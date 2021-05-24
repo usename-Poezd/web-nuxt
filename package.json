@@ -24,7 +24,7 @@
     "qs": "^6.10.1"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.15.3",
+    "@nuxt/types": "^2.15.6",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/device": "^2.1.0",
     "@nuxtjs/eslint-config-typescript": "^6.0.0",
