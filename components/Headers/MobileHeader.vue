@@ -13,7 +13,7 @@
       <div class="text-center text-xs font-semibold">Чат</div>
     </a>
     <a href="" class="flex flex-col items-center w-full px-3 py-2 flex flex-col justify-center text-gray-400">
-      <FontAwesomeIcon icon="user-alt" class="text-xl mr-2"/>
+      <FontAwesomeIcon icon="user-alt" class="text-xl"/>
       <div class="text-center text-xs font-semibold">Профиль</div>
     </a>
   </nav>
@@ -23,6 +23,6 @@
   import Vue from 'vue';
 
   export default Vue.extend({
-    name: "MobileHeader",
+    name: "MobileHeader"
   });
 </script>

@@ -1,3 +1,33 @@
 @import "~tailwindcss/base";
 @import "~tailwindcss/components";
 @import "~tailwindcss/utilities";
+
+.img-fluid {
+  @apply w-full h-auto;
+}
+
+.star {
+  @apply relative flex;
+  width: 96px;
+  height: 16px;
+}
+
+.star-outline {
+  @apply absolute top-0 left-0;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='%23d6dbe0'%3E%3Cpath d='M7.952.656a.226.226 0 00-.21.13l-2.22 4.738-5.112.688a.23.23 0 00-.125.393l3.737 3.617-.937 5.163a.234.234 0 00.09.227c.07.052.163.058.24.016l4.531-2.503 4.532 2.503c.077.042.17.036.24-.016a.233.233 0 00.09-.227l-.938-5.163 3.738-3.617a.228.228 0 00-.126-.393l-5.11-.688L8.148.786a.222.222 0 00-.197-.13z'/%3E%3C/svg%3E");
+  height: 16px;
+  width: 96px;
+  background-size: 20px 16px;
+  background-position-x: -2px;
+  background-repeat: repeat-x;
+}
+
+.star-filled {
+  @apply absolute top-0 left-0;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='%23ff8970'%3E%3Cpath d='M7.952.656a.226.226 0 00-.21.13l-2.22 4.738-5.112.688a.23.23 0 00-.125.393l3.737 3.617-.937 5.163a.234.234 0 00.09.227c.07.052.163.058.24.016l4.531-2.503 4.532 2.503c.077.042.17.036.24-.016a.233.233 0 00.09-.227l-.938-5.163 3.738-3.617a.228.228 0 00-.126-.393l-5.11-.688L8.148.786a.222.222 0 00-.197-.13z'/%3E%3C/svg%3E");
+  height: 16px;
+  width: 96px;
+  background-size: 20px 16px;
+  background-position-x: -2px;
+  background-repeat: repeat-x;
+}

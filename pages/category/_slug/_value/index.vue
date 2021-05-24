@@ -3,18 +3,18 @@
     <div class="py-8">
       <div class="flex items-center mb-8">
         <h1 class="text-3xl font-bold mr-1">
-          {{kind.titleRus}}
+          {{subcategory.title}}
         </h1>
-        <div class="text-sm text-gray-600">{{kind.activeProductsCount}}</div>
+        <div class="text-sm text-gray-600">{{products.length}}</div>
       </div>
-      <div v-if="kind.subcategories.length" class="flex flex-wrap items-center mb-4">
+      <div v-if="subcategory.localities.length" class="flex flex-wrap items-center mb-4">
         <NuxtLink
-          :to="'/category' + kind.slug + '/' + subcategory.title"
-          v-for="subcategory in kind.subcategories"
-          :key="'subcategory-header-page-' + subcategory.id"
+          v-for="locality in subcategory.localities"
+          :to="`/category/${kind.slug}/${subcategory.slug}/?localities=${$route.query.localities ? `${$route.query.localities},` : ''}${locality.id}`"
+          :key="'locality-header-page-' + locality.title"
           class="rounded-full bg-gray-100 transition hover:bg-gray-200 text-black mr-2 mb-2 py-1 px-2 text-sm cursor-pointer"
         >
-          {{subcategory.title}}
+          {{locality.title}}
         </NuxtLink>
       </div>
     </div>
@@ -23,18 +23,14 @@
         <div class="mt-2 mr-2">
           <div class="mb-5">
             <div class="font-bold mb-3">Категории:</div>
-            <div class="flex flex-col items-start flex-start">
-              <NuxtLink :to="'/category' + kind.slug" class="block rounded p-1 bg-green-100 transition hover:text-green-600 mb-1">{{kind.titleRus}}</NuxtLink>
-              <ul v-if="kind.subcategories.length" class="pl-5">
-                <li v-for="subcategory in kind.subcategories" :key="'subcategory-filter-' + subcategory.id">
-                  <NuxtLink
-                    :to="'/category' + kind.slug + '/' + subcategory.title"
-                    class="block transition hover:text-green-600 my-1"
-                  >
-                    {{subcategory.title}}
-                  </NuxtLink>
-                </li>
-              </ul>
+            <div class="mb-1">
+              <NuxtLink :to="'/category/' + kind.slug" class="flex items-center transition duration-200 hover:text-green-600">
+                <FontAwesomeIcon icon="chevron-left" class="mr-1"/>
+                <span>{{kind.titleRus}}</span>
+              </NuxtLink>
+            </div>
+            <div class="flex flex-col items-start flex-start pl-2">
+              <NuxtLink :to="'/category/' + kind.slug + '/' + subcategory.slug" class="block rounded p-1 bg-green-100 transition hover:text-green-600 mb-1">{{subcategory.title}}</NuxtLink>
             </div>
           </div>
         </div>
@@ -44,7 +40,7 @@
       <div class="w-10/12 flex flex-wrap">
         <div v-for="product in products" class="flex flex-col lg:w-3/12 md:w-4/12 sm:w-6/12 w-full px-2 mb-2">
           <div class="flex flex-col shadow rounded-xl bg-white p-2 flex-1">
-            <NuxtLink :to="'/catalog/' + kind.slug + '/' + product.id"  class="relative mb-2">
+            <NuxtLink :to="'/category/' + kind.slug + '/' + product.id"  class="relative mb-2">
               <div class="absolute bg-white shadow rounded top-2 right-2 p-1">
                 <div v-if="!product.group || (product.group.male === 0 && product.group.female)">
                   <FontAwesomeIcon v-if="product.sex === null" icon="genderless" class="text-xl"/>
@@ -63,14 +59,14 @@
                   </div>
                 </div>
               </div>
-              <img :src="product.preview.imgSrc" alt="" class="img-fluid rounded">
+              <img :data-src="product.preview.imgSrc" alt="" class="img-fluid rounded lazyload">
             </NuxtLink>
             <div class="flex flex-col flex-1">
               <div>
                 <span class="text-red-500 font-bold text-lg">55 000 ₽</span>
               </div>
               <NuxtLink
-                :to="'/catalog/' + kind.slug + '/' + product.id"
+                :to="'/category/' + kind.slug + '/' + product.id"
                 class="block font-semibold text-sm mb-2 transition duration-200 hover:text-green-600"
               >
                 {{product.name}}
@@ -104,19 +100,30 @@
 
       data: () => ({
         kind: {} as any,
+        subcategory: {} as any,
         products: [] as Array<any>
       }),
 
-      mounted() {
-        console.log(this.products)
-      },
-
-      async asyncData({ params, $api }) {
-        const kind = await $api.getKind(params.slug);
-        const products = await $api.getProducts(params.slug);
+      async asyncData({ params, $api, query }) {
+        const kind = await $api.getKind(params.slug, {
+          include: 'activeSubcategories,activeSubcategories.activeLocalities'
+        });
+        const subcategory = await kind.activeSubcategories.find((s: any) => s.slug === params.value);
+        subcategory.localities = await subcategory.activeLocalities;
+        const products = await $api.getProducts({
+          include: 'preview',
+          query: {
+            filter: {
+              kind: params.slug,
+              subcategory: params.value,
+              locality: query.localities
+            }
+          }
+        });
 
         return {
           kind,
+          subcategory,
           products
         }
       }
