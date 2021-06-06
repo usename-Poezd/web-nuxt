@@ -12,10 +12,11 @@
       </div>
     </div>
     <div class="container pt-4 flex flex-wrap">
-      <a
+      <NuxtLink
         v-for="activeKind in activeKinds"
+        :to="`/category/${activeKind.slug}`"
         :key="'header-menu-kind-' + activeKind.id"
-        href="#"
+        @click.native="toggleHeaderMenu"
         class="lg:w-3/12 md:w-4/12 sm:w-6/12 w-full mb-4 sm:px-3 px-0"
       >
         <div class="flex flex-col rounded bg-gray-100 transition hover:text-green-600 py-3 xl:px-0 px-3 h-full">
@@ -31,14 +32,14 @@
           </div>
         </div>
 
-      </a>
+      </NuxtLink>
     </div>
   </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
-  import {mapGetters} from 'vuex';
+  import {mapGetters, mapActions} from 'vuex';
 
   export default Vue.extend({
     name: "HeaderMenu",
@@ -48,5 +49,11 @@
         'activeKinds'
       ])
     },
+
+    methods: {
+      ...mapActions('core', [
+        'toggleHeaderMenu'
+      ])
+    }
   });
 </script>
