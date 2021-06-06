@@ -1,31 +1,25 @@
 import {NuxtAxiosInstance} from "@nuxtjs/axios";
 import {Deserializer} from "jsonapi-serializer";
 import qs from "qs";
+import {IMorph, IKind} from "~/types";
 
-interface IApiService {
-  getKinds: () => Promise<any>
-  getKind: (slug: string, options?: any) => Promise<any>,
-  getSubcategory: (slug: string) => Promise<any>,
-  getProducts: (options?: any) => Promise<any>
-}
+class ApiService {
+  private api: NuxtAxiosInstance;
 
-class ApiService implements IApiService {
-  api: NuxtAxiosInstance;
-
-  deserializer = new Deserializer({keyForAttribute: "camelCase"});
+  private  deserializer = new Deserializer({keyForAttribute: "camelCase"});
 
   constructor(api: NuxtAxiosInstance) {
     this.api = api;
   }
 
-  getKinds = async () => {
+  getKinds = async (): Promise<Array<IKind>> => {
     const data = await this.api.$get('kinds');
 
     return this.deserializer.deserialize(data)
       .then((data) => data);
   };
 
-  getKind = async (slug: string, options: any = {}) => {
+  getKind = async (slug: string, options: any = {}): Promise<IKind> => {
     let url = `kinds?filter[slug]=${slug}&include=${options.include || ''}`;
     const query = qs.stringify(options.query);
     url += `&${query}`;
@@ -42,6 +36,11 @@ class ApiService implements IApiService {
       .then((data) => data);
   };
 
+  searchMorphs = async (q: string, kind: string): Promise<Array<IMorph>> => {
+    return await this.api.$get(`/search/morphs?q=${q}&kind=${kind}`)
+      .then((res) => res.data);
+  };
+
   getProducts = async (options: any = {}) => {
     let url = `products?include=${options.include || ''}&sort=${options.sort || 'random'}`;
 
@@ -49,15 +48,20 @@ class ApiService implements IApiService {
     url += `&${query}`;
 
     const data = await this.api.$get(url);
+    const products = await this.deserializer.deserialize(data);
 
-    return this.deserializer.deserialize(data)
-      .then((data) => data);
+    return {
+      products,
+      meta: data.meta
+    };
   };
 
 }
 
 
+type ApiServiceType =  ApiService;
+
 export {
   ApiService,
-  IApiService
+  ApiServiceType
 }

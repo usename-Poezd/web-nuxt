@@ -1,27 +1,27 @@
 import { Plugin } from '@nuxt/types'
-import {ApiService, IApiService} from "~/services";
+import {ApiService, ApiServiceType} from "~/services";
 declare module 'vue/types/vue' {
   // this.$myInjectedFunction inside Vue components
   interface Vue {
-    $api: IApiService
+    $api: ApiServiceType
   }
 }
 
 declare module '@nuxt/types' {
   // nuxtContext.app.$myInjectedFunction inside asyncData, fetch, plugins, middleware, nuxtServerInit
   interface NuxtAppOptions {
-    $api: IApiService
+    $api: ApiServiceType
   }
   // nuxtContext.$myInjectedFunction
   interface Context {
-    $api: IApiService
+    $api: ApiServiceType
   }
 }
 
 declare module 'vuex/types/index' {
   // this.$myInjectedFunction inside Vuex stores
   interface Store<S> {
-    $api: IApiService
+    $api: ApiServiceType
   }
 }
 
