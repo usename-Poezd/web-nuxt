@@ -1,6 +1,8 @@
 @import "~tailwindcss/base";
 @import "~tailwindcss/components";
 @import "~tailwindcss/utilities";
+@import "range";
+@import "select";
 
 .img-fluid {
   @apply w-full h-auto;
@@ -30,4 +32,124 @@
   background-size: 20px 16px;
   background-position-x: -2px;
   background-repeat: repeat-x;
+}
+
+//MORPH
+@mixin morph-indicator {
+  @apply font-semibold  py-1 px-2 rounded text-center text-white;
+  user-select: none;
+}
+
+.morph {
+  &s{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    &-table {
+      .morph-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 29%;
+        font-size: 75%;
+      }
+    }
+  }
+
+  &-indicator-count{
+    @apply font-semibold;
+    display: inline-block;
+    padding: 2px 8px;
+    color: #fff;
+    border-radius: 5px;
+    user-select: none;
+  }
+
+  &-indicator{
+    @apply font-semibold  py-1 px-2 rounded text-center text-white;
+    user-select: none;
+
+    @media (max-width: 576px) {
+      white-space: normal!important;
+    }
+
+    &:hover{
+      text-decoration: none;
+    }
+
+    &-search{
+      @include morph-indicator;
+      background: #be2050;
+    }
+  }
+
+  &-dominant{
+
+    $normal: #8AABDA;
+    $super: #3C68AF;
+
+    &-normal{
+      background: $normal;
+    }
+
+    &-visual{
+      background: $normal;
+    }
+
+    &-super{
+      background: $super;
+    }
+  }
+
+  &-recessive{
+
+    $possible-het: #FECC00;
+    $het: #FCBD6A;
+    $visual: #EF7F1A;
+
+    &-possible-het{
+      background: $possible-het;
+    }
+
+    &-het{
+      background: $het;
+    }
+
+    &-visual{
+      background: $visual;
+    }
+  }
+
+  &-other{
+
+    $normal: #727271;
+    $possible: #B2B09C;
+
+    &-normal{
+      background: $normal;
+    }
+
+    &-visual{
+      background: $normal;
+    }
+
+    &-possible{
+      background: $possible;
+    }
+  }
+
+  &-search{
+    &-input {
+      position: relative;
+
+      .spinner-border {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
 }
