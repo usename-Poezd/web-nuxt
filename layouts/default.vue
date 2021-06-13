@@ -1,5 +1,6 @@
 <template>
   <div :style="$device.isMobile && 'padding-bottom: 56px;'">
+    <modals-container/>
     <Header/>
     <HeaderMenu :class="!headerMenuShow ? 'hidden' : ''"/>
     <Nuxt :class="headerMenuShow ? 'hidden' : ''"/>
