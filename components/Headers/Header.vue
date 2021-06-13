@@ -6,7 +6,7 @@
           <img src="https://breeders-zone.s3.us-east-2.amazonaws.com/static/icons/logo.svg" alt="" class="img-fluid lg:h-12">
         </NuxtLink>
       </div>
-      <div class="w-full p-2 flex items-center">
+      <div class="w-full p-2 pr-0 flex items-center">
         <div class="flex items-center w-full mr-2 bg-gray-200 rounded">
           <input type="text" placeholder="Поиск..." class="block w-full p-2 rounded outline-none appearance-none bg-gray-200">
           <button class="outline-none appearance-none text-gray-500 relative top-0.5 pr-2">
@@ -30,10 +30,10 @@
           </button>
           <ul class="flex items-center">
             <li>
-              <a href="#" class="px-3 flex flex-col items-center justify-center transition hover:text-green-700">
+              <NuxtLink to="/auth/login" class="px-3 flex flex-col items-center justify-center transition hover:text-green-700">
                 <FontAwesomeIcon icon="user-alt" class="text-3xl text-green-600"/>
-                <div class="text-xs font-semibold">Вход</div>
-              </a>
+                <div class="text-xs font-semibold">{{isAuthenticated && user ? user.name : 'Вход' }}</div>
+              </NuxtLink>
             </li>
           </ul>
         </nav>
@@ -44,7 +44,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import {mapGetters, mapActions} from 'vuex';
+  import {mapGetters, mapActions, mapState} from 'vuex';
 
   export default Vue.extend({
     name: "Header",
@@ -53,7 +53,10 @@
       ...mapGetters('core', [
         'activeKinds',
         'headerMenuShow'
-      ])
+      ]),
+
+      ...mapState('auth', ['user']),
+      ...mapGetters('auth', ['isAuthenticated'])
     },
 
     methods: {

@@ -14,15 +14,21 @@
     </a>
     <a href="" class="flex flex-col items-center w-full px-3 py-2 flex flex-col justify-center text-gray-400">
       <FontAwesomeIcon icon="user-alt" class="text-xl"/>
-      <div class="text-center text-xs font-semibold">Профиль</div>
+      <div class="text-center text-xs font-semibold">{{isAuthenticated ? user.name : 'Профиль'}}</div>
     </a>
   </nav>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
+  import {mapGetters, mapState} from "~/node_modules/vuex";
 
   export default Vue.extend({
-    name: "MobileHeader"
+    name: "MobileHeader",
+
+    computed: {
+      ...mapState('auth', ['user']),
+      ...mapGetters('auth', ['isAuthenticated'])
+    },
   });
 </script>
