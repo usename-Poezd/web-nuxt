@@ -1,12 +1,10 @@
 <template>
-  <div class="container">
-    <div class="md:py-8 py-4">
-      <div class="flex items-center mb-8">
-        <h1 class="text-3xl font-bold mr-1">
-          {{kind.titleRus}}
-        </h1>
-        <div class="text-sm text-gray-600">{{meta.page.total}}</div>
-      </div>
+  <ProductLayout :products="products" :meta="meta" :sort="sort">
+    <template #headerTitle>
+      {{kind.titleRus}}
+    </template>
+
+    <template #headerFilter>
       <div v-if="kind.activeSubcategories.length" class="flex flex-wrap items-center">
         <NuxtLink
           :to="'/category/' + kind.slug + '/' + subcategory.slug"
@@ -17,8 +15,9 @@
           {{subcategory.title}}
         </NuxtLink>
       </div>
-    </div>
-    <div class="flex flex-wrap items-start">
+    </template>
+
+    <template #filter>
       <ProductFilter
         :kind="kind"
         :morphs="meta.selectedMorphs"
@@ -26,34 +25,31 @@
         :minPrice="meta.minPrice"
         :maxPrice="meta.maxPrice"
       />
-
-      <div class="md:w-10/12 w-full flex flex-wrap">
-        <ProductCard
-          v-for="product in products"
-          :key="'product-' + product.id"
-          :product="product"
-        />
-      </div>
-      <div class="md:w-10/12 w-full ml-auto pt-3">
-        <Pagination :currentPage="meta.currentPage" :lastPage="meta.lastPage"/>
-      </div>
-    </div>
-  </div>
+    </template>
+  </ProductLayout>
 </template>
 
 <script lang="ts">
     import Vue from "vue";
     import {IKind} from '~/types';
     import qs from "qs";
+    import {withPopper} from "~/utils";
 
     export default Vue.extend({
 
       watchQuery: true,
 
       data: () => ({
+        sortOptions: [{label: 'Сначала дешевле', value: 'price'}, {label: 'Сначала дороже', value: '-price'}],
         kind: {} as IKind,
-        products: [] as Array<any>
+        products: [] as Array<any>,
+        meta: {} as any,
+        sort: ''
       }),
+
+      methods: {
+        withPopper
+      },
 
       async asyncData({ params, query, $api, route }) {
         const kind = await $api.getKind(params.slug, {
@@ -67,6 +63,7 @@
               size: 20,
               number: query.page
             },
+            sort: query.sort,
             filter: {
               kind: params.slug,
               price: query.price,
@@ -79,7 +76,8 @@
         return {
           kind,
           products,
-          meta
+          meta,
+          sort: query.sort
         }
       }
     });

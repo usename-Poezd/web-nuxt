@@ -1,12 +1,10 @@
 <template>
-  <div class="container">
-    <div class="md:py-8 py-4">
-      <div class="flex items-center mb-8">
-        <h1 class="text-3xl font-bold mr-1">
-          {{subcategory.title}}
-        </h1>
-        <div class="text-sm text-gray-600">{{meta.page.total}}</div>
-      </div>
+  <ProductLayout :products="products" :meta="meta" :sort="sort">
+    <template #headerTitle>
+      {{subcategory.title}}
+    </template>
+
+    <template #headerFilter>
       <div v-if="subcategory.localities.length" class="flex flex-wrap items-center">
         <NuxtLink
           v-for="locality in subcategory.localities"
@@ -22,8 +20,9 @@
           {{locality.title}}
         </NuxtLink>
       </div>
-    </div>
-    <div class="flex flex-wrap items-start">
+    </template>
+
+    <template #filter>
       <ProductFilter
         :kind="kind"
         :subcategory="subcategory"
@@ -31,24 +30,14 @@
         :minPrice="meta.minPrice"
         :maxPrice="meta.maxPrice"
       />
-
-      <div class="md:w-10/12 w-full flex flex-wrap">
-        <ProductCard
-          v-for="product in products"
-          :key="'product-' + product.id"
-          :product="product"
-        />
-      </div>
-      <div class="md:w-10/12 w-full ml-auto pt-3">
-        <Pagination :currentPage="meta.currentPage" :lastPage="meta.lastPage"/>
-      </div>
-    </div>
-  </div>
+    </template>
+  </ProductLayout>
 </template>
 
 <script lang="ts">
     import Vue from "vue";
     import {IKind} from "~/types";
+    import {withPopper} from "~/utils";
 
     export default Vue.extend({
 
@@ -57,7 +46,9 @@
       data: () => ({
         kind: {} as IKind,
         subcategory: {} as any,
-        products: [] as Array<any>
+        products: [] as Array<any>,
+        meta: {} as any,
+        sort: ''
       }),
 
       async asyncData({ params, $api, query }) {
@@ -75,6 +66,7 @@
               size: 20,
               number: query.page
             },
+            sort: query.sort,
             filter: {
               kind: params.slug,
               subcategory: params.value,
@@ -89,7 +81,8 @@
           kind,
           subcategory,
           products,
-          meta
+          meta,
+          sort: query.sort
         }
       }
     });
