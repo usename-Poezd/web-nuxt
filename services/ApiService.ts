@@ -1,16 +1,48 @@
 import {NuxtAxiosInstance} from "@nuxtjs/axios";
 import {Deserializer} from "jsonapi-serializer";
 import qs from "qs";
-import {IMorph, IKind} from "~/types";
+import {IKind, IMorph} from "~/types";
 
 class ApiService {
   private api: NuxtAxiosInstance;
+  private authApi: NuxtAxiosInstance;
+
 
   private  deserializer = new Deserializer({keyForAttribute: "camelCase"});
 
-  constructor(api: NuxtAxiosInstance) {
+  constructor(api: NuxtAxiosInstance, authApi: NuxtAxiosInstance) {
     this.api = api;
+    this.authApi = authApi
   }
+
+  me = async (access_token: string): Promise<any> => {
+    return await this.authApi.$post('me', {}, {
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    });
+  };
+
+  register = async (user: any): Promise<any> => {
+    return await this.authApi.$post('register', user);
+  };
+
+  login = async (loginData: any): Promise<any> => {
+    return await this.authApi.$post('login', loginData);
+  };
+
+  refresh = async (refresh_token: string): Promise<any> => {
+    return await this.authApi.$post('refresh', {refresh_token});
+  };
+
+  sendVerification = async (data: any): Promise<any> => {
+    return await this.authApi.$post('verify/send', data);
+  };
+
+  verify = async (data: any): Promise<any> => {
+    return await this.authApi.$post('verify', data);
+  };
+
 
   getKinds = async (): Promise<Array<IKind>> => {
     const data = await this.api.$get('kinds');
