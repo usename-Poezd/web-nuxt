@@ -22,10 +22,23 @@ export default {
     '@/assets/scss/main.scss'
   ],
 
+  transpile: [
+    "vee-validate/dist/rules"
+  ],
+
+  extend(config, ctx) {
+    
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/api.ts',
     '~/plugins/fontawesome.ts',
+    '~plugins/vue-js-modal.ts',
+    '~plugins/vue-select.ts',
+    '~/plugins/local-storage',
+    '~/plugins/vee-validate',
+    '~/plugins/mask',
     {
       src: '~plugins/vue-slider-component.ts',
       ssr: false
@@ -58,6 +71,10 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
+
+  formulate: {
+    configPath: '~/formulate.config.js'
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
