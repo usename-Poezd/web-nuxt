@@ -2,6 +2,7 @@ version: 2
 updates:
 # Fetch and update latest `npm` packages
 - package-ecosystem: npm
+  target_branch: 'dev'
   directory: '/'
   schedule:
     interval: daily
