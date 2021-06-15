@@ -20,7 +20,7 @@
     "@types/qs": "^6.9.6",
     "core-js": "^3.12.1",
     "jsonapi-serializer": "^3.6.7",
-    "nuxt": "^2.15.6",
+    "nuxt": "^2.15.7",
     "qs": "^6.10.1"
   },
   "devDependencies": {
