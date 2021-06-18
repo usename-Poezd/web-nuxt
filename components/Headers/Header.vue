@@ -30,7 +30,7 @@
           </button>
           <ul class="flex items-center">
             <li>
-              <NuxtLink to="/auth/login" class="px-3 flex flex-col items-center justify-center transition hover:text-green-700">
+              <NuxtLink :to="isAuthenticated && user ? '/profile' : '/auth/login'" class="px-3 flex flex-col items-center justify-center transition hover:text-green-700">
                 <FontAwesomeIcon icon="user-alt" class="text-3xl text-green-600"/>
                 <div class="text-xs font-semibold">{{isAuthenticated && user ? user.name : 'Вход' }}</div>
               </NuxtLink>
