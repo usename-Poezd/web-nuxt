@@ -5,14 +5,20 @@
 @import "select";
 @import "forms";
 @import "modals";
+@import "alerts";
 @import "morphs";
 
 .link {
   @apply transition hover:text-blue-600 text-blue-500;
 }
 
+.cropper-view-box,
+.cropper-face {
+  border-radius: 50%;
+}
+
 .img-fluid {
-  @apply w-full h-auto;
+  @apply max-w-full h-auto;
 }
 
 .star {

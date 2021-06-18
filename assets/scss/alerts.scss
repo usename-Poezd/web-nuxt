@@ -1,0 +1,53 @@
+
+/* ALERTS */
+
+.alert {
+  @apply flex flex-row items-center p-5 rounded border-b-2;
+
+  &-content {
+    @apply ml-4;
+  }
+
+  &-description {
+    @apply text-sm;
+  }
+
+  &-icon {
+    @apply flex items-center  border-2  justify-center h-6 w-6 flex-shrink-0 rounded-full;
+  }
+
+
+
+
+  &-danger {
+    @apply bg-red-200 border-red-300;
+
+    .alert-description {
+      @apply text-red-600;
+    }
+
+    .alert-icon {
+      @apply bg-red-100 border-red-500;
+
+      span {
+        @apply text-red-500;
+      }
+    }
+  }
+
+  &-success {
+    @apply bg-green-200 border-green-300;
+
+    .alert-description {
+      @apply text-green-600;
+    }
+
+    .alert-icon {
+      @apply bg-green-100 border-green-500;
+
+      span {
+        @apply text-green-500;
+      }
+    }
+  }
+}
