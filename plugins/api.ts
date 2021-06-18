@@ -1,5 +1,8 @@
 import { Plugin } from '@nuxt/types'
+import {Store} from 'vuex';
 import {ApiService, ApiServiceType} from "~/services";
+import {NuxtAxiosInstance} from "@nuxtjs/axios";
+import {RootState} from "~/store";
 declare module 'vue/types/vue' {
   // this.$myInjectedFunction inside Vue components
   interface Vue {
@@ -25,11 +28,10 @@ declare module 'vuex/types/index' {
   }
 }
 
-
-const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
+const modAxios = (axios: NuxtAxiosInstance, store: Store<RootState>, redirect: any) => {
   const IGNORED_PATHS = ['/auth/login', '/auth/register', '/auth/logout', '/auth/refresh'];
 
-  $axios.onRequest((config) => {
+  axios.onRequest((config) => {
     // check if the user is authenticated
     if (store.state.auth.access_token) {
       // set the Authorization header using the access token
@@ -39,7 +41,7 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
     return config
   });
 
-  $axios.onError((error) => {
+  axios.onError((error) => {
     return new Promise(async (resolve, reject) => {
       // ignore certain paths (i.e. paths relating to authentication)
       // @ts-ignore
@@ -49,7 +51,7 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
       const statusCode = error.response ? error.response.status : -1;
 
       // only handle authentication errors or errors involving the validity of the token
-      if ((statusCode === 401 || statusCode === 422) && !isIgnored) {
+      if ((statusCode === 401) && !isIgnored) {
         // API should return a reason for the error, represented here by the text_code property
 
         // Example API response:
@@ -87,7 +89,7 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
 
               // re-run the initial request using the new request config after a successful refresh
               // this response will be returned to the initial calling method
-              return resolve($axios(config))
+              return resolve(axios(config))
             } catch (e) {
               // catch any error while refreshing the token
               await store.dispatch('auth/logout')
@@ -111,6 +113,10 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
       return reject(error)
     })
   });
+}
+
+const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
+  modAxios($axios, store, redirect);
 
 
   // Create a custom axios instance
@@ -125,6 +131,8 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
 
   // Set baseURL to something different
   api.setBaseURL('http://localhost/api/v2/');
+  modAxios(api, store, redirect);
+
 
   const authApi =  $axios.create({
     transformResponse: [function (data) {
@@ -136,6 +144,8 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
     }],
   });
   authApi.setBaseURL('http://localhost/api/auth/v2/');
+  modAxios(authApi, store, redirect);
+
 
   const apiService = new ApiService(api, authApi);
 
