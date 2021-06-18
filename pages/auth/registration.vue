@@ -111,9 +111,7 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import {mapActions} from 'vuex';
-  //@ts-ignore
-  import Verify from "~/components/Verify.vue";
+  import VerificationPhoneCode from "~/components/Verification/PhoneCode.vue";
 
   export default Vue.extend({
     middleware: ['guest'],
@@ -143,9 +141,11 @@
         this.$api.register(this.formValues)
           .then(() => {
             this.$modal.show(
-              Verify,
+              VerificationPhoneCode,
               {
-                stage: 2
+                stage: 2,
+                type: 'account',
+                userPhone: this.formValues.phone
               },
               {
                 name: 'verify',

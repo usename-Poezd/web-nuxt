@@ -7,7 +7,7 @@ import Vue from 'vue'
 import {mapMutations, mapState} from 'vuex';
 import {AUTH_MUTATIONS} from "~/store/auth";
 // @ts-ignore
-import Verify from "~/components/Verify.vue";
+import Verify from "~/components/Verification/PhoneCode.vue";
 
 export default Vue.extend({
 
@@ -16,7 +16,8 @@ export default Vue.extend({
       this.$modal.show(
         Verify,
         {
-          userId: Number(this.$route.query.id)
+          userId: Number(this.$route.query.id),
+          type: 'account'
         },
         {
           name: 'verify',

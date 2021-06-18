@@ -49,7 +49,7 @@
               </div>
             </ValidationProvider>
             <div class="mb-3 flex justify-end">
-              <a href="#" class="link">Забыли пароль?</a>
+              <span @click.prevent="openModal({type: 'password'})" class="link">Забыли пароль?</span>
             </div>
             <button
               type="submit"
@@ -68,8 +68,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import {mapActions} from 'vuex';
-//@ts-ignore
-import Verify from "~/components/Verify.vue";
+import VerificationPhoneCode from "~/components/Verification/PhoneCode.vue";
 
 export default Vue.extend({
   middleware: ['guest'],
@@ -100,17 +99,22 @@ export default Vue.extend({
             this.unauthorized = true;
             this.loading = false;
           } else if (err.response.status === 403) {
-            this.$modal.show(
-              Verify,
-              {
-                stage: 2
-              },
-              {
-                name: 'verify',
-                clickToClose: false,
-                adaptive: true
-              });
+            this.openModal({
+              type: 'account',
+              stage: 2
+            })
           }
+        });
+    },
+
+    openModal(componentProps: any = {}) {
+      this.$modal.show(
+        VerificationPhoneCode,
+        componentProps,
+        {
+          name: 'verify',
+          clickToClose: false,
+          adaptive: true
         });
     }
   }
