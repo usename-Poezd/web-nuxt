@@ -33,7 +33,7 @@
       <div class="md:w-10/12 w-full">
         <div class="flex justify-between mb-3 md:px-2">
           <button
-            v-if="!$device.isMobile"
+            v-if="!$device.isMobile && kind"
             @click.prevent="openMorphsTable"
             class="shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"
           >
@@ -64,7 +64,7 @@
             <FontAwesomeIcon icon="sliders-h" size="lg"/>
           </button>
         </div>
-        <div v-if="$device.isMobile" class="flex justify-between mb-3 md:px-2">
+        <div v-if="$device.isMobile && kind" class="flex justify-between mb-3 md:px-2">
           <button
             @click.prevent="openMorphsTable"
             class="w-full shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"

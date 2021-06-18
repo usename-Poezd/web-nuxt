@@ -80,7 +80,13 @@ class ApiService {
   };
 
   getProducts = async (options: any = {}) => {
-    let url = `products?include=${options.include || ''}&sort=${options.sort || 'random'}`;
+    let url = `products?include=${options.include || ''}`;
+
+    if (options.query.sort) {
+      url += `&sort=${options.sort}`
+    } else if (!options.query.q) {
+      url += `&sort=${options.sort}`
+    }
 
     const query = qs.stringify(options.query);
     url += `&${query}`;

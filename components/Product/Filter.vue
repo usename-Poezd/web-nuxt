@@ -1,7 +1,7 @@
 <template>
   <div class="md:w-2/12 w-full">
     <div class="mt-2 mr-2">
-      <div class="mb-5">
+      <div v-if="kind" class="mb-5">
         <div class="font-bold mb-3">Категории:</div>
         <div class="mb-1">
           <NuxtLink

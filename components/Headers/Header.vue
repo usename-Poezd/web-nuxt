@@ -8,8 +8,14 @@
       </div>
       <div class="w-full p-2 pr-0 flex items-center">
         <div class="flex items-center w-full mr-2 bg-gray-200 rounded">
-          <input type="text" placeholder="Поиск..." class="block w-full p-2 rounded outline-none appearance-none bg-gray-200">
-          <button class="outline-none appearance-none text-gray-500 relative top-0.5 pr-2">
+          <input
+            v-model="q"
+            @keydown.enter="$router.push('/category/search?q=' + q)"
+            type="text"
+            placeholder="Поиск..."
+            class="block w-full p-2 rounded outline-none appearance-none bg-gray-200"
+          >
+          <button @click.prevent="$router.push('/category/search?q=' + q)" class="outline-none appearance-none text-gray-500 relative top-0.5 pr-2">
             <FontAwesomeIcon class="text-xl" icon="search"/>
           </button>
         </div>
@@ -48,6 +54,10 @@
 
   export default Vue.extend({
     name: "Header",
+
+    data: () => ({
+      q: ''
+    }),
 
     computed: {
       ...mapGetters('core', [
