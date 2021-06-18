@@ -2,13 +2,14 @@ import {NuxtAxiosInstance} from "@nuxtjs/axios";
 import {Deserializer} from "jsonapi-serializer";
 import qs from "qs";
 import {IKind, IMorph} from "~/types";
+import {JsonApiService} from "~/services/JsonApiService";
 
 class ApiService {
   private api: NuxtAxiosInstance;
   private authApi: NuxtAxiosInstance;
 
 
-  private  deserializer = new Deserializer({keyForAttribute: "camelCase"});
+  private deserializer = new Deserializer({keyForAttribute: "camelCase"});
 
   constructor(api: NuxtAxiosInstance, authApi: NuxtAxiosInstance) {
     this.api = api;
@@ -35,7 +36,7 @@ class ApiService {
     return await this.authApi.$post('refresh', {refresh_token});
   };
 
-  sendVerification = async (data: any): Promise<any> => {
+   sendVerification = async (data: any): Promise<any> => {
     return await this.authApi.$post('verify/send', data);
   };
 
@@ -59,6 +60,11 @@ class ApiService {
 
     return this.deserializer.deserialize(data)
       .then((data) => data);
+  };
+
+  getKindTable = async (id: string|number): Promise<any> => {
+    return this.api.$get(`kinds/${id}/table`)
+      .then((resp) => resp.data);
   };
 
   getSubcategory = async (slug: string) => {
@@ -88,6 +94,14 @@ class ApiService {
     };
   };
 
+  // User
+
+  updateUser = async (user: any = {}, options: any = {}) => {
+    const data = await this.api.$patch(`users/${user.id}`, JsonApiService.serializeUser(user), options);
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
+  }
 }
 
 
