@@ -1,5 +1,5 @@
 <template>
-  <ProductLayout :products="products" :meta="meta" :sort="sort">
+  <ProductLayout :products="products" :meta="meta" :sort="sort" :kind="kind">
     <template #headerTitle>
       {{kind.titleRus}}
     </template>
@@ -68,7 +68,11 @@
               kind: params.slug,
               price: query.price,
               sex: query.sex,
-              morphs: qs.parse(route.fullPath.replace(route.path, '').replace('?', '')).morphs
+              morphs: qs.parse(route.fullPath.replace(route.path, '').replace('?', '')).morphs,
+              morph: {
+                gene: query.gene,
+                trait: query.trait
+              }
             }
           }
         });

@@ -1,17 +1,18 @@
 <template>
-  <ProductLayout :products="products" :meta="meta" :sort="sort">
+  <ProductLayout :products="products" :meta="meta" :sort="sort" :kind="kind">
     <template #headerTitle>
-      {{subcategory.title}}
+      {{subcategory.title}}{{$route.query.localities ? ', ' + subcategory.localities.find(i => i.id === $route.query.localities).title : ''}}
     </template>
 
     <template #headerFilter>
       <div v-if="subcategory.localities.length" class="flex flex-wrap items-center">
         <NuxtLink
           v-for="locality in subcategory.localities"
+          v-if="!$route.query.localities || $route.query.localities !== locality.id"
           :to="{
             path: `/category/${kind.slug}/${subcategory.slug}`,
             query: {
-              localities: `${$route.query.localities ? `${$route.query.localities},` : ''}${locality.id}`
+              localities: locality.id
             }
           }"
           :key="'locality-header-page-' + locality.title"
