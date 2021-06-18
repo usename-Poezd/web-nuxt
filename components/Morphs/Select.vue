@@ -50,14 +50,18 @@
   import {formatMorph, formatMorphClass, withPopper} from "~/utils";
 
   export default Vue.extend({
-    name: "MorphsSelect",
-
     data() {
       return {
         selectedMorphs: this.morphs || [] as Array<IMorph>,
         morph: null,
         searchedMorphs: [] as Array<IMorph>
       }
+    },
+
+    watch: {
+      morphs: function (val) {
+        this.selectedMorphs = val;
+      },
     },
 
     computed: {
