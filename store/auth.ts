@@ -21,7 +21,7 @@ export const state = (): AuthState => ({
 export const mutations: MutationTree<AuthState> = {
   // store the logged in user in the state
   [AUTH_MUTATIONS.SET_USER] (state, user) {
-    state.user = user;
+    state.user = {...user};
   },
 
   // store new or updated token fields in the state
