@@ -13,7 +13,15 @@
             <span>{{kind.titleRus}}</span>
           </NuxtLink>
           <NuxtLink
-            v-else
+            v-if="subcategory && $route.query.localities"
+            :to="'/category/' + kind.slug + '/' + subcategory.slug"
+            class="flex items-center transition duration-200 hover:text-green-600 ml-2"
+          >
+            <FontAwesomeIcon icon="chevron-left" class="mr-1"/>
+            <span>{{subcategory.title}}</span>
+          </NuxtLink>
+          <NuxtLink
+            v-if="!subcategory"
             :to="'/category' + kind.slug"
             class="inline-block rounded p-1 bg-green-100 transition hover:text-green-600 ml-2"
           >
@@ -33,7 +41,14 @@
           </ul>
 
           <NuxtLink
-            v-if="subcategory"
+            v-if="subcategory && $route.query.localities"
+            :to="'/category/' + kind.slug + '/' + subcategory.slug"
+            class="block rounded p-1 bg-green-100 transition hover:text-green-600 mb-1"
+          >
+            {{subcategory.localities.find(i => i.id === $route.query.localities).title}}
+          </NuxtLink>
+          <NuxtLink
+            v-else-if="subcategory"
             :to="'/category/' + kind.slug + '/' + subcategory.slug"
             class="block rounded p-1 bg-green-100 transition hover:text-green-600 mb-1"
           >
@@ -82,8 +97,6 @@
   import qs from 'qs';
 
   export default Vue.extend({
-    name: 'ProductFilter',
-
     data() {
       const price = this.$route.query.price ?
         (this.$route.query.price as string).split(',').map(i => Number(i))
@@ -114,6 +127,8 @@
         const morphsQuery = qs.stringify({morphs: morphs.map(item => `${item.gene.id},${item.trait.id}`)});
         const query = qs.parse(this.$route.fullPath.replace(this.$route.path, '').replace('?', ''));
         delete query.morphs;
+        delete query.gene;
+        delete query.trait;
 
         this.$router.push(`${this.$route.path}?${qs.stringify(query)}&${morphsQuery}`);
       },

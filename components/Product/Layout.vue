@@ -21,7 +21,7 @@
       >
         <div class="py-3 border-b relative flex justify-center">
           <h3 class="font-bold">Фильтры</h3>
-          <div class="absolute top-3 right-2.5">
+          <div class="absolute top-3 right-2.5 cursor-pointer">
             <FontAwesomeIcon icon="times" size="lg" @click="$modal.hide('filter')"/>
           </div>
         </div>
@@ -31,7 +31,14 @@
       </modal>
 
       <div class="md:w-10/12 w-full">
-        <div class="flex md:justify-end justify-between mb-3 md:px-2">
+        <div class="flex justify-between mb-3 md:px-2">
+          <button
+            v-if="!$device.isMobile"
+            @click.prevent="openMorphsTable"
+            class="shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"
+          >
+            Открыть таблицу морф
+          </button>
           <div class="md:mr-0 mr-2 md:w-3/12 w-full">
             <VueSelect
               @input="(val) => $router.push({
@@ -57,7 +64,19 @@
             <FontAwesomeIcon icon="sliders-h" size="lg"/>
           </button>
         </div>
+        <div v-if="$device.isMobile" class="flex justify-between mb-3 md:px-2">
+          <button
+            @click.prevent="openMorphsTable"
+            class="w-full shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"
+          >
+            Открыть таблицу морф
+          </button>
+        </div>
         <div class="flex flex-wrap">
+          <div v-if="!products.length" class="flex flex-col items-center my-20 w-full">
+            <FontAwesomeIcon icon="times" size="5x" class="text-red-500"/>
+            <p class="font-bold text-xl">Тавары не найдены</p>
+          </div>
           <ProductCard
             v-for="product in products"
             :key="'product-' + product.id"
@@ -75,6 +94,8 @@
 <script lang="ts">
   import Vue from 'vue';
   import {withPopper} from "~/utils";
+  import Table from "~/components/Morphs/Table.vue";
+  import {IKind} from "~/types";
 
   export default Vue.extend({
     data: () => ({
@@ -82,12 +103,25 @@
     }),
 
     methods: {
-      withPopper
+      withPopper,
+
+      openMorphsTable() {
+        this.$modal.show(Table, {
+          kind: this.kind
+        }, {
+          name: 'morphs-table',
+          adaptive: true,
+          class: 'table-modal',
+          height: 'auto',
+          scrollable: true
+        })
+      }
     },
 
     props: {
       products: Array as () => Array<any>,
       meta: Object,
+      kind: Object as () => IKind,
       sort: String
     }
   });
