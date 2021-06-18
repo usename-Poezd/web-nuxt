@@ -22,14 +22,6 @@ export default {
     '@/assets/scss/main.scss'
   ],
 
-  transpile: [
-    "vee-validate/dist/rules"
-  ],
-
-  extend(config, ctx) {
-    
-  },
-
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/api.ts',
@@ -39,6 +31,7 @@ export default {
     '~/plugins/local-storage',
     '~/plugins/vee-validate',
     '~/plugins/mask',
+    '~/plugins/vue-textarea-autosize',
     {
       src: '~plugins/vue-slider-component.ts',
       ssr: false
@@ -78,6 +71,14 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: [
+      "vee-validate/dist/rules"
+    ],
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {},
+
     babel:{
       plugins: [
         ['@babel/plugin-proposal-private-methods', { loose: true }]
