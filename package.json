@@ -18,7 +18,7 @@
     "@nuxtjs/axios": "^5.13.4",
     "@types/jsonapi-serializer": "^3.6.3",
     "@types/qs": "^6.9.6",
-    "core-js": "^3.12.1",
+    "core-js": "^3.15.0",
     "jsonapi-serializer": "^3.6.7",
     "nuxt": "^2.15.6",
     "qs": "^6.10.1"
