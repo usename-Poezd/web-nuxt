@@ -83,7 +83,7 @@
       <div class="mb-5">
         <div class="font-bold mb-3">Морфы:</div>
         <div class="mb-1">
-          <MorphsSelect :morphs="morphs" @change="changeMorphs"/>
+          <MorphsSelect class="filter-select" :morphs="morphs" @change="changeMorphs"/>
         </div>
       </div>
     </div>

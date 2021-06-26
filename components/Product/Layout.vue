@@ -85,7 +85,7 @@
         </div>
       </div>
       <div class="md:w-10/12 w-full ml-auto pt-3">
-        <Pagination :currentPage="meta.currentPage" :lastPage="meta.lastPage"/>
+        <Pagination :currentPage="meta.page.currentPage" :lastPage="meta.page.lastPage"/>
       </div>
     </div>
   </div>
