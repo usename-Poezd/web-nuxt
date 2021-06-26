@@ -33,6 +33,14 @@ export default {
     '~/plugins/mask',
     '~/plugins/vue-textarea-autosize',
     {
+      src: '~/plugins/vue2-datepicker',
+      ssr: false
+    },
+    {
+      src: '~/plugins/vue-js-toggle-button.ts',
+      ssr: false
+    },
+    {
       src: '~plugins/vue-slider-component.ts',
       ssr: false
     }
@@ -53,6 +61,7 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/device',
+    '@nuxtjs/composition-api/module',
     'nuxt-lazysizes'
   ],
 
@@ -72,7 +81,8 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [
-      "vee-validate/dist/rules"
+      "vee-validate/dist/rules",
+      "vue-currency-input"
     ],
     /*
      ** You can extend webpack config here
