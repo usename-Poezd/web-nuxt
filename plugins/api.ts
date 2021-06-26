@@ -106,7 +106,7 @@ const modAxios = (axios: NuxtAxiosInstance, store: Store<RootState>, redirect: a
           return redirect('/')
         }
 
-        return error;
+        return reject(error);
       }
 
       // ignore all other errors, let component or other error handlers handle them
