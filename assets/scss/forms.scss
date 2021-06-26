@@ -5,3 +5,7 @@
 .forms-input {
   @apply shadow rounded p-2 focus:outline-none focus:ring-1 focus:ring-green-600;
 }
+
+.file-uploads {
+  @apply w-full;
+}

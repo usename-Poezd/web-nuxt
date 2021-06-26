@@ -22,7 +22,7 @@ $vs-state-disabled-cursor: not-allowed !default;
 //  Borders
 $vs-border-width: 2px !default;
 $vs-border-style: solid !default;
-$vs-border-radius: 4px !default;
+$vs-border-radius: 0.5rem !default;
 $vs-border-color: map_get($vs-colors, 'lightest') !default;
 
 //  Component Controls: Clear, Open Indicator
@@ -44,3 +44,35 @@ $vs-dropdown-box-shadow: 0px 3px 6px 0px map_get($vs-colors, 'darkest') !default
 $vs-dropdown-bg: #fff !default;
 
 @import "~vue-select/src/scss/vue-select.scss";
+
+.forms-select .vs__search::placeholder,
+.forms-select .vs__dropdown-toggle,
+.forms-select .vs__dropdown-menu {
+  @apply shadow rounded p-2 focus:outline-none focus:ring-1 focus:ring-green-600 border-0;
+}
+
+.forms-select .vs__search,
+.forms-select .vs__search:focus {
+  @apply p-0 m-0 border-0;
+}
+
+.forms-select .vs__clear,
+.forms-select .vs__open-indicator {
+  fill: #394066;
+}
+
+.filter-select .vs__search::placeholder,
+.filter-select .vs__dropdown-toggle,
+.filter-select .vs__dropdown-menu {
+  @apply rounded p-1 bg-gray-200 border-transparent focus:border-transparent focus:ring-0 focus:ring-offset-0;
+}
+
+.filter-select .vs__search,
+.filter-select .vs__search:focus {
+  @apply p-0 m-0 border-0;
+}
+
+.filter-select .vs__clear,
+.filter-select .vs__open-indicator {
+  fill: #394066;
+}
