@@ -34,7 +34,7 @@
     <div>
       <div v-for="(morph, idx) in selectedMorphs" :key="`${morph.gene.id}${morph.trait.id}`" :class="`morph-indicator inline-block whitespace-normal mr-1 mb-1 text-sm ${formatMorphClass(morph)}`">
         <span class="mr-1">{{formatMorph(morph)}}</span>
-        <span class="cursor-pointer" @click="deleteSelectedMorph">
+        <span class="cursor-pointer" @click="deleteSelectedMorph(idx)">
           <FontAwesomeIcon icon="times"/>
         </span>
       </div>
@@ -52,7 +52,7 @@
   export default Vue.extend({
     data() {
       return {
-        selectedMorphs: this.morphs || [] as Array<IMorph>,
+        selectedMorphs: [...this.morphs] || [] as Array<IMorph>,
         morph: null,
         searchedMorphs: [] as Array<IMorph>
       }
@@ -86,7 +86,7 @@
       onSearch(search: string, loading: (arg0: boolean) => void) {
         if(search.length) {
           loading(true);
-          const kind = this.kinds.find((k: IKind) => k.slug === this.$route.params.slug)?.id;
+          const kind = this.kinds.find((k: IKind) => k.slug === this.$route.params.slug)?.id || this.kind;
           this.search(search, kind, loading, this);
         }
       },
