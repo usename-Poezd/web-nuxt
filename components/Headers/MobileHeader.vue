@@ -1,5 +1,5 @@
 <template>
-  <nav class="fixed bottom-0 flex bg-white w-full shadow">
+  <nav class="fixed z-50 bottom-0 flex bg-white w-full shadow">
     <NuxtLink
       to="/"
       :class="`flex flex-col items-center w-full px-3 py-2 flex flex-col justify-center ${$route.path === '/' ? 'text-green-600' : 'text-gray-400'}`"
