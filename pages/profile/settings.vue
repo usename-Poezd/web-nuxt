@@ -334,6 +334,7 @@ import UploadAvatar from "~/components/Upload/Avatar.vue";
 
 
 export default Vue.extend({
+  middleware: ['auth'],
   layout: 'profile',
 
   data: () => ({
