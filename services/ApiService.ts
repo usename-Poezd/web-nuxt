@@ -46,7 +46,7 @@ class ApiService {
 
 
   getKinds = async (): Promise<Array<IKind>> => {
-    const data = await this.api.$get('kinds');
+    const data = await this.api.$get('kinds?include=subcategories,subcategories.localities');
 
     return this.deserializer.deserialize(data)
       .then((data) => data);
@@ -79,13 +79,15 @@ class ApiService {
       .then((res) => res.data);
   };
 
+  // Products
+
   getProducts = async (options: any = {}) => {
     let url = `products?include=${options.include || ''}`;
 
     if (options.query.sort) {
       url += `&sort=${options.sort}`
     } else if (!options.query.q) {
-      url += `&sort=${options.sort}`
+      url += `&sort=${options.sort || 'random'}`
     }
 
     const query = qs.stringify(options.query);
@@ -99,6 +101,25 @@ class ApiService {
       meta: data.meta
     };
   };
+
+  getProduct = async (id: number|string, include = '') => {
+    const data = await this.api.$get(`products/${id}?${include && `include=${include}`}`);
+    return await this.deserializer.deserialize(data);
+  };
+
+  updateProduct = async (product: any = {}) => {
+    const data = await this.api.$patch(`products/${product.id}`, JsonApiService.serializeProduct(product));
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
+  }
+
+  createProduct = async (product: any = {}) => {
+    const data = await this.api.$post(`products`, JsonApiService.serializeProduct(product));
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
+  }
 
   // User
 
