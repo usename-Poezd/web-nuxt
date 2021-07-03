@@ -39,7 +39,7 @@
       </div>
       <div class="md:w-3/12 w-9/12 md:pl-4 pl-0">
         <VueSelect
-          class="rounded"
+          class="forms-select"
           @input="(val) => $router.push({
                 path: $route.path,
                 query: {
@@ -65,7 +65,15 @@
         </NuxtLink>
       </div>
     </div>
-    <ProductShop v-for="product in products" :key="`product-${product.id}`"  :product="product"/>
+    <ProductShop
+      v-for="product in products"
+      :key="`product-${product.id}`"
+      :product="product"
+      @delete="(id) => {
+        const idx = products.findIndex(p => p.id === id)
+        products.splice(idx, 1)
+      }"
+    />
 
     <div class="pt-4">
       <Pagination :currentPage="meta.page.currentPage" :lastPage="meta.page.lastPage"/>

@@ -16,6 +16,25 @@
       </ol>
     </nav>
 
+    <div v-if="success" class="alert alert-success mb-4">
+      <div class="alert-icon">
+            <span>
+                <svg fill="currentColor"
+                     viewBox="0 0 20 20"
+                     class="h-4 w-4">
+                    <path fill-rule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clip-rule="evenodd"></path>
+                </svg>
+            </span>
+      </div>
+      <div class="alert-content">
+        <div class="alert-description">
+          Вы успешно обновили полдукт
+        </div>
+      </div>
+    </div>
+
     <div v-if="added" class="alert alert-success mb-4">
       <div class="alert-icon">
             <span>
@@ -46,7 +65,9 @@
         <div class="md:w-6/12 w-full flex flex-col">
           <UploadImage
             @isUpload="isUpload"
-            @mutate="handlePreview"
+            :value="previews"
+            :multiple="false"
+            @change="(val) => previews = val"
             id="preview"
             previewClass="md:w-3/12 sm:w-6/12 w-full"
           >
@@ -64,7 +85,8 @@
         <div class="md:w-6/12 w-full flex flex-col">
           <UploadImage
             @isUpload="isUpload"
-            @mutate="handleImages"
+            :value="images"
+            @change="(val) => images = val"
             id="images"
             previewClass="md:w-3/12 sm:w-6/12 w-full"
           >
@@ -414,10 +436,20 @@
         </div>
       </div>
     </div>
+    <div
+      v-if="loading"
+      class="flex-inline justify-center items-center text-sm text-white font-bold inline-block rounded-lg py-2 px-14 cursor-pointer duration-200 transition bg-green-600 hover:bg-green-700"
+    >
+      <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </div>
     <button
+      v-else
       type="submit"
-      :disabled="invalid && uploaded"
-      :class="`flex items-center text-sm text-center text-white font-bold inline-block rounded-lg py-2 px-7 cursor-pointer duration-200 transition ${!invalid || !uploaded ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300'} mb-4`"
+      :disabled="invalid || uploaded"
+      :class="`flex items-center text-sm text-center text-white font-bold inline-block rounded-lg py-2 px-7 cursor-pointer duration-200 transition ${!invalid && !uploaded ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300'} mb-4`"
     >
       Сохранить
     </button>
@@ -458,7 +490,7 @@ export default Vue.extend({
 
       serverErrors: {},
       images: [] as Array<number>,
-      preview: null as unknown as number,
+      previews: [] as Array<any>,
       morphs: [] as Array<IMorph>,
 
       kind: null as unknown as IKind,
@@ -466,6 +498,7 @@ export default Vue.extend({
       uploaded: false,
       changedMorphs: [] as Array<IMorph>,
       loading: false,
+      success: false,
       added: false
     }
   },
@@ -489,13 +522,15 @@ export default Vue.extend({
         ...this.formValues,
         cb: moment(this.formValues.cb).add(4, 'hours'),
         id: this.product.id,
-        tmpImages: this.images,
+        tmpImages: this.images.map((i: any) => i.tmpId),
         tmpMorphs: this.changedMorphs.map(m => ({
           type: (m as any).type,
           gene: m.gene.id,
           trait: m.trait.id
         })),
-        tmpPreview: String(this.preview),
+        tmpPreview: this.previews.length ?
+          String(this.previews[0].tmpId)
+          : null,
         sex: this.formValues.sex === 'group' ? null : this.formValues.sex,
         kind: {
           id: this.kind.id
@@ -522,9 +557,36 @@ export default Vue.extend({
         }
       };
 
-      this.$api.updateProduct(product)
-        .then(() => {
+      this.loading = true;
+      this.success = false;
+      this.serverErrors = {};
+
+      this.$api.updateProduct(product, 'preview,kind,subcategory,morphs.gene,morphs.trait,images,age,locality')
+        .then((product: any) => {
           this.loading = false;
+          this.success = true
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+          this.product = product;
+
+          this.formValues = {
+            askPrice: product.askPrice,
+            isActive: product.isActive,
+            name: product.name,
+            article: product.article,
+            description: product.description,
+            price: product.price.find((i: any) => i.currency === product.currency).amount,
+            currency: product.currency,
+            age: product.age?.id,
+            locality: product.locality?.id || '',
+            cb: moment(product.cb).toDate() as Date,
+            sex:  product.group !== null ? 'group' : product.sex as boolean|string|null,
+            groupMale: product.group?.male || '',
+            groupFemale: product.group?.female || '',
+          };
+          this.morphs = [...product.morphs];
+
+          this.images = [];
+          this.previews = [];
           this.changedMorphs = [];
         })
         .catch((err) => {
@@ -552,12 +614,6 @@ export default Vue.extend({
 
     isUpload(upl: boolean) {
       this.uploaded = upl;
-    },
-    handleImages(files: Array<number>) {
-      this.images = files;
-    },
-    handlePreview(files: Array<number>) {
-      this.preview = files[0];
     }
   },
 

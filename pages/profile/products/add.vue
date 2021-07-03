@@ -414,7 +414,8 @@
         <div>
           <UploadImage
             @isUpload="isUpload"
-            @mutate="handleUploaded"
+            :value="images"
+            @change="(val) => images = val"
           />
         </div>
       </div>
@@ -464,7 +465,7 @@ export default Vue.extend({
     },
 
     serverErrors: {},
-    images: [] as Array<number>,
+    images: [] as Array<any>,
     morphs: [] as Array<IMorph>,
 
     kind: null as unknown as IKind,
@@ -480,14 +481,14 @@ export default Vue.extend({
     submit() {
       const product: any = {
         ...this.formValues,
-        cb: moment(this.formValues.cb).toISOString(),
-        tmpImages: this.images,
+        cb: moment(this.formValues.cb).add(4, 'hours'),
+        tmpImages: this.images.map((i: any) => i.tmpId),
         tmpMorphs: this.morphs.map(m => ({
           type: 'add',
           gene: m.gene.id,
           trait: m.trait.id
         })),
-        tmpPreview: String(this.images[0]),
+        tmpPreview: String(this.images[0].tmpId),
         sex: this.formValues.sex === 'group' ? null : this.formValues.sex,
         kind: {
           id: this.kind.id
@@ -517,9 +518,20 @@ export default Vue.extend({
         })
         .catch((err) => {
           if (err.response.status === 422) {
-            this.serverErrors = err.response.data.errors;
+            const errors = err.response.data.errors;
+            this.serverErrors = {
+              name: errors.filter((item: any) => item.source.pointer === "/data/attributes/name").map((item: any) => item.detail),
+              article: errors.filter((item: any) => item.source.pointer === "/data/attributes/article").map((item: any) => item.detail),
+              price: errors.filter((item: any) => item.source.pointer === "/data/attributes/price").map((item: any) => item.detail),
+              currency: errors.filter((item: any) => item.source.pointer === "/data/attributes/currency").map((item: any) => item.detail),
+              sex: errors.filter((item: any) => item.source.pointer === "/data/attributes/sex").map((item: any) => item.detail),
+              cb: errors.filter((item: any) => item.source.pointer === "/data/attributes/cb").map((item: any) => item.detail)
+            };
 
-            if (((this.serverErrors as any).name || (this.serverErrors as any).price || (this.serverErrors as any).currency) && this.kind.onlyText) {
+            if ((this.serverErrors as any).name.length
+              || (this.serverErrors as any).article.length
+              || (this.serverErrors as any).price.length
+              || (this.serverErrors as any).currency.length) {
               this.step = 3
             } else {
               this.step = 4
@@ -566,9 +578,6 @@ export default Vue.extend({
 
     isUpload(upl: boolean) {
       this.uploaded = upl;
-    },
-    handleUploaded(files: Array<number>) {
-      this.images = files;
     }
   },
 
