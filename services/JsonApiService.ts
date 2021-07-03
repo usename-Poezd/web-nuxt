@@ -25,7 +25,7 @@ export class JsonApiService {
     return UserSerializer.serialize(user);
   }
 
-  static serializeProduct = (user: any) => {
+  static serializeProduct = (product: any) => {
     const ProductSerializer = new Serializer('products', {
       attributes: [
         'name',
@@ -98,6 +98,70 @@ export class JsonApiService {
       keyForAttribute: "camelCase"
     });
 
-    return ProductSerializer.serialize(user);
+    return ProductSerializer.serialize(product);
+  }
+
+  static serializeDivorce = (divorce: any) => {
+    const DivorceSerializer = new Serializer('divorces', {
+      attributes: [
+        'title',
+        'description',
+        'cb',
+
+        'tmpMorphs',
+
+        'sexPhotos',
+        'masonryPhotos',
+        'exitPhotos',
+
+        'tmpImages',
+
+        'kind',
+        'subcategory',
+      ],
+
+      typeForAttribute: function (attribute, data) {
+        // sometimes this returns undefined
+        return data.customType;
+      },
+
+      // @ts-ignore
+      sexPhotos: {
+        type: 'images',
+        ref: 'id',
+        attributes: []
+      },
+
+      // @ts-ignore
+      masonryPhotos: {
+        type: 'images',
+        ref: 'id',
+        attributes: []
+      },
+
+      // @ts-ignore
+      exitPhotos: {
+        type: 'images',
+        ref: 'id',
+        attributes: []
+      },
+
+      // @ts-ignore
+      kind: {
+        ref: 'id',
+        attributes: []
+      },
+
+      // @ts-ignore
+      subcategory: {
+        ref: 'id',
+        attributes: []
+      },
+
+
+      keyForAttribute: "camelCase"
+    });
+
+    return DivorceSerializer.serialize(divorce);
   }
 }

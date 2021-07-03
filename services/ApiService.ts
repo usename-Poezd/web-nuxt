@@ -85,9 +85,9 @@ class ApiService {
     let url = `products?include=${options.include || ''}`;
 
     if (options.query.sort) {
-      url += `&sort=${options.sort}`
+      url += `&sort=${options.query.sort}`
     } else if (!options.query.q) {
-      url += `&sort=${options.sort || 'random'}`
+      url += `&sort=${options.query.sort || 'random'}`
     }
 
     const query = qs.stringify(options.query);
@@ -107,8 +107,8 @@ class ApiService {
     return await this.deserializer.deserialize(data);
   };
 
-  updateProduct = async (product: any = {}) => {
-    const data = await this.api.$patch(`products/${product.id}`, JsonApiService.serializeProduct(product));
+  updateProduct = async (product: any = {}, include: string = '') => {
+    const data = await this.api.$patch(`products/${product.id}?include=${include}`, JsonApiService.serializeProduct(product));
 
     return this.deserializer.deserialize(data)
       .then((data) => data);
@@ -116,6 +116,62 @@ class ApiService {
 
   createProduct = async (product: any = {}) => {
     const data = await this.api.$post(`products`, JsonApiService.serializeProduct(product));
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
+  }
+
+  deleteProduct = async (id: number|string) => {
+    const data = await this.api.$delete(`products/${id}`);
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
+  }
+
+  // Divorces
+
+  getDivorces = async (options: any = {}) => {
+    let url = `divorces?include=${options.include || ''}`;
+
+    if (options.query.sort) {
+      url += `&sort=${options.sort}`
+    } else if (!options.query.q) {
+      url += `&sort=${options.sort || 'cb'}`
+    }
+
+    const query = qs.stringify(options.query);
+    url += `&${query}`;
+
+    const data = await this.api.$get(url);
+    const divorces = await this.deserializer.deserialize(data);
+
+    return {
+      divorces,
+      meta: data.meta
+    };
+  };
+
+  getDivorce = async (id: number|string, include = '') => {
+    const data = await this.api.$get(`divorces/${id}?${include && `include=${include}`}`);
+    return await this.deserializer.deserialize(data);
+  };
+
+  updateDivorce = async (divorce: any = {}, include: string = '') => {
+    const data = await this.api.$patch<any>(`divorces/${divorce.id}?include=${include}`, JsonApiService.serializeDivorce(divorce));
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
+  }
+
+  createDivorce = async (divorce: any = {}) => {
+    const data = await this.api.$post<any>(`divorces`, JsonApiService.serializeDivorce(divorce));
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
+  }
+
+  deleteDivorce = async (id: number|string) => {
+    const data = await this.api.$delete(`divorces/${id}`);
 
     return this.deserializer.deserialize(data)
       .then((data) => data);
@@ -129,6 +185,18 @@ class ApiService {
     return this.deserializer.deserialize(data)
       .then((data) => data);
   }
+
+  // Divorces
+
+  getDocuments = async () => {
+    const data = await this.api.$get('documents?fields[documents]=title,label');
+    return await this.deserializer.deserialize(data)
+  };
+
+  getDocument = async (id: number|string) => {
+    const data = await this.api.$get(`documents/${id}?fields[documents]=title,description`);
+    return await this.deserializer.deserialize(data);
+  };
 }
 
 
