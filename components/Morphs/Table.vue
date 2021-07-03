@@ -1,6 +1,6 @@
 <template>
-  <div class="p-2 h-full">
-    <div class="py-3 mb-3 border-b relative flex justify-center">
+  <div class="md:p-2 h-full">
+    <div v-if="isModal" class="py-3 mb-3 border-b relative flex justify-center">
       <h3 class="font-bold">Таблица морф</h3>
       <div class="absolute top-3 right-2.5  cursor-pointer">
         <FontAwesomeIcon icon="times" size="lg" @click="$modal.hide('morphs-table')"/>
@@ -51,7 +51,7 @@
           </div>
           <div v-else class="flex justify-end">
             <NuxtLink
-              v-for="traitGroup in gene.trait_groups"
+              v-for="traitGroup in gene.traitGroups"
               :key="`table-gene-${gene.id}-trait-group-${traitGroup.id}`"
               :to="{
                 path: '/category/' + kind.slug,
@@ -185,26 +185,47 @@
   import {stringify} from "qs";
 
   export default Vue.extend({
-    props: ['kind'],
+    props: {
+      kind: {
+        type: Object,
+        default: () => ({})
+      },
+      isModal: {
+        type: Boolean,
+        default: true
+      },
+      tableMorphs: {
+        type: Object,
+        default: () => ({
+          genes: [],
+          subcategories: []
+        })
+      },
+    },
 
-    data: () => ({
-      loading: true,
-      genes: [],
-      subcategories: []
-    }),
+    data() {
+      return {
+        loading: false,
+        genes: this.tableMorphs.genes,
+        subcategories: this.tableMorphs.subcategories
+      }
+    },
 
     methods: {
       stringify
     },
 
     mounted() {
-      this.$api.getKindTable(this.kind.id)
-        .then((data: any) => {
-          this.genes = data.genes;
-          this.subcategories = data.subcategories;
+      if (!this.genes.length || !this.subcategories.length) {
+        this.loading = true;
+        this.$api.getKindTable(this.kind.id)
+          .then((data: any) => {
+            this.genes = data.genes;
+            this.subcategories = data.subcategories;
 
-          this.loading = false;
-        })
+            this.loading = false;
+          })
+      }
     }
   });
 </script>
