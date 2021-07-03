@@ -80,6 +80,7 @@
           Изменить
         </NuxtLink>
         <button
+          @click.prevent="deleteProduct"
           class="text-sm text-white font-bold inline-block rounded-lg py-2 px-3 cursor-pointer duration-200 transition bg-red-500 hover:bg-red-600"
         >
           Удалить
@@ -102,6 +103,11 @@
       formatMorph,
       RUB,
       getPrice,
+
+      deleteProduct() {
+        this.$api.deleteProduct(this.product.id);
+        this.$emit('delete', this.product.id)
+      },
 
       checkProduct: _.debounce( (product: any, vm: any) => {
         vm.$api.updateProduct({
