@@ -5,7 +5,7 @@
         extensions="gif,jpg,jpeg,png,webp"
         accept="image/png,image/gif,image/jpeg,image/webp"
         :input-id="id"
-        :multiple="true"
+        :multiple="multiple"
         :custom-action="upload"
         v-model="files"
         @input-file="inputFile"
@@ -24,7 +24,7 @@
 
         <div v-if="files.length || $slots.default" class="flex flex-wrap">
           <slot></slot>
-          <div v-for="file in files" :class="`${previewClass} px-2 relative rounded`">
+          <div v-for="file in files" :key="`uploaded-image-${file.id}`" :class="`${previewClass} px-2 relative rounded`">
             <div v-if="!file.success" class="h-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-7/12 rounded-full overflow-hidden">
               <div class="w-full h-full bg-gray-200 absolute"></div>
               <div class="transition-all ease-out duration-1000 h-full bg-green-500 relative w-0" :style="`width: ${file.progress}%`"></div>
@@ -49,10 +49,28 @@ import 'vue-upload-component/dist/vue-upload-component.part.css';
 import FileUpload from 'vue-upload-component/dist/vue-upload-component.part.js'
 
 export default Vue.extend({
+  // @ts-ignore
+  $_veeValidate: {
+    // fetch the current value from the innerValue defined in the component data.
+    // @ts-ignore
+    value () {
+      // @ts-ignore
+      return this.files;
+    }
+  },
+
   props: {
     previewClass: {
       type: String as PropType<string>,
       default: 'md:w-2/12 sm:w-6/12 w-full'
+    },
+    value: {
+      type: Array,
+      default: () => []
+    },
+    multiple: {
+      type: Boolean,
+      default: true
     },
     id: {
       type: String,
@@ -64,9 +82,23 @@ export default Vue.extend({
     FileUpload
   },
 
-  data: () => ({
-    files: [] as Array<any>
-  }),
+  computed: {
+    files: {
+      get: function() {
+        // @ts-ignore
+        return this.value
+      },
+      set: function(value: Array<any>) {
+        value = value.map((i: any) => {
+          i.tmpId =  Number(i.xhr?.response)
+          return i
+        })
+
+        // @ts-ignore
+        this.$emit('change', value)
+      }
+    }
+  },
 
   watch: {
     files: {
