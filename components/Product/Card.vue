@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col lg:w-3/12 md:w-4/12 sm:w-6/12 w-full md:px-2 mb-2">
+  <div class="flex flex-col md:px-2 mb-2">
     <div class="flex flex-col shadow rounded-xl bg-white p-2 flex-1">
-      <NuxtLink :to="'/category/' + product.kind.slug + '/' + product.id"  class="relative mb-2">
+      <NuxtLink :to="`/category/${product.kind.slug}${product.subcategory ? `/${product.subcategory.slug}/` : '/'}${product.id}`" class="relative mb-2">
         <div v-if="!product.kind.onlyText" class="absolute bg-white shadow rounded top-2 right-2 p-1">
           <div v-if="!product.group || (product.group.male === 0 && product.group.female)">
             <FontAwesomeIcon v-if="product.sex === null" icon="genderless" class="text-xl"/>
@@ -27,7 +27,7 @@
           <span class="text-red-500 font-bold text-lg">{{formatPrice()}}</span>
         </div>
         <NuxtLink
-          :to="'/category/' + product.kind.slug + '/' + product.id"
+          :to="`/category/${product.kind.slug}${product.subcategory ? `/${product.subcategory.slug}/` : '/'}${product.id}`"
           class="block font-semibold text-sm mb-2 transition duration-200 hover:text-green-600"
         >
           {{product.name}}
