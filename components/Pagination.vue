@@ -64,19 +64,21 @@ export default Vue.extend({
     }
   },
 
-  data() {
-    const pageRange = 2;
+  computed: {
+    pages: function () {
+      const pageRange = 2;
 
-    const start = (this.currentPage - pageRange) > 0 ? this.currentPage - pageRange : 1;
-    const end = (this.currentPage + pageRange) < this.lastPage ? this.currentPage + pageRange : this.lastPage;
+      // @ts-ignore
+      const start = (this.currentPage - pageRange) > 0 ? this.currentPage - pageRange : 1;
+      // @ts-ignore
+      const end = (this.currentPage + pageRange) < this.lastPage ? this.currentPage + pageRange : this.lastPage;
 
-    const pages = []
-    for (let i = start; i <= end; i++) {
-      pages.push(i)
-    }
+      const pages = []
+      for (let i = start; i <= end; i++) {
+        pages.push(i)
+      }
 
-    return {
-      pages: pages
+      return pages;
     }
   }
 });

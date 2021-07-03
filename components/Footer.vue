@@ -13,7 +13,7 @@
         <ul>
           <li><a href="" class="md:text-sm py-2 hover:text-green-600 transition">FAQ</a></li>
           <li><a href="" class="md:text-sm py-2 hover:text-green-600 transition">Помощь</a></li>
-          <li><a href="" class="md:text-sm py-2 hover:text-green-600 transition">Юридические документы</a></li>
+          <li><NuxtLink to="/documents" class="md:text-sm py-2 hover:text-green-600 transition">Юридические документы</NuxtLink></li>
         </ul>
       </div>
       <div class="md:w-4/12 w-full md:text-right">
