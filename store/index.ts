@@ -1,4 +1,4 @@
-import {ActionTree} from 'vuex'
+import {ActionTree, Store} from 'vuex'
 import {AuthState} from "~/store/auth";
 import {CoreState} from "~/store/core";
 
