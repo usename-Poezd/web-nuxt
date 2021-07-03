@@ -11,7 +11,7 @@ export interface IMorph {
     id: number
     title: string
     type: string
-    trait_group: {
+    traitGroup: {
       label: string
       title: string
     }|null
