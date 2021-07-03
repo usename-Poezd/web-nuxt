@@ -1,11 +1,14 @@
 <template>
   <div class="container">
     <div class="md:py-8 py-4">
-      <div class="flex items-center mb-8">
-        <h1 class="text-3xl font-bold mr-1">
-          <slot name="headerTitle"/>
-        </h1>
-        <div class="text-sm text-gray-600">{{meta.page.total}}</div>
+      <div class="flex md:flex-row flex-col md:items-center justify-between mb-8">
+        <div class="flex items-center">
+          <h1 class="text-3xl font-bold mr-1">
+            <slot name="headerTitle"/>
+          </h1>
+          <div class="text-sm text-gray-600">{{meta.page.total}}</div>
+        </div>
+        <span v-if="$route.name === 'category-slug' && $route.fullPath === $route.path" class="link cursor-pointer text-sm" @click.prevent="() => {setTableView(true); $router.go(0)}">В старый дизайн</span>
       </div>
       <slot name="headerFilter"/>
     </div>
@@ -48,6 +51,7 @@
                   sort: val ? val.value : ''
                 }
               })"
+              class="forms-select"
               :filterable="false"
               :searchable="false"
               placeholder="Сортировать по..."
@@ -78,6 +82,7 @@
             <p class="font-bold text-xl">Тавары не найдены</p>
           </div>
           <ProductCard
+            class="lg:w-3/12 md:w-4/12 sm:w-6/12 w-full"
             v-for="product in products"
             :key="'product-' + product.id"
             :product="product"
@@ -96,6 +101,8 @@
   import {withPopper} from "~/utils";
   import Table from "~/components/Morphs/Table.vue";
   import {IKind} from "~/types";
+  import {mapMutations} from "vuex";
+  import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
 
   export default Vue.extend({
     data: () => ({
@@ -103,9 +110,13 @@
     }),
 
     methods: {
+      ...mapMutations({
+        setTableView: `core/${SET_TABLE_CATEGORY_VIEW}`
+      }),
       withPopper,
 
       openMorphsTable() {
+        this.$router
         this.$modal.show(Table, {
           kind: this.kind
         }, {
