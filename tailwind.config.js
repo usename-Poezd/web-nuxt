@@ -11,6 +11,10 @@ module.exports = {
     extend: {
 
     },
+    cursor: {
+      pointer: 'pointer',
+      grab: 'grab'
+    },
     container: {
       center: true,
       padding: {
@@ -22,7 +26,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      ringWidth: ['hover'],
+    }
   },
   plugins: [
     require('@tailwindcss/forms')({
