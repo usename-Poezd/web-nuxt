@@ -6,11 +6,12 @@ import { Plugin } from '@nuxt/types'
 
 const localStorage: Plugin = ({ store, req, isDev }) => {
   createPersistedState({
-    key: 'token', // choose any name for your cookie
+    key: 'nvcs', // choose any name for your cookie
     paths: [
       // persist the access_token and refresh_token values from the "auth" store module
       'auth.access_token',
       'auth.refresh_token',
+      'core.tableCategoryView'
     ],
     storage: {
       // if on the browser, parse the cookies using js-cookie otherwise parse from the raw http request
