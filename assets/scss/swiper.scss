@@ -1,0 +1,14 @@
+.swiper-thumb {
+  @apply rounded bg-black;
+  cursor: pointer;
+
+  img {
+    @apply transition;
+  }
+}
+
+.swiper-thumb.swiper-slide-active {
+  img {
+    @apply opacity-70;
+  }
+}

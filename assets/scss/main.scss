@@ -8,6 +8,33 @@
 @import "alerts";
 @import "morphs";
 @import "datepicker";
+@import "swiper";
+@import "document";
+
+.border-dashed {
+  @apply relative;
+  &:before {
+    content: " ";
+    @apply border-b-2 border-dotted absolute bottom-1 block w-full;
+  }
+}
+
+.product-page-image {
+  .lazyload,
+  .lazyloading {
+    opacity: 0;
+    height: 0;
+
+  }
+  .lazyloaded {
+    opacity: 1;
+    transition: opacity 100ms;
+
+    & + div {
+      @apply hidden;
+    }
+  }
+}
 
 button {
   @apply outline-none focus:outline-none;
