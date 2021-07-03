@@ -1,5 +1,5 @@
 <template>
-  <ProductLayout :products="products" :meta="meta" :sort="sort" :kind="kind">
+  <ProductLayout v-if="!isProduct" :products="products" :meta="meta" :sort="sort" :kind="kind">
     <template #headerTitle>
       {{subcategory.title}}{{$route.query.localities ? ', ' + subcategory.localities.find(i => i.id === $route.query.localities).title : ''}}
     </template>
@@ -33,6 +33,7 @@
       />
     </template>
   </ProductLayout>
+  <ProductPage v-else :product="product" :kind="kind" :products="products"/>
 </template>
 
 <script lang="ts">
@@ -45,45 +46,75 @@
       watchQuery: true,
 
       data: () => ({
+        isProduct: true,
         kind: {} as IKind,
         subcategory: {} as any,
+        product: {} as any,
         products: [] as Array<any>,
-        meta: {} as any,
+        meta: {
+          page: {}
+        } as any,
         sort: ''
       }),
 
-      async asyncData({ params, $api, query }) {
-        const kind = await $api.getKind(params.slug, {
-          include: 'activeSubcategories,activeSubcategories.activeLocalities'
-        });
+      async asyncData({ params, $api, query, store }) {
+        if (!Number(params.value)) {
+          const kind = await $api.getKind(params.slug, {
+            include: 'activeSubcategories,activeSubcategories.activeLocalities'
+          });
 
-        const subcategory = await kind.activeSubcategories.find((s: any) => s.slug === params.value);
-        subcategory.localities = await subcategory.activeLocalities;
+          const subcategory = await kind.activeSubcategories.find((s: any) => s.slug === params.value);
+          subcategory.localities = await subcategory.activeLocalities;
 
-        const {products, meta} = await $api.getProducts({
-          include: 'preview,kind',
+          const {products, meta} = await $api.getProducts({
+            include: 'preview,kind,subcategory',
+            query: {
+              page: {
+                size: 20,
+                number: query.page
+              },
+              sort: query.sort,
+              filter: {
+                kind: params.slug,
+                subcategory: params.value,
+                locality: query.localities,
+                price: query.price,
+                sex: query.sex
+              }
+            }
+          });
+
+          return {
+            isProduct: false,
+            kind,
+            subcategory,
+            products,
+            meta,
+            sort: query.sort
+          }
+        }
+
+        const product = await $api.getProduct(params.value, 'preview,images,kind,subcategory,locality,morphs.gene,morphs.trait,morphs.trait.traitGroup,shop,age');
+        const kind = await store.getters["core/activeKind"](params.slug)
+        const {products} = await $api.getProducts({
+          include: 'preview,kind,subcategory',
           query: {
+            sort: 'random',
             page: {
-              size: 20,
-              number: query.page
+              size: 5
             },
-            sort: query.sort,
             filter: {
-              kind: params.slug,
-              subcategory: params.value,
-              locality: query.localities,
-              price: query.price,
-              sex: query.sex
+              kind: kind.slug,
+              shop: product.shop.id
             }
           }
         });
 
         return {
+          product,
           kind,
-          subcategory,
           products,
-          meta,
-          sort: query.sort
+          isProduct: true
         }
       }
     });
