@@ -1,5 +1,18 @@
 <template>
-  <ProductLayout :products="products" :meta="meta" :sort="sort" :kind="kind">
+  <div class="container"  v-if="isTableView">
+    <div class="md:py-8 py-4">
+      <div class="flex md:flex-row flex-col md:items-center justify-between mb-8">
+        <div class="flex items-center">
+          <h1 class="text-3xl font-bold mr-1">
+            {{kind.titleRus}}
+          </h1>
+        </div>
+        <span class="link cursor-pointer text-sm" @click.prevent="() => {setTableView(false); $router.go(0)}">В новый дизайн</span>
+      </div>
+    </div>
+    <MorphsTable :tableMorphs="tableMorphs" :kind="kind" :isModal="false"/>
+  </div>
+  <ProductLayout v-else :products="products" :meta="meta" :sort="sort" :kind="kind">
     <template #headerTitle>
       {{kind.titleRus}}
     </template>
@@ -34,12 +47,17 @@
     import {IKind} from '~/types';
     import qs from "qs";
     import {withPopper} from "~/utils";
+    import {RootState} from "~/store";
+    import {mapMutations} from "vuex";
+    import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
 
     export default Vue.extend({
 
       watchQuery: true,
 
       data: () => ({
+        tableMorphs: [],
+        isTableView: false,
         sortOptions: [{label: 'Сначала дешевле', value: 'price'}, {label: 'Сначала дороже', value: '-price'}],
         kind: {} as IKind,
         products: [] as Array<any>,
@@ -48,40 +66,59 @@
       }),
 
       methods: {
-        withPopper
+        withPopper,
+        ...mapMutations({
+          setTableView: `core/${SET_TABLE_CATEGORY_VIEW}`
+        }),
       },
 
-      async asyncData({ params, query, $api, route }) {
+      async asyncData({ params, query, $api, route, store }) {
         const kind = await $api.getKind(params.slug, {
           include: 'activeSubcategories',
         });
 
-        const {products, meta} = await $api.getProducts({
-          include: 'preview,kind',
-          query: {
-            page: {
-              size: 20,
-              number: query.page
-            },
-            sort: query.sort,
-            filter: {
-              kind: params.slug,
-              price: query.price,
-              sex: query.sex,
-              morphs: qs.parse(route.fullPath.replace(route.path, '').replace('?', '')).morphs,
-              morph: {
-                gene: query.gene,
-                trait: query.trait
+        const isTableView = (store.state as RootState).core.tableCategoryView && (!query.gene || !query.trait)
+
+
+
+        if (!isTableView) {
+          const {products, meta} = await $api.getProducts({
+            include: 'preview,kind,subcategory',
+            query: {
+              page: {
+                size: 20,
+                number: query.page
+              },
+              sort: query.sort,
+              filter: {
+                kind: params.slug,
+                price: query.price,
+                sex: query.sex,
+                morphs: qs.parse(route.fullPath.replace(route.path, '').replace('?', '')).morphs,
+                morph: {
+                  gene: query.gene,
+                  trait: query.trait
+                }
               }
             }
-          }
-        });
+          });
 
-        return {
-          kind,
-          products,
-          meta,
-          sort: query.sort
+          return {
+            kind,
+            products,
+            meta,
+            isTableView,
+            sort: query.sort
+          }
+        } else {
+          const tableMorphs = await $api.getKindTable(kind.id);
+
+          return {
+            kind,
+            isTableView,
+            tableMorphs,
+            sort: query.sort
+          }
         }
       }
     });
