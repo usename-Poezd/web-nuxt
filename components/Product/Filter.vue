@@ -144,12 +144,23 @@
       }
     },
 
-    props: [
-      'subcategory',
-      'kind',
-      'maxPrice',
-      'minPrice',
-      'morphs'
-    ]
+    props: {
+      subcategory: {
+        type: Object
+      },
+      kind: {
+        type: Object
+      },
+      maxPrice: {
+        type: Number
+      },
+      minPrice: {
+        type: Number
+      },
+      morphs: {
+        type: Array,
+        default: () => []
+      },
+    }
   });
 </script>
