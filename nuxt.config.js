@@ -37,6 +37,10 @@ export default {
       ssr: false
     },
     {
+      src: '~/plugins/vue-awesome-swiper',
+      ssr: false
+    },
+    {
       src: '~/plugins/vue-js-toggle-button.ts',
       ssr: false
     },
