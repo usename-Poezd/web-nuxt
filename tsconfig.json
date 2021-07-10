@@ -29,7 +29,8 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@types/node",
-      "@nuxtjs/device"
+      "@nuxtjs/device",
+      "@nuxtjs/firebase"
     ]
   },
   "exclude": [
