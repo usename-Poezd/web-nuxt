@@ -181,14 +181,15 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+import Vue, {PropType} from 'vue';
   import {stringify} from "qs";
+import {IKind} from "~/types";
 
   export default Vue.extend({
     props: {
       kind: {
-        type: Object,
-        default: () => ({})
+        type: Object as PropType<IKind>,
+        default: (): IKind => ({} as IKind)
       },
       isModal: {
         type: Boolean,

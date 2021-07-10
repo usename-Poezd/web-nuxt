@@ -43,8 +43,8 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {mapGetters} from 'vuex';
+import Vue, {PropType} from 'vue';
+import {mapState} from 'vuex';
   import _ from "lodash";
   import {IKind, IMorph} from "~/types";
   import {formatMorph, formatMorphClass, withPopper} from "~/utils";
@@ -65,7 +65,7 @@
     },
 
     computed: {
-      ...mapGetters('core', ['kinds'])
+      ...mapState('core', ['kinds'])
     },
 
     methods: {
@@ -111,7 +111,7 @@
 
     props: {
       kind: String,
-      morphs: Array as () => Array<IMorph>
+      morphs: Array as PropType<Array<IMorph>>
     }
   });
 </script>
