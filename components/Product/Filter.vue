@@ -77,7 +77,7 @@
       <div class="mb-5">
         <div class="font-bold mb-3">Пол:</div>
         <div class="mb-1">
-          <FilterCheckbox :value="value" query="sex" :key="`sex-${idx}`" v-for="(value, idx) in sex"/>
+          <FilterCheckbox v-for="(value, idx) in sex" :value="value" query="sex" :key="`sex-${idx}`"/>
         </div>
       </div>
       <div class="mb-5">
@@ -91,9 +91,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+import Vue, {PropType} from 'vue';
   import _ from "lodash";
-  import {IMorph} from "~/types";
+import {IKind, IMorph, ISubcategory} from "~/types";
   import qs from 'qs';
 
   export default Vue.extend({
@@ -146,10 +146,10 @@
 
     props: {
       subcategory: {
-        type: Object
+        type: Object as PropType<ISubcategory>
       },
       kind: {
-        type: Object
+        type: Object as PropType<IKind>
       },
       maxPrice: {
         type: Number
@@ -158,7 +158,7 @@
         type: Number
       },
       morphs: {
-        type: Array,
+        type: Array as PropType<Array<IMorph>>,
         default: () => []
       },
     }
