@@ -209,7 +209,7 @@
               >
               <div class="mt-1">
                 <div class="text-red-500" v-for="error in errors">{{error}}</div>
-                <div class="text-red-500" v-for="error in serverErrors.company_name">{{error}}</div>
+                <div class="text-red-500" v-for="error in serverErrors.companyName">{{error}}</div>
               </div>
             </ValidationProvider>
           </div>
@@ -299,6 +299,106 @@
             </label>
           </div>
         </div>
+        <div class="flex md:flex-row flex-col mb-4">
+          <div class="md:w-2/12 w-full">
+            <label for="website" class="text-gray-800 font-semibold">Сайт</label>
+          </div>
+          <div class="md:w-6/12 w-full flex flex-col">
+            <ValidationProvider name="сайт" v-slot="{ errors }">
+              <input
+                id="website"
+                name="website"
+                v-model="formValues.website"
+                type="text"
+                class="forms-input w-full"
+              >
+              <div class="mt-1">
+                <div class="text-red-500" v-for="error in errors">{{error}}</div>
+                <div class="text-red-500" v-for="error in serverErrors.website">{{error}}</div>
+              </div>
+            </ValidationProvider>
+          </div>
+        </div>
+        <div class="flex md:flex-row flex-col mb-4">
+          <div class="md:w-2/12 w-full">
+            <label for="vk" class="text-gray-800 font-semibold">Вконтакте</label>
+          </div>
+          <div class="md:w-6/12 w-full flex flex-col">
+            <ValidationProvider name="вконтакте" rules="required" v-slot="{ errors }">
+              <input
+                id="vk"
+                name="vk"
+                v-model="formValues.vk"
+                type="text"
+                class="forms-input w-full"
+              >
+              <div class="mt-1">
+                <div class="text-red-500" v-for="error in errors">{{error}}</div>
+                <div class="text-red-500" v-for="error in serverErrors.vk">{{error}}</div>
+              </div>
+            </ValidationProvider>
+          </div>
+        </div>
+        <div class="flex md:flex-row flex-col mb-4">
+          <div class="md:w-2/12 w-full">
+            <label for="facebook" class="text-gray-800 font-semibold">Facebook</label>
+          </div>
+          <div class="md:w-6/12 w-full flex flex-col">
+            <ValidationProvider name="facebook" v-slot="{ errors }">
+              <input
+                id="facebook"
+                name="facebook"
+                v-model="formValues.facebook"
+                type="text"
+                class="forms-input w-full"
+              >
+              <div class="mt-1">
+                <div class="text-red-500" v-for="error in errors">{{error}}</div>
+                <div class="text-red-500" v-for="error in serverErrors.facebook">{{error}}</div>
+              </div>
+            </ValidationProvider>
+          </div>
+        </div>
+        <div class="flex md:flex-row flex-col mb-4">
+          <div class="md:w-2/12 w-full">
+            <label for="facebook" class="text-gray-800 font-semibold">Instagram</label>
+          </div>
+          <div class="md:w-6/12 w-full flex flex-col">
+            <ValidationProvider name="instagram" v-slot="{ errors }">
+              <input
+                id="instagram"
+                name="instagram"
+                v-model="formValues.instagram"
+                type="text"
+                class="forms-input w-full"
+              >
+              <div class="mt-1">
+                <div class="text-red-500" v-for="error in errors">{{error}}</div>
+                <div class="text-red-500" v-for="error in serverErrors.instagram">{{error}}</div>
+              </div>
+            </ValidationProvider>
+          </div>
+        </div>
+        <div class="flex md:flex-row flex-col mb-4">
+          <div class="md:w-2/12 w-full">
+            <label for="facebook" class="text-gray-800 font-semibold">YouTube</label>
+          </div>
+          <div class="md:w-6/12 w-full flex flex-col">
+            <ValidationProvider name="YouTube" v-slot="{ errors }">
+              <input
+                id="youtube"
+                name="youtube"
+                v-model="formValues.youtube"
+                type="text"
+                class="forms-input w-full"
+              >
+              <div class="mt-1">
+                <div class="text-red-500" v-for="error in errors">{{error}}</div>
+                <div class="text-red-500" v-for="error in serverErrors.youtube">{{error}}</div>
+              </div>
+            </ValidationProvider>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -346,9 +446,15 @@ export default Vue.extend({
     serverErrors: {
       name: [],
       surname: [],
-      company_name: [],
+      companyName: [],
       policity: [],
-      location: []
+      location: [],
+
+      website: [],
+      vk: [],
+      facebook: [],
+      instagram: [],
+      youtube: [],
     }
   }),
 
@@ -366,7 +472,13 @@ export default Vue.extend({
         policity: user.policity,
         localDelivery: user.localDelivery,
         regionalDelivery: user.regionalDelivery,
-        countrywideDelivery: user.countrywideDelivery
+        countrywideDelivery: user.countrywideDelivery,
+
+        website: user.website,
+        vk: user.vk,
+        facebook: user.facebook,
+        instagram: user.instagram,
+        youtube: user.youtube
       }
     }
   },
@@ -387,7 +499,7 @@ export default Vue.extend({
             id: this.user.id,
             logoImg: id
           })
-            .then((data:any) => {
+            .then((data) => {
               this.setUser(data);
               this.logoImgLoading = false;
             })
@@ -410,7 +522,7 @@ export default Vue.extend({
         id: this.user.id,
         ...this.formValues
       })
-        .then((data: any) => {
+        .then((data) => {
           this.setUser(data);
           this.loading = false;
           this.success = true
@@ -418,7 +530,22 @@ export default Vue.extend({
         })
         .catch((err) => {
           if (err.response.status === 422) {
-            this.serverErrors = err.response.data.errors;
+            const errors = err.response.data.errors;
+
+            this.serverErrors = {
+              name: errors.filter((item: any) => item.source.pointer === "/data/attributes/name").map((item: any) => item.detail),
+              surname: errors.filter((item: any) => item.source.pointer === "/data/attributes/surname").map((item: any) => item.detail),
+              location: errors.filter((item: any) => item.source.pointer === "/data/attributes/location").map((item: any) => item.detail),
+              companyName: errors.filter((item: any) => item.source.pointer === "/data/attributes/companyName").map((item: any) => item.detail),
+              policity: errors.filter((item: any) => item.source.pointer === "/data/attributes/policity").map((item: any) => item.detail),
+
+              website: errors.filter((item: any) => item.source.pointer === "/data/attributes/website").map((item: any) => item.detail),
+              vk: errors.filter((item: any) => item.source.pointer === "/data/attributes/vk").map((item: any) => item.detail),
+              facebook: errors.filter((item: any) => item.source.pointer === "/data/attributes/facebook").map((item: any) => item.detail),
+              instagram: errors.filter((item: any) => item.source.pointer === "/data/attributes/instagram").map((item: any) => item.detail),
+              youtube: errors.filter((item: any) => item.source.pointer === "/data/attributes/youtube").map((item: any) => item.detail),
+            };
+
             this.loading = false;
             this.error = true;
             window.scrollTo({ top: 0, behavior: 'smooth' })

@@ -85,6 +85,8 @@
 import Vue from 'vue'
 import {mapState} from "vuex";
 import {withPopper} from "~/utils";
+import {IProduct} from "~/types";
+import {MetaType} from "~/services";
 
 export default Vue.extend({
   middleware: ['auth'],
@@ -93,7 +95,9 @@ export default Vue.extend({
   watchQuery: ['kind', 'page', 'sort'],
 
   data: () => ({
-    q: ''
+    q: '',
+    products: [] as Array<IProduct>,
+    meta: {} as MetaType
   }),
 
   computed: {

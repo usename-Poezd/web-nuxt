@@ -8,7 +8,7 @@
           <NuxtLink to="/profile/settings" class="link text-sm">Редактировать профиль</NuxtLink>
         </div>
         <div class="flex flex-wrap">
-          <div class="w-6/12">
+          <div class="lg:w-6/12 w-full">
             <ul>
               <li class="flex items-center">
                 <p class="font-semibold mr-1">Имя:</p>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div class="w-6/12 shadow rounded-lg p-4">
+      <div v-if="user.isBreeder" class="lg:w-6/12 w-full shadow rounded-lg p-4">
         <div class="mb-5">
           <h3 class="text-2xl font-semibold leading-4">Магазин</h3>
           <NuxtLink to="/profile/settings" class="link text-sm">Редактировать магазин</NuxtLink>

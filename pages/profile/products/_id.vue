@@ -322,7 +322,7 @@
         </div>
         <div class="flex md:flex-row flex-col mb-4">
           <div class="md:w-2/12 w-full">
-            <label for="price" class="text-gray-800 font-semibold">Дата рождения</label>
+            <label for="cb" class="text-gray-800 font-semibold">Дата рождения</label>
           </div>
           <div class="md:w-6/12 w-full flex md:flex-nowrap flex-wrap">
             <client-only>
@@ -460,7 +460,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import {mapActions, mapState} from "vuex";
-import {IKind, IMorph} from "~/types";
+import {IKind, IMorph, IProduct, ISubcategory} from "~/types";
 import moment from "moment";
 import {withPopper} from "~/utils";
 import {diffArrays} from "diff";
@@ -471,14 +471,14 @@ export default Vue.extend({
 
   data() {
     return {
-      product: {} as any,
+      product: {} as IProduct,
       formValues: {
         askPrice: false,
         isActive: true,
         name: '',
         article: '',
-        description: null,
-        price: null,
+        description: null as string|null,
+        price: null as unknown as number|undefined,
         currency: 'RUB',
         age: '1',
         locality: '',
@@ -494,7 +494,7 @@ export default Vue.extend({
       morphs: [] as Array<IMorph>,
 
       kind: null as unknown as IKind,
-      subcategory: null as any,
+      subcategory: null as unknown as ISubcategory,
       uploaded: false,
       changedMorphs: [] as Array<IMorph>,
       loading: false,
@@ -562,7 +562,7 @@ export default Vue.extend({
       this.serverErrors = {};
 
       this.$api.updateProduct(product, 'preview,kind,subcategory,morphs.gene,morphs.trait,images,age,locality')
-        .then((product: any) => {
+        .then((product) => {
           this.loading = false;
           this.success = true
           window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -574,14 +574,14 @@ export default Vue.extend({
             name: product.name,
             article: product.article,
             description: product.description,
-            price: product.price.find((i: any) => i.currency === product.currency).amount,
+            price: product.price.find((i: any) => i.currency === product.currency)?.amount,
             currency: product.currency,
             age: product.age?.id,
             locality: product.locality?.id || '',
             cb: moment(product.cb).toDate() as Date,
             sex:  product.group !== null ? 'group' : product.sex as boolean|string|null,
-            groupMale: product.group?.male || '',
-            groupFemale: product.group?.female || '',
+            groupMale: product.group?.male || 0,
+            groupFemale: product.group?.female || 0,
           };
           this.morphs = [...product.morphs];
 
@@ -591,7 +591,15 @@ export default Vue.extend({
         })
         .catch((err) => {
           if (err.response.status === 422) {
-            this.serverErrors = err.response.data.errors;
+            const errors = err.response.data.errors;
+            this.serverErrors = {
+              name: errors.filter((item: any) => item.source.pointer === "/data/attributes/name").map((item: any) => item.detail),
+              article: errors.filter((item: any) => item.source.pointer === "/data/attributes/article").map((item: any) => item.detail),
+              price: errors.filter((item: any) => item.source.pointer === "/data/attributes/price").map((item: any) => item.detail),
+              currency: errors.filter((item: any) => item.source.pointer === "/data/attributes/currency").map((item: any) => item.detail),
+              sex: errors.filter((item: any) => item.source.pointer === "/data/attributes/sex").map((item: any) => item.detail),
+              cb: errors.filter((item: any) => item.source.pointer === "/data/attributes/cb").map((item: any) => item.detail)
+            };
           }
         });
     },
@@ -630,7 +638,7 @@ export default Vue.extend({
         name: product.name,
         article: product.article,
         description: product.description,
-        price: product.price.find((i: any) => i.currency === product.currency).amount,
+        price: product.price.find(i => i.currency === product.currency)?.amount,
         currency: product.currency,
         age: product.age?.id,
         locality: product.locality?.id || '',
