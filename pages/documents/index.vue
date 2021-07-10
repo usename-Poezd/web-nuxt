@@ -3,7 +3,7 @@
     <div class="md:w-3/12 w-full md:mr-4 md:border-r py-3">
       <h1 class="text-2xl font-bold md:hidden mb-4">Юридические документы</h1>
       <ul>
-        <li v-for="document in documents" :key="`document-${document.id}`">
+        <li v-for="document in documents" :key="`document-${document.label}`">
           <NuxtLink
             :to="`/documents/${document.label}`"
             class="flex items-center md:px-4 py-4 transition hover:bg-gray-100 rounded-l-md"
@@ -25,10 +25,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {IDocument} from "~/types";
 
 export default Vue.extend({
   data: () => ({
-    documents: []
+    documents: [] as Array<IDocument>
   }),
 
   async asyncData({$api}) {

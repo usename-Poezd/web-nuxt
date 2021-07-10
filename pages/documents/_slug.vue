@@ -2,13 +2,13 @@
   <div class="container md:flex">
     <div class="w-3/12 md:block hidden mr-4 border-r py-3">
       <ul>
-        <li v-for="sideDocument in documents" :key="`document-${sideDocument.id}`">
+        <li v-for="sideDocument in documents" :key="`document-${sideDocument.label}`">
           <NuxtLink
             :to="`/documents/${sideDocument.label}`"
-            :class="`relative block px-4 py-4 transition hover:bg-gray-100 rounded-l-md ${document.id === sideDocument.id && 'text-green-600'}`"
+            :class="`relative block px-4 py-4 transition hover:bg-gray-100 rounded-l-md ${document.label === sideDocument.label && 'text-green-600'}`"
           >
             {{ sideDocument.title }}
-            <span v-if="document.id === sideDocument.id" class="block h-full w-1 absolute top-0 right-0 bg-green-600"></span>
+            <span v-if="document.label === sideDocument.label" class="block h-full w-1 absolute top-0 right-0 bg-green-600"></span>
           </NuxtLink>
         </li>
       </ul>
@@ -28,11 +28,12 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {IDocument} from "~/types";
 
 export default Vue.extend({
   data: () => ({
-    documents: [],
-    document: {}
+    documents: [] as Array<IDocument>,
+    document: {} as IDocument
   }),
 
   async asyncData({params, $api}) {
