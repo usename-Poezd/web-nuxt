@@ -8,6 +8,7 @@
                   slidesPerView: 1,
                   slidesPerGroup: 1,
                   spaceBetween: 10,
+                   grabCursor: true,
                 }"
         ref="modalMain"
       >
@@ -31,6 +32,7 @@
                   slidesPerView: 3,
                   slidesPerGroup: 1,
                   spaceBetween: 10,
+                  grabCursor: true,
                  }"
           ref="modalThumbs"
         >
@@ -49,10 +51,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, {PropType} from "vue";
+import {IProduct} from "~/types";
 
 export default Vue.extend({
-  props: ['product'],
+  props: {
+    product: Object as PropType<IProduct>
+  },
 
   mounted() {
     this.$nextTick(() => {
