@@ -20,14 +20,16 @@
     import Vue from "vue";
     import qs from "qs";
     import {withPopper} from "~/utils";
+    import {IProduct} from "~/types";
+    import {MetaType} from "~/services";
 
     export default Vue.extend({
 
       watchQuery: true,
 
       data: () => ({
-        products: [] as Array<any>,
-        meta: {} as any,
+        products: [] as Array<IProduct>,
+        meta: {} as MetaType,
         sort: ''
       }),
 

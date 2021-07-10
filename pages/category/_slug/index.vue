@@ -44,12 +44,14 @@
 
 <script lang="ts">
     import Vue from "vue";
-    import {IKind} from '~/types';
+    import {IKind, IProduct} from '~/types';
     import qs from "qs";
     import {withPopper} from "~/utils";
     import {RootState} from "~/store";
     import {mapMutations} from "vuex";
     import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
+    import {MetaType} from "~/services";
+    import {SEO_MUTATIONS} from "~/store/seo";
 
     export default Vue.extend({
 
@@ -60,8 +62,8 @@
         isTableView: false,
         sortOptions: [{label: 'Сначала дешевле', value: 'price'}, {label: 'Сначала дороже', value: '-price'}],
         kind: {} as IKind,
-        products: [] as Array<any>,
-        meta: {} as any,
+        products: [] as Array<IProduct>,
+        meta: {} as MetaType,
         sort: ''
       }),
 
@@ -77,13 +79,16 @@
           include: 'activeSubcategories',
         });
 
-        const isTableView = (store.state as RootState).core.tableCategoryView && (!query.gene || !query.trait)
+        const isTableView = (store.state as RootState).core.tableCategoryView && (!query.gene || !query.trait || !query.shop)
 
 
 
         if (!isTableView) {
+          const seoOption = kind.seo.kind;
+          store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, seoOption);
+
           const {products, meta} = await $api.getProducts({
-            include: 'preview,kind,subcategory',
+            include: 'preview,kind,subcategory,shop',
             query: {
               page: {
                 size: 20,
@@ -91,6 +96,7 @@
               },
               sort: query.sort,
               filter: {
+                shop: query.shop,
                 kind: params.slug,
                 price: query.price,
                 sex: query.sex,
@@ -112,6 +118,8 @@
           }
         } else {
           const tableMorphs = await $api.getKindTable(kind.id);
+          const seoOption = kind.seo.morphs;
+          store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, seoOption);
 
           return {
             kind,
@@ -120,6 +128,25 @@
             sort: query.sort
           }
         }
-      }
+      },
+
+      head() {
+        const {option} = this.$store.state.seo;
+        return {
+          title: option.title,
+          meta: [
+            {
+              hid: 'description',
+              name: 'description',
+              content: option.description
+            },
+            {
+              hid: 'keywords',
+              name: 'keywords',
+              content: option.keywords
+            }
+          ]
+        }
+      },
     });
 </script>

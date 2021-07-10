@@ -4,15 +4,16 @@
 
 <script lang="ts">
     import Vue from "vue";
-    import {IKind} from "~/types";
+    import {IKind, IProduct, ISubcategory} from "~/types";
+    import {SEO_MUTATIONS} from "~/store/seo";
 
     export default Vue.extend({
 
       data: () => ({
         kind: {} as IKind,
-        subcategory: {} as any,
-        product: {} as any,
-        products: [] as Array<any>
+        subcategory: {} as ISubcategory,
+        product: {} as IProduct,
+        products: [] as Array<IProduct>
       }),
 
 
@@ -28,6 +29,7 @@
               size: 5
             },
             filter: {
+              exclude: product.id,
               kind: kind.slug,
               subcategory: subcategory.slug,
               shop: product.shop.id
@@ -35,11 +37,32 @@
           }
         });
 
+        store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, product.seo);
+
         return {
           product,
           kind,
           subcategory,
           products
+        }
+      },
+      head() {
+        const {option} = this.$store.state.seo;
+
+        return {
+          title: option.title,
+          meta: [
+            {
+              hid: 'description',
+              name: 'description',
+              content: option.description
+            },
+            {
+              hid: 'keywords',
+              name: 'keywords',
+              content: option.keywords
+            }
+          ]
         }
       }
     });

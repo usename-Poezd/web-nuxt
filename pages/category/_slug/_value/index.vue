@@ -38,8 +38,9 @@
 
 <script lang="ts">
     import Vue from "vue";
-    import {IKind} from "~/types";
-    import {withPopper} from "~/utils";
+    import {IKind, IProduct, ISubcategory} from "~/types";
+    import {MetaType} from "~/services";
+    import {SEO_MUTATIONS} from "~/store/seo";
 
     export default Vue.extend({
 
@@ -48,12 +49,12 @@
       data: () => ({
         isProduct: true,
         kind: {} as IKind,
-        subcategory: {} as any,
-        product: {} as any,
-        products: [] as Array<any>,
+        subcategory: {} as ISubcategory,
+        product: {} as IProduct,
+        products: [] as Array<IProduct>,
         meta: {
           page: {}
-        } as any,
+        } as MetaType,
         sort: ''
       }),
 
@@ -63,11 +64,11 @@
             include: 'activeSubcategories,activeSubcategories.activeLocalities'
           });
 
-          const subcategory = await kind.activeSubcategories.find((s: any) => s.slug === params.value);
-          subcategory.localities = await subcategory.activeLocalities;
+          const subcategory = await (kind.activeSubcategories.find((s: any) => s.slug === params.value) as ISubcategory);
+          subcategory.localities = subcategory.activeLocalities;
 
           const {products, meta} = await $api.getProducts({
-            include: 'preview,kind,subcategory',
+            include: 'preview,kind,subcategory,shop',
             query: {
               page: {
                 size: 20,
@@ -104,11 +105,14 @@
               size: 5
             },
             filter: {
+              exclude: product.id,
               kind: kind.slug,
               shop: product.shop.id
             }
           }
         });
+
+        store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, product.seo);
 
         return {
           product,
@@ -116,6 +120,36 @@
           products,
           isProduct: true
         }
-      }
+      },
+
+      head() {
+        if (this.isProduct) {
+          const {option} = this.$store.state.seo;
+
+          return {
+            title: option.title,
+            meta: [
+              {
+                hid: 'description',
+                name: 'description',
+                content: option.description
+              },
+              {
+                hid: 'keywords',
+                name: 'keywords',
+                content: option.keywords
+              }
+            ]
+          }
+        } else {
+          return {
+            title: `${this.kind.titleRus} (${this.kind.titleEng}), ${this.subcategory.title} - Breeders Zone`,
+            meta: [
+              // @TODO: make seo for subcategories
+            ]
+          }
+        }
+
+      },
     });
 </script>
