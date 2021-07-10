@@ -1,3 +1,5 @@
+import {ISubcategory} from "~/types/subcategory";
+
 export interface IKind {
   id: number,
   active: boolean,
@@ -7,6 +9,8 @@ export interface IKind {
   onlyText: boolean,
   group: string,
 
-  activeSubcategories: Array<any>
-  subcategories: Array<any>
+  logoSquare: string,
+
+  activeSubcategories: Array<ISubcategory>
+  subcategories: Array<ISubcategory>
 }
