@@ -110,7 +110,7 @@
 
             <div class="mt-1">
               <div class="text-red-500" v-for="error in errors">{{error}}</div>
-              <div class="text-red-500" v-for="error in serverErrors.title">{{error}}</div>
+              <div class="text-red-500" v-for="error in serverErrors.tmpImages">{{error}}</div>
             </div>
           </ValidationProvider>
         </div>
@@ -427,7 +427,12 @@ import {RootState} from "~/store";
           })
           .catch((err) => {
             if (err.response.status === 422) {
-              this.serverErrors = err.response.data.errors;
+              const errors = err.response.data.errors;
+              this.serverErrors = {
+                tmpImages: errors.filter((item: any) => item.source.pointer === "/data/attributes/tmpImages").map((item: any) => item.detail),
+                title: errors.filter((item: any) => item.source.pointer === "/data/attributes/title").map((item: any) => item.detail),
+                cb: errors.filter((item: any) => item.source.pointer === "/data/attributes/cb").map((item: any) => item.detail)
+              };
 
               this.loading = false;
             }
