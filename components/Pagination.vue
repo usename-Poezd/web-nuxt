@@ -1,5 +1,5 @@
 <template>
-  <ul v-if="currentPage !== lastPage" class="flex items-center border-t mt-3">
+  <ul v-if="lastPage !== 1" class="flex items-center border-t mt-3">
     <li v-if="currentPage > 1">
       <NuxtLink
         :to="{
