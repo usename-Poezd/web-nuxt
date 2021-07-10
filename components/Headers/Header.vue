@@ -35,6 +35,18 @@
             <div class="font-semibold">Категории</div>
           </button>
           <ul class="flex items-center">
+            <li v-if="isAuthenticated && user">
+              <NuxtLink
+                to="/chat"
+                class="px-3 flex flex-col items-center justify-center transition hover:text-green-700"
+              >
+                <div class="relative">
+                  <div v-if="unreadChats" class="absolute -top-2 -right-3 bg-green-600 text-xs text-white font-semibold py-0.5 px-1.5 rounded-full">{{unreadChats}}</div>
+                  <FontAwesomeIcon icon="comments" class="text-2xl text-green-600"/>
+                  <div class="text-center text-xs font-semibold">Чат</div>
+                </div>
+              </NuxtLink>
+            </li>
             <li>
               <NuxtLink :to="isAuthenticated && user ? '/profile' : '/auth/login'" class="px-3 flex flex-col items-center justify-center transition hover:text-green-700">
                 <FontAwesomeIcon icon="user-alt" class="text-3xl text-green-600"/>
@@ -60,13 +72,15 @@
     }),
 
     computed: {
-      ...mapGetters('core', [
-        'activeKinds',
+      ...mapState('core', [
         'headerMenuShow'
+      ]),
+      ...mapGetters('core', [
+        'activeKinds'
       ]),
 
       ...mapState('auth', ['user']),
-      ...mapGetters('auth', ['isAuthenticated'])
+      ...mapGetters('auth', ['isAuthenticated', 'unreadChats'])
     },
 
     methods: {

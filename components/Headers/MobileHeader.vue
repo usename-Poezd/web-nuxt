@@ -14,10 +14,16 @@
       <FontAwesomeIcon icon="list" class="text-xl mr-2"/>
       <div class="text-center text-xs font-semibold">Категории</div>
     </NuxtLink>
-    <a href="" class="flex flex-col items-center w-full px-3 py-2 flex flex-col justify-center text-gray-400">
-      <FontAwesomeIcon icon="comments"/>
-      <div class="text-center text-xs font-semibold">Чат</div>
-    </a>
+    <NuxtLink
+      :to="isAuthenticated && user ? '/chat' : '/auth/login'"
+      :class="`flex flex-col items-center w-full px-3 py-2 flex flex-col justify-center ${$route.path.includes('/chat') ? 'text-green-600' : 'text-gray-400'}`"
+    >
+      <div class="relative">
+        <div v-if="unreadChats" class="absolute -top-2 -right-3 bg-green-600 text-xs text-white font-semibold py-0.5 px-1.5 rounded-full">{{unreadChats}}</div>
+        <FontAwesomeIcon icon="comments"/>
+        <div class="text-center text-xs font-semibold">Чат</div>
+      </div>
+    </NuxtLink>
     <NuxtLink
       :to="isAuthenticated && user ? '/profile' : '/auth/login'"
       :class="`flex flex-col items-center w-full px-3 py-2 flex flex-col justify-center ${$route.path.includes('/profile') ? 'text-green-600' : 'text-gray-400'}`"
@@ -36,8 +42,8 @@
     name: "MobileHeader",
 
     computed: {
+      ...mapGetters('auth', ['isAuthenticated', 'unreadChats']),
       ...mapState('auth', ['user']),
-      ...mapGetters('auth', ['isAuthenticated'])
     },
   });
 </script>

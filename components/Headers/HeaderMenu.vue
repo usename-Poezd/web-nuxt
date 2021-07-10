@@ -54,16 +54,16 @@
       q: ''
     }),
 
+    methods: {
+      ...mapActions('core', [
+        'toggleHeaderMenu'
+      ])
+    },
+
     computed: {
       ...mapGetters('core', [
         'activeKinds'
       ])
     },
-
-    methods: {
-      ...mapActions('core', [
-        'toggleHeaderMenu'
-      ])
-    }
   });
 </script>
