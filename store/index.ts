@@ -1,6 +1,7 @@
 import {ActionTree, Store} from 'vuex'
 import {AuthState} from "~/store/auth";
 import {CoreState} from "~/store/core";
+import {SeoState} from "~/store/seo";
 
 export const state = () => ({
 
@@ -8,11 +9,12 @@ export const state = () => ({
 
 export type RootState = {
   auth: AuthState
-  core: CoreState
+  core: CoreState,
+  seo: SeoState
 };
 
 export const actions: ActionTree<RootState, RootState> = {
-  async nuxtServerInit({ state, dispatch }) {
+  async nuxtServerInit({ state, dispatch } ) {
     await dispatch('core/load');
 
     const { access_token, refresh_token } = state.auth;

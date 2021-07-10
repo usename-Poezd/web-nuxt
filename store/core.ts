@@ -21,10 +21,8 @@ export const state = (): CoreState => ({
 });
 
 export const getters: GetterTree<CoreState, CoreState> = {
-  activeKinds: (state) => state.kinds.filter( k => k.active),
-  activeKind: (state) => (slug: string) => state.kinds.find( k => k.slug === slug),
-  kinds: (state) => state.kinds,
-  headerMenuShow: state => state.headerMenuShow
+  activeKinds: (state): Array<IKind> => state.kinds.filter( k => k.active),
+  activeKind: (state) => (slug: string): IKind|undefined => state.kinds.find( k => k.slug === slug),
 };
 
 export const mutations: MutationTree<CoreState> = {

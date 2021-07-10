@@ -1,27 +1,34 @@
 import {MutationTree, ActionTree, GetterTree} from "vuex";
+import {IUser} from "~/types";
+import {getFirebaseToken, setFirebaseToken} from "~/utils";
 
 export const AUTH_MUTATIONS = {
   SET_USER: 'SET_USER',
   SET_PAYLOAD: 'SET_PAYLOAD',
   LOGOUT: 'LOGOUT',
+  SET_USER_UNREAD_CHATS: 'SET_USER_UNREAD_CHATS',
 };
 
 export type AuthState = {
   access_token: string,
   refresh_token: string,
-  user: any,
+  user: IUser,
 }
 
 export const state = (): AuthState => ({
   access_token: '', // JWT access token
   refresh_token: '', // JWT refresh token,
-  user: null
+  user: null as unknown as IUser
 });
 
 export const mutations: MutationTree<AuthState> = {
   // store the logged in user in the state
   [AUTH_MUTATIONS.SET_USER] (state, user) {
-    state.user = {...user};
+    state.user = {
+      id: String(user.id),
+      ...user,
+      unreadChats: user.unreadChats || {}
+    };
   },
 
   // store new or updated token fields in the state
@@ -36,10 +43,17 @@ export const mutations: MutationTree<AuthState> = {
 
   // clear our the state, essentially logging out the user
   [AUTH_MUTATIONS.LOGOUT] (state) {
-    state.user = null;
+    state.user = null as unknown as IUser;
     state.access_token = '';
     state.refresh_token = '';
   },
+
+  [AUTH_MUTATIONS.SET_USER_UNREAD_CHATS] (state, chats) {
+    state.user.unreadChats = {
+      ...state.user.unreadChats,
+      ...chats
+    }
+  }
 };
 
 export const actions: ActionTree<AuthState, AuthState> = {
@@ -60,6 +74,29 @@ export const actions: ActionTree<AuthState, AuthState> = {
     // commit the user and tokens to the state
     commit(AUTH_MUTATIONS.SET_USER, user);
     commit(AUTH_MUTATIONS.SET_PAYLOAD, payload);
+
+    await setFirebaseToken(this.$api, payload.access_token)
+      .then(async () => {
+        await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+
+        const chatIds = Object.keys((await this.$fire.database.ref(`users/${user.id}`).get()).toJSON() as object);
+
+        chatIds.map((chatId: string) => {
+          this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {
+            const data = snapshot.val();
+
+            if (data.creator !== String(user.id) && !data.checked) {
+              commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+                [chatId]: true
+              });
+            } else {
+              commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+                [chatId]: false
+              });
+            }
+          })
+        })
+      });
   },
 
   // given the current refresh token, refresh the user's access token to prevent expiry
@@ -74,8 +111,27 @@ export const actions: ActionTree<AuthState, AuthState> = {
   },
 
   // logout the user
-  logout ({ commit, state }) {
-    commit(AUTH_MUTATIONS.LOGOUT)
+  async logout ({ commit, state }) {
+    const user = {...state.user};
+    commit(AUTH_MUTATIONS.LOGOUT);
+
+    const chatIds = Object.keys((await this.$fire.database.ref(`users/${user.id}`).get()).toJSON() as object);
+
+    chatIds.map((chatId: string) => {
+      this.$fire.database.ref(`chats/${chatId}/message`).off('value', (snapshot) => {
+        const data = snapshot.val();
+
+        if (data.creator !== String(user.id) && !data.checked) {
+          commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+            [chatId]: true
+          });
+        } else {
+          commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+            [chatId]: false
+          });
+        }
+      })
+    })
   },
 };
 
@@ -83,5 +139,9 @@ export const getters: GetterTree<AuthState, AuthState> = {
   // determine if the user is authenticated based on the presence of the access token
   isAuthenticated: (state) => {
     return !!state.access_token
+  },
+
+  unreadChats: (state) => {
+    return Object.keys(state.user.unreadChats).filter((chatId: string) => state.user.unreadChats[chatId]).length
   },
 };
