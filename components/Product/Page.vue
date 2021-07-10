@@ -68,6 +68,7 @@
                   slidesPerView: 3,
                   slidesPerGroup: 1,
                   spaceBetween: 10,
+                  grabCursor: true,
                  }"
                  ref="thumbs"
                >
@@ -255,6 +256,7 @@
           <div v-if="!product.askPrice" class="text-red-500 font-bold text-2xl mb-2">{{formatPrice()}}</div>
           <div v-else class="font-bold text-xl mb-2">Цена по запросу</div>
           <button
+            @click.prevent="send"
             class="w-full text-sm text-white font-bold rounded py-2 px-3 cursor-pointer duration-200 transition bg-green-600 hover:bg-green-700"
           >
             {{
@@ -376,6 +378,7 @@
           v-for="product in products"
           :key="'product-' + product.id"
           :product="product"
+          :truncateName="true"
         />
       </div>
     </div>
@@ -385,8 +388,9 @@
 <script lang="ts">
 import Vue, {PropType} from 'vue';
 import {RUB, getPrice, formatMorphClass, formatMorph, USD, EUR} from "~/utils";
-import {IKind} from "~/types";
+import {IKind, IProduct, ISubcategory} from "~/types";
 import moment from "moment";
+import ChatSend from "~/components/Chat/Send.vue";
 
   export default Vue.extend({
     data() {
@@ -413,6 +417,15 @@ import moment from "moment";
       getPrice,
       formatMorph,
       formatMorphClass,
+
+      send() {
+        this.$modal.show(ChatSend, {product: this.product}, {
+          adaptive: true,
+          scrollable: true,
+          height: 'auto'
+        })
+      },
+
       openModal() {
         this.$modal.show('productModal');
       },
@@ -430,10 +443,10 @@ import moment from "moment";
     },
 
     props: {
-      product: Object as PropType<any>,
-      products: Array as PropType<Array<any>>,
+      product: Object as PropType<IProduct>,
+      products: Array as PropType<Array<IProduct>>,
       kind: Object as PropType<IKind>,
-      subcategory: Object as PropType<any>
+      subcategory: Object as PropType<ISubcategory>
     }
   });
 </script>
