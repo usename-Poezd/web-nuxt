@@ -1,4 +1,5 @@
 import {ISubcategory} from "~/types/subcategory";
+import {ISeoOption} from "~/types/seo-option";
 
 export interface IKind {
   id: number,
@@ -8,6 +9,11 @@ export interface IKind {
   titleEng: string,
   onlyText: boolean,
   group: string,
+
+  seo: {
+    morphs: ISeoOption,
+    kind: ISeoOption
+  }
 
   logoSquare: string,
 

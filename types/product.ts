@@ -3,6 +3,7 @@ import {IMorph} from "~/types/morphs";
 import {IUser} from "~/types/user";
 import {ISubcategory} from "~/types/subcategory";
 import {ILocality} from "~/types/locality";
+import {ISeoOption} from "~/types/seo-option";
 
 export interface IProduct {
   id: string,
@@ -37,7 +38,9 @@ export interface IProduct {
     title: string
   }
 
-  shop: IUser
+  shop: IUser,
+
+  seo: ISeoOption,
 
 
   kind: IKind,
