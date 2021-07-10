@@ -48,6 +48,7 @@
                 path: $route.path,
                 query: {
                   ...$route.query,
+                  page: 1,
                   sort: val ? val.value : ''
                 }
               })"
@@ -97,12 +98,13 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+import Vue, {PropType} from 'vue';
   import {withPopper} from "~/utils";
   import Table from "~/components/Morphs/Table.vue";
-  import {IKind} from "~/types";
+import {IKind, IProduct} from "~/types";
   import {mapMutations} from "vuex";
   import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
+import {MetaType} from "~/services";
 
   export default Vue.extend({
     data: () => ({
@@ -130,9 +132,9 @@
     },
 
     props: {
-      products: Array as () => Array<any>,
-      meta: Object,
-      kind: Object as () => IKind,
+      products: Array as PropType<Array<IProduct>>,
+      meta: Object as PropType<MetaType>,
+      kind: Object as PropType<IKind>,
       sort: String
     }
   });
