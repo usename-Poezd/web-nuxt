@@ -3,7 +3,7 @@
     <modals-container/>
     <Header/>
     <HeaderMenu :class="!headerMenuShow ? 'hidden' : ''"/>
-    <main :class="`container md:mt-16 mt-5 ${headerMenuShow ? 'hidden' : ''}`">
+    <main v-if="isAuthenticated && user" :class="`container md:mt-16 mt-5 ${headerMenuShow ? 'hidden' : ''}`">
       <div class="flex items-start flex-wrap">
         <div v-if="$route.path === '/profile' || !$device.isMobile" class="md:w-2/12 w-full md:mb-16 mb-5">
           <div class="mb-7 flex md:flex-col md:items-start items-center">
@@ -48,7 +48,7 @@
                 <FontAwesomeIcon v-if="$device.isMobile" icon="chevron-right" class="text-gray-500"/>
               </NuxtLink>
             </li>
-            <li>
+            <li v-if="user.isBreeder">
               <NuxtLink to="/profile/divorces" class="flex items-center justify-between md:pb-2 pb-4 text-gray-800 transition duration-200 hover:text-green-600">
                 <div class="flex items-center">
                   <span class="mr-1 w-6 text-center">
@@ -71,7 +71,7 @@
               </NuxtLink>
             </li>
             <li>
-              <div @click.prevent="() => {logout(); $router.push('/')}" class="flex items-center justify-between md:pb-2 pb-4 text-gray-800 transition duration-200 hover:text-green-600 cursor-pointer">
+              <div @click.prevent="() => {$router.push('/'); logout();}" class="flex items-center justify-between md:pb-2 pb-4 text-gray-800 transition duration-200 hover:text-green-600 cursor-pointer">
                 <div class="flex items-center">
                    <span class="mr-1 w-6 text-center">
                     <FontAwesomeIcon icon="sign-out-alt"/>
@@ -99,6 +99,7 @@ import {mapActions, mapGetters, mapMutations, mapState} from 'vuex';
 //@ts-ignore
 import UploadAvatar from "~/components/Upload/Avatar"
 import {AUTH_MUTATIONS} from "~/store/auth";
+import {getFirebaseToken, setFirebaseToken} from "~/utils";
 
 export default Vue.extend({
   middleware: ['auth'],
@@ -110,15 +111,43 @@ export default Vue.extend({
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapGetters('core', [
+    ...mapState('core', [
       'headerMenuShow'
-    ])
+    ]),
+
+    ...mapGetters('auth', ['isAuthenticated']),
+  },
+
+  mounted() {
+    setFirebaseToken(this.$api)
+      .then(async () => {
+        await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+
+        const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() as object);
+
+        chatIds.map((chatId: string) => {
+          this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {
+            const data = snapshot.val();
+
+            if (data.creator !== String(this.user.id) && !data.checked) {
+              this.setUserUnreadChats({
+                [chatId]: true
+              })
+            } else {
+              this.setUserUnreadChats({
+                [chatId]: false
+              })
+            }
+          })
+        })
+      })
   },
 
   methods: {
     ...mapActions('auth', ['logout']),
     ...mapMutations({
-      setUser: `auth/${AUTH_MUTATIONS.SET_USER}`
+      setUser: `auth/${AUTH_MUTATIONS.SET_USER}`,
+      setUserUnreadChats: `auth/${AUTH_MUTATIONS.SET_USER_UNREAD_CHATS}`
     }),
     updateProfileImg() {
       this.$modal.show(UploadAvatar, {
