@@ -115,7 +115,7 @@ const modAxios = (axios: NuxtAxiosInstance, store: Store<RootState>, redirect: a
   });
 }
 
-const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
+const apiPlugin: Plugin = ({$axios, store, redirect, $config}, inject) => {
   modAxios($axios, store, redirect);
 
 
@@ -130,7 +130,7 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
   });
 
   // Set baseURL to something different
-  api.setBaseURL('http://localhost/api/v2/');
+  api.setBaseURL($config.api);
   modAxios(api, store, redirect);
 
 
@@ -143,7 +143,7 @@ const apiPlugin: Plugin = ({$axios, store, redirect}, inject) => {
       return data.data;
     }],
   });
-  authApi.setBaseURL('http://localhost/api/auth/v2/');
+  authApi.setBaseURL($config.authApi);
   modAxios(authApi, store, redirect);
 
 
