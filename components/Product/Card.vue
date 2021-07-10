@@ -28,18 +28,14 @@
         </div>
         <NuxtLink
           :to="`/category/${product.kind.slug}${product.subcategory ? `/${product.subcategory.slug}/` : '/'}${product.id}`"
-          class="block font-semibold text-sm mb-2 transition duration-200 hover:text-green-600"
+          :class="`block font-semibold text-sm mb-2 transition duration-200 hover:text-green-600 ${truncateName && 'truncate'}`"
         >
           {{product.name}}
         </NuxtLink>
 
-        <div class="star mb-3">
-          <div class="star-outline"></div>
-          <div class="star-filled" style="width: 75%"></div>
-        </div>
-
         <div class="mt-auto">
           <button
+            @click.prevent="send"
             class="text-sm text-white font-bold inline-block rounded-lg py-2 px-3 cursor-pointer duration-200 transition bg-green-600 hover:bg-green-700"
           >
             {{
@@ -56,21 +52,36 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {RUB, getPrice} from "~/utils";
+import Vue, {PropType} from 'vue';
+import {RUB, getPrice} from "~/utils";
+import {IProduct} from "~/types";
+import ChatSend from '~/components/Chat/Send';
 
-  export default Vue.extend({
-    name: "Card",
 
-    methods: {
-      getPrice,
-      formatPrice() {
-        return RUB(getPrice(this.product.price))
-      }
+export default Vue.extend({
+  name: "Card",
+
+  methods: {
+    getPrice,
+    formatPrice() {
+      return RUB(getPrice(this.product.price))
     },
 
-    props: {
-      product: Object,
+    send() {
+      this.$modal.show(ChatSend, {product: this.product}, {
+        adaptive: true,
+        scrollable: true,
+        height: 'auto'
+      })
     }
-  });
+  },
+
+  props: {
+    product: Object as PropType<IProduct>,
+    truncateName: {
+      type: Boolean,
+      default: false
+    }
+  }
+});
 </script>
