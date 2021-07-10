@@ -91,10 +91,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+import Vue, {PropType} from 'vue';
   import {RUB, getPrice, formatMorphClass, formatMorph} from "~/utils";
   import moment from "moment";
   import _ from "lodash";
+import {IProduct} from "~/types";
 
   export default Vue.extend({
     methods: {
@@ -109,7 +110,7 @@
         this.$emit('delete', this.product.id)
       },
 
-      checkProduct: _.debounce( (product: any, vm: any) => {
+      checkProduct: _.debounce( (product: IProduct, vm: any) => {
         vm.$api.updateProduct({
           id: product.id,
           askPrice: product.askPrice,
@@ -120,7 +121,7 @@
 
     watch: {
       product: {
-        handler: function (product: any) {
+        handler: function (product: IProduct) {
           this.checkProduct(product, this);
         },
         deep: true
@@ -128,7 +129,7 @@
     },
 
     props: {
-      product: Object,
+      product: Object as PropType<IProduct>,
     }
   });
 </script>
