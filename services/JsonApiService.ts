@@ -17,9 +17,15 @@ export class JsonApiService {
         'countrywideDelivery',
         'location',
         'password',
-        'password_confirmation'
+        'password_confirmation',
+
+        'vk',
+        'website',
+        'facebook',
+        'instagram',
+        'youtube'
       ],
-      keyForAttribute: "snake_case"
+      keyForAttribute: user.password_confirmation ? "snake_case" : "camelCase"
     });
 
     return UserSerializer.serialize(user);

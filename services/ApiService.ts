@@ -1,8 +1,19 @@
 import {NuxtAxiosInstance} from "@nuxtjs/axios";
 import {Deserializer} from "jsonapi-serializer";
 import qs from "qs";
-import {IKind, IMorph} from "~/types";
+import {IKind, IMorph, IUser, IProduct, ISubcategory, IDocument, ISeoOption} from "~/types";
 import {JsonApiService} from "~/services/JsonApiService";
+
+export type MetaType = {
+  selectedMorphs: Array<IMorph>,
+  minPrice: number,
+  maxPrice: number,
+  page: {
+    total: number
+    currentPage: number,
+    lastPage: number
+  }
+}
 
 class ApiService {
   private api: NuxtAxiosInstance;
@@ -14,6 +25,19 @@ class ApiService {
   constructor(api: NuxtAxiosInstance, authApi: NuxtAxiosInstance) {
     this.api = api;
     this.authApi = authApi
+  }
+
+  getFirebaseToken = async (access_token = ''): Promise<string> => {
+    const resp = access_token ?
+       this.authApi.$post('firebase', {}, {
+        headers: {
+          Authorization: 'Bearer ' + access_token
+        }
+      })
+      : this.authApi.$post('firebase');
+
+
+    return await resp.then((data: any) => data.token)
   }
 
   me = async (access_token: string): Promise<any> => {
@@ -67,7 +91,7 @@ class ApiService {
       .then((resp) => resp.data);
   };
 
-  getSubcategory = async (slug: string) => {
+  getSubcategory = async (slug: string): Promise<ISubcategory> => {
     const data = await this.api.$get(`subcategories?filter[slug]=${slug}&include=kind,localities`);
 
     return this.deserializer.deserialize(data)
@@ -81,7 +105,7 @@ class ApiService {
 
   // Products
 
-  getProducts = async (options: any = {}) => {
+  getProducts = async (options: any = {}): Promise<{products: Array<IProduct>, meta: MetaType}> => {
     let url = `products?include=${options.include || ''}`;
 
     if (options.query.sort) {
@@ -102,19 +126,19 @@ class ApiService {
     };
   };
 
-  getProduct = async (id: number|string, include = '') => {
+  getProduct = async (id: number|string, include = ''): Promise<IProduct> => {
     const data = await this.api.$get(`products/${id}?${include && `include=${include}`}`);
     return await this.deserializer.deserialize(data);
   };
 
-  updateProduct = async (product: any = {}, include: string = '') => {
+  updateProduct = async (product: any = {}, include: string = ''): Promise<IProduct> => {
     const data = await this.api.$patch(`products/${product.id}?include=${include}`, JsonApiService.serializeProduct(product));
 
     return this.deserializer.deserialize(data)
       .then((data) => data);
   }
 
-  createProduct = async (product: any = {}) => {
+  createProduct = async (product: any = {}): Promise<IProduct> => {
     const data = await this.api.$post(`products`, JsonApiService.serializeProduct(product));
 
     return this.deserializer.deserialize(data)
@@ -178,23 +202,51 @@ class ApiService {
   }
 
   // User
+  getUsers = async (options: any = {}): Promise<Array<IUser>> => {
+    let url = `users?fields[users]=name,surname,companyName,profileImg,logoImg`;
 
-  updateUser = async (user: any = {}, options: any = {}) => {
+    const query = qs.stringify(options.query);
+    url += `&${query}`;
+
+    const data = await this.api.$get(url);
+    return await this.deserializer.deserialize(data);
+  };
+
+
+  updateUser = async (user: any = {}, options: any = {}): Promise<IUser> => {
     const data = await this.api.$patch(`users/${user.id}`, JsonApiService.serializeUser(user), options);
 
     return this.deserializer.deserialize(data)
       .then((data) => data);
   }
 
-  // Divorces
+  // Documents
 
-  getDocuments = async () => {
+  getDocuments = async (): Promise<Array<IDocument>> => {
     const data = await this.api.$get('documents?fields[documents]=title,label');
     return await this.deserializer.deserialize(data)
   };
 
-  getDocument = async (id: number|string) => {
+  getDocument = async (id: number|string): Promise<IDocument> => {
     const data = await this.api.$get(`documents/${id}?fields[documents]=title,description`);
+    return await this.deserializer.deserialize(data);
+  };
+
+  // Shop
+  getShop = async (shop: string): Promise<IUser> => {
+    const data = await this.api.$get(`users?include=country,kinds&filter[shop]=${encodeURIComponent(shop)}`);
+    return await this.deserializer.deserialize(data);
+  };
+
+  // Guards
+  getGuards = async (): Promise<IUser> => {
+    const data = await this.api.$get("users?filter[isGuard]=true&fields[kinds]=titleRus&fields[users]=name,surname,about,profileImg,guardKinds&include=guardKinds");
+    return await this.deserializer.deserialize(data);
+  };
+
+  // Guards
+  getSeoOption = async (option: string): Promise<ISeoOption> => {
+    const data = await this.api.$get(`seo-options/${option}?formatted=true`);
     return await this.deserializer.deserialize(data);
   };
 }
