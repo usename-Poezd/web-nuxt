@@ -32,6 +32,7 @@ export default {
     '~/plugins/vee-validate',
     '~/plugins/mask',
     '~/plugins/vue-textarea-autosize',
+    '~/plugins/vuescroll',
     {
       src: '~/plugins/vue2-datepicker',
       ssr: false
@@ -72,8 +73,25 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/firebase',
   ],
+
+  firebase: {
+    config: {
+      apiKey: "",
+      authDomain: "",
+      databaseURL: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: "",
+    },
+    services: {
+      auth: true, // Just as example. Can be any other service.
+      database: true
+    }
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
