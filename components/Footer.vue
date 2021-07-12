@@ -12,7 +12,6 @@
       <div class="md:w-6/12 mr-6 md:mb-0 mb-3">
         <ul>
           <li><NuxtLink to="/guards" class="md:text-sm py-2 hover:text-green-600 transition">Хранители</NuxtLink></li>
-          <li><a href="" class="md:text-sm py-2 hover:text-green-600 transition">Помощь</a></li>
           <li><NuxtLink to="/documents" class="md:text-sm py-2 hover:text-green-600 transition">Юридические документы</NuxtLink></li>
         </ul>
       </div>
@@ -25,11 +24,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+import Vue from 'vue';
 
-  export default Vue.extend({
-    name: "Footer",
-
-
-  });
+export default Vue.extend({
+  name: "Footer",
+});
 </script>
