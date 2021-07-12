@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'web-nuxt',
+    title: 'Breeder Zone',
     htmlAttrs: {
       lang: 'en'
     },
@@ -11,7 +11,7 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: 'https://breeders-zone.s3.us-east-2.amazonaws.com/static/icons/favicon.ico' }
     ]
   },
 

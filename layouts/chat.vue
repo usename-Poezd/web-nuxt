@@ -17,6 +17,10 @@ export default Vue.extend({
     ...mapState('core', [
       'headerMenuShow'
     ])
-  }
+  },
+
+  head: () => ({
+    title: 'Чат'
+  })
 })
 </script>

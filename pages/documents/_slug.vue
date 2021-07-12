@@ -13,7 +13,7 @@
         </li>
       </ul>
     </div>
-    <div class="md:w-9/12 w-ful py-7">
+    <div class="md:w-9/12 w-full py-7">
       <NuxtLink to="/documents" class="md:hidden flex items-center mb-4">
         <FontAwesomeIcon icon="chevron-left" size="lg" class="md:hidden block mr-2"/>
         <span class="font-semibold">Назад</span>
@@ -43,6 +43,12 @@ export default Vue.extend({
     return {
       documents,
       document
+    }
+  },
+
+  head() {
+    return {
+      title: this.document.title
     }
   }
 })

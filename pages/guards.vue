@@ -54,6 +54,10 @@ export default Vue.extend({
     return {
       guards
     }
-  }
+  },
+
+  head: () => ({
+    title: 'Хранители'
+  })
 })
 </script>

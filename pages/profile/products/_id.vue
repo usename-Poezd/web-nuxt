@@ -562,7 +562,7 @@ export default Vue.extend({
       this.serverErrors = {};
 
       this.$api.updateProduct(product, 'preview,kind,subcategory,morphs.gene,morphs.trait,images,age,locality')
-        .then((product) => {
+        .then((product: IProduct) => {
           this.loading = false;
           this.success = true
           window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -589,7 +589,7 @@ export default Vue.extend({
           this.previews = [];
           this.changedMorphs = [];
         })
-        .catch((err) => {
+        .catch((err: any) => {
           if (err.response.status === 422) {
             const errors = err.response.data.errors;
             this.serverErrors = {
@@ -658,6 +658,13 @@ export default Vue.extend({
 
       added: query.type === 'added'
     }
-  }
+  },
+
+  head() {
+    return {
+      // @ts-ignore
+      title: this.product.name
+    }
+  },
 })
 </script>

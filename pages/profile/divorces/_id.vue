@@ -26,6 +26,13 @@ export default Vue.extend({
     return {
       divorce
     }
-  }
+  },
+
+  head() {
+    return {
+      // @ts-ignore
+      title: this.divorce.title
+    }
+  },
 })
 </script>

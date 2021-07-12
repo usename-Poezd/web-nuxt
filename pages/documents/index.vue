@@ -14,7 +14,7 @@
         </li>
       </ul>
     </div>
-    <div class="md:block hidden w-9/12 flex py-7">
+    <div class="md:flex hidden w-9/12 py-7">
       <div class="text-center m-auto">
         <FontAwesomeIcon icon="bookmark" size="4x" class="text-yellow-400 mb-4"/>
         <p class="font-semibold">Выберете документ для ознокомления</p>
@@ -38,7 +38,11 @@ export default Vue.extend({
     return {
       documents
     }
-  }
+  },
+
+  head: () => ({
+    title: 'Юридические документы'
+  })
 })
 </script>
 

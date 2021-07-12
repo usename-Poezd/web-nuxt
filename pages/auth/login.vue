@@ -113,10 +113,13 @@ export default Vue.extend({
         componentProps,
         {
           name: 'verify',
-          clickToClose: false,
           adaptive: true
         });
     }
-  }
+  },
+
+  head: () => ({
+    title: 'Вход'
+  })
 })
 </script>

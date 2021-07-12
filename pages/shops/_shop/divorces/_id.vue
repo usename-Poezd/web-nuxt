@@ -227,7 +227,7 @@
 
 
       data: () => ({
-        divorce: {}
+        divorce: {} as any
       }),
 
       methods: {
@@ -241,6 +241,12 @@
 
         return {
           divorce
+        }
+      },
+
+      head() {
+        return {
+          title: `${this.divorce.title} — ${this.$route.params.shop}, Breeders Zone`
         }
       }
     });

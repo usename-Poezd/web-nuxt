@@ -129,6 +129,10 @@ export default Vue.extend({
       meta,
       kind: query.kind
     }
-  }
+  },
+
+  head: () => ({
+    title: 'Мои товары'
+  }),
 })
 </script>

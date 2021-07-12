@@ -81,6 +81,12 @@
           divorces,
           meta
         }
+      },
+
+      head() {
+        return {
+          title: 'Все разведения ' + this.$route.params.shop
+        }
       }
     });
 </script>

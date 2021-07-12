@@ -583,6 +583,10 @@ export default Vue.extend({
 
   computed: {
     ...mapState('core', ['kinds'])
-  }
+  },
+
+  head: () => ({
+    title: 'Добавить товар'
+  }),
 })
 </script>

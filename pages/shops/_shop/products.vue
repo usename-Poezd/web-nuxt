@@ -116,6 +116,12 @@
           meta,
           sort: query.sort
         }
+      },
+
+      head() {
+        return {
+          title: 'Все товары ' + this.$route.params.shop
+        }
       }
     });
 </script>

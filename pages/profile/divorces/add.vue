@@ -8,5 +8,9 @@ import Vue from 'vue'
 export default Vue.extend({
   middleware: ['auth'],
   layout: 'profile',
+
+  head: () => ({
+    title: 'Добавить разведение'
+  }),
 })
 </script>

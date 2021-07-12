@@ -571,6 +571,10 @@ export default Vue.extend({
         })
       }
     }
-  }
+  },
+
+  head: () => ({
+    title: 'Мой профиль'
+  }),
 })
 </script>
