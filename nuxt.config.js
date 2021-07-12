@@ -94,7 +94,10 @@ export default {
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseUrl: process.env.DOCKER_API_BASE_PATH,
+    browserBaseURL: process.env.API_BASE_PATH
+  },
 
   formulate: {
     configPath: '~/formulate.config.js'
@@ -120,6 +123,17 @@ export default {
 
   publicRuntimeConfig: {
     api: process.env.API_BASE_PATH,
-    authApi: process.env.AUTH_API_BASE_PATH
+    authApi: process.env.AUTH_API_BASE_PATH,
+    dockerApi: process.env.API_BASE_PATH,
+    dockerAuthApi: process.env.AUTH_API_BASE_PATH,
+    DEBUG: process.env.DEBUG ? 'nuxt:*' : false,
+  },
+
+  privateRuntimeConfig: {
+    api: process.env.API_BASE_PATH,
+    authApi: process.env.AUTH_API_BASE_PATH,
+    dockerApi: process.env.DOCKER_API_BASE_PATH,
+    dockerAuthApi: process.env.DOCKER_AUTH_API_BASE_PATH,
+    DEBUG: process.env.DEBUG ? 'nuxt:*' : false,
   },
 }

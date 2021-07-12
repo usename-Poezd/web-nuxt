@@ -130,7 +130,7 @@ const apiPlugin: Plugin = ({$axios, store, redirect, $config}, inject) => {
   });
 
   // Set baseURL to something different
-  api.setBaseURL($config.api);
+  api.setBaseURL($axios.defaults.baseURL + 'api/v2/');
   modAxios(api, store, redirect);
 
 
@@ -143,7 +143,7 @@ const apiPlugin: Plugin = ({$axios, store, redirect, $config}, inject) => {
       return data.data;
     }],
   });
-  authApi.setBaseURL($config.authApi);
+  authApi.setBaseURL($axios.defaults.baseURL + 'api/auth/v2/');
   modAxios(authApi, store, redirect);
 
 
