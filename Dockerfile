@@ -1,12 +1,6 @@
-FROM node:lts
+FROM node:16-alpine3.11 as build
 
 WORKDIR /var/www
-
-COPY . /var/www
-RUN rm package-lock.json
-
-RUN npm cache clear --force
-RUN npm install
 
 ARG API_BASE_PATH
 ENV API_BASE_PATH $API_BASE_PATH
@@ -35,8 +29,25 @@ ENV FIREBASE_MESSAGING_SENDER_ID $FIREBASE_MESSAGING_SENDER_ID
 ARG FIREBASE_APP_ID
 ENV FIREBASE_APP_ID $FIREBASE_APP_ID
 
-RUN npm run build
+COPY . /var/www
+RUN rm package-lock.json && npm install
 
+ENV NODE_ENV=production
+
+RUN npm run build --standalone
+
+
+FROM node:16-alpine3.11
+WORKDIR /var/www
+
+ADD package.json .
+ADD nuxt.config.js .
+COPY --from=build /var/www/node_modules ./node_modules
+COPY --from=build /var/www/.nuxt ./.nuxt
+COPY --from=build /var/www/static ./static
+
+
+ENV NODE_ENV=production
 ENV HOST 0.0.0.0
 
 CMD ["npm", "start"]
