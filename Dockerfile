@@ -30,11 +30,11 @@ ARG FIREBASE_APP_ID
 ENV FIREBASE_APP_ID $FIREBASE_APP_ID
 
 COPY . /var/www
-RUN rm package-lock.json && npm install
+RUN rm package-lock.json && npm i
 
 ENV NODE_ENV=production
 
-RUN npm run build --standalone
+RUN npm run build --standalone && npm i
 
 
 FROM node:16-alpine3.11
