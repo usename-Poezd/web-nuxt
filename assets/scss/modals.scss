@@ -1,0 +1,27 @@
+.full-modal {
+  @apply bg-white;
+  top: 0 !important;
+  overflow: auto;
+}
+
+.upload-modal {
+  .v--modal-box.v--modal {
+    @apply top-6 #{!important};
+  }
+}
+
+.table-modal {
+  .v--modal-box.v--modal {
+    @apply lg:w-8/12 w-full mx-auto #{!important};
+
+    left: 0 !important;
+  }
+}
+
+.product-modal {
+  .v--modal-box.v--modal {
+    @apply lg:w-6/12 w-full mx-auto #{!important};
+
+    left: 0 !important;
+  }
+}

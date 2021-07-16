@@ -6,11 +6,14 @@ module.exports = {
     './plugins/**/*.{js,ts}',
     './nuxt.config.{js,ts}',
   ],
-  important: true,
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
 
+    },
+    cursor: {
+      pointer: 'pointer',
+      grab: 'grab'
     },
     container: {
       center: true,
@@ -23,7 +26,13 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      ringWidth: ['hover'],
+    }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms')({
+      strategy: 'class',
+    })
+  ],
 }

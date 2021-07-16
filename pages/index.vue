@@ -5,9 +5,9 @@
         <div class="w-8/12">
           <h1 class="md:text-3xl text-xl font-bold mb-3">Breeders Zone - это маркетплейс для продажи животных</h1>
           <p class="md:text-base text-sm font-semibold mb-5">Зарегестрируйтесь и найдите свое животное за пару кликов</p>
-          <button class="p-3 flex items-center transition hover:bg-green-700 bg-green-600 rounded-lg text-white outline-none appearance-none font-semibold">
+          <NuxtLink to="/auth/registration" class="p-3 transition hover:bg-green-700 bg-green-600 rounded-lg text-white outline-none appearance-none font-semibold">
             Зарегестрироваться
-          </button>
+          </NuxtLink>
         </div>
         <div class="md:w-56 w-24 md:h-56 h-24 rounded-full bg-white overflow-hidden relative">
           <img src="https://breeders-zone.s3.us-east-2.amazonaws.com/media/cache/b0/ce/11.jpg" alt="" class="img-fluid rounded-full absolute bottom-0">
@@ -22,7 +22,7 @@
         </div>
         <div class="flex flex-wrap">
           <NuxtLink
-            v-for="kind in allKindsShow ? kinds : activeKinds"
+            v-for="kind in (allKindsShow ? kinds : activeKinds)"
             :key="'kind-' + kind.id"
             :to="'/category/' + kind.slug"
             class="lg:w-3/12 md:w-4/12 sm:w-6/12 w-full mb-4 sm:px-3 px-0"
@@ -49,16 +49,43 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {mapGetters} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
+import {SEO_MUTATIONS} from "~/store/seo";
 
 export default Vue.extend({
   data: () => ({
     allKindsShow: false,
   }),
 
+  async asyncData({$api, store}) {
+    const seoOption = await $api.getSeoOption('default');
+    store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, seoOption)
+  },
+
+  head() {
+    const {option} = this.$store.state.seo;
+    return {
+      title: option.title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: option.description
+        },
+        {
+          hid: 'keywords',
+          name: 'keywords',
+          content: option.keywords
+        }
+      ]
+    }
+  },
+
   computed: {
+    ...mapState('core', [
+      'kinds'
+    ]),
     ...mapGetters('core', [
-      'kinds',
       'activeKinds'
     ])
   },

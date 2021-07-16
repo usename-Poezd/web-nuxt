@@ -1,0 +1,8 @@
+.chat {
+  height: calc(100vh - 164px);
+
+  @media (max-width: 1024px) {
+    height: calc(100vh - 84px);
+    padding-bottom: 56px;
+  }
+}

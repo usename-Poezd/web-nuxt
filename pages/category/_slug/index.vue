@@ -1,13 +1,24 @@
 <template>
-  <div class="container">
-    <div class="py-8">
-      <div class="flex items-center mb-8">
-        <h1 class="text-3xl font-bold mr-1">
-          {{kind.titleRus}}
-        </h1>
-        <div class="text-sm text-gray-600">{{kind.activeProductsCount}}</div>
+  <div class="container"  v-if="isTableView">
+    <div class="md:py-8 py-4">
+      <div class="flex md:flex-row flex-col md:items-center justify-between mb-8">
+        <div class="flex items-center">
+          <h1 class="text-3xl font-bold mr-1">
+            {{kind.titleRus}}
+          </h1>
+        </div>
+        <span class="link cursor-pointer text-sm" @click.prevent="() => {setTableView(false); $router.go(0)}">В новый дизайн</span>
       </div>
-      <div v-if="kind.activeSubcategories.length" class="flex flex-wrap items-center mb-4">
+    </div>
+    <MorphsTable :tableMorphs="tableMorphs" :kind="kind" :isModal="false"/>
+  </div>
+  <ProductLayout v-else :products="products" :meta="meta" :sort="sort" :kind="kind">
+    <template #headerTitle>
+      {{kind.titleRus}}
+    </template>
+
+    <template #headerFilter>
+      <div v-if="kind.activeSubcategories.length" class="flex flex-wrap items-center">
         <NuxtLink
           :to="'/category/' + kind.slug + '/' + subcategory.slug"
           v-for="subcategory in kind.activeSubcategories"
@@ -17,113 +28,125 @@
           {{subcategory.title}}
         </NuxtLink>
       </div>
-    </div>
-    <div class="flex items-start">
-      <div class="w-2/12">
-        <div class="mt-2 mr-2">
-          <div class="mb-5">
-            <div class="font-bold mb-3">Категории:</div>
-            <div class="flex flex-col items-start flex-start pl-2">
-              <NuxtLink :to="'/category' + kind.slug" class="block rounded p-1 bg-green-100 transition hover:text-green-600 mb-1">{{kind.titleRus}}</NuxtLink>
-              <ul v-if="kind.activeSubcategories.length" class="pl-5">
-                <li v-for="subcategory in kind.activeSubcategories" :key="'subcategory-filter-' + subcategory.id">
-                  <NuxtLink
-                    :to="'/category/' + kind.slug + '/' + subcategory.slug"
-                    class="block transition hover:text-green-600 my-1"
-                  >
-                    {{subcategory.title}}
-                  </NuxtLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+    </template>
 
-
-      <div class="w-10/12 flex flex-wrap">
-        <div v-for="product in products" class="flex flex-col lg:w-3/12 md:w-4/12 sm:w-6/12 w-full px-2 mb-2">
-          <div class="flex flex-col shadow rounded-xl bg-white p-2 flex-1">
-            <NuxtLink :to="'/category/' + kind.slug + '/' + product.id"  class="relative mb-2">
-              <div class="absolute bg-white shadow rounded top-2 right-2 p-1">
-                <div v-if="!product.group || (product.group.male === 0 && product.group.female)">
-                  <FontAwesomeIcon v-if="product.sex === null" icon="genderless" class="text-xl"/>
-                  <FontAwesomeIcon v-if="!product.sex && product.sex !== null" icon="venus" class="text-xl" style="color: #c11f80;"/>
-                  <FontAwesomeIcon v-if="product.sex" icon="mars" class="text-xl" style="color: #3f81e5;"/>
-                </div>
-                <div v-else class="flex">
-                  <div>
-                    <span class="text-sm">{{product.group.male}}</span>
-                    <FontAwesomeIcon icon="mars" class="text-xl" style="color: #3f81e5;"/>
-                  </div>
-                  <span class="text-sm">.</span>
-                  <div>
-                    <span class="text-sm">{{product.group.female}}</span>
-                    <FontAwesomeIcon icon="venus" class="text-xl" style="color: #c11f80;"/>
-                  </div>
-                </div>
-              </div>
-              <img :data-src="product.preview.imgSrc" alt="" class="img-fluid rounded lazyload">
-            </NuxtLink>
-            <div class="flex flex-col flex-1">
-              <div>
-                <span class="text-red-500 font-bold text-lg">55 000 ₽</span>
-              </div>
-              <NuxtLink
-                :to="'/category/' + kind.slug + '/' + product.id"
-                class="block font-semibold text-sm mb-2 transition duration-200 hover:text-green-600"
-              >
-                {{product.name}}
-              </NuxtLink>
-
-              <div class="star mb-3">
-                <div class="star-outline"></div>
-                <div class="star-filled" style="width: 75%"></div>
-              </div>
-
-              <div class="mt-auto">
-                <button
-
-                  class="text-sm text-white font-bold inline-block rounded-lg py-2 px-3 cursor-pointer duration-200 transition bg-green-600 hover:bg-green-700"
-                >
-                  Написать продавцу
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <template #filter>
+      <ProductFilter
+        :kind="kind"
+        :morphs="meta.selectedMorphs"
+        :subcategory="null"
+        :minPrice="meta.minPrice"
+        :maxPrice="meta.maxPrice"
+      />
+    </template>
+  </ProductLayout>
 </template>
 
 <script lang="ts">
     import Vue from "vue";
+    import {IKind, IProduct} from '~/types';
+    import qs from "qs";
+    import {withPopper} from "~/utils";
+    import {RootState} from "~/store";
+    import {mapMutations} from "vuex";
+    import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
+    import {MetaType} from "~/services";
+    import {SEO_MUTATIONS} from "~/store/seo";
 
     export default Vue.extend({
 
+      watchQuery: true,
+
       data: () => ({
-        kind: {} as any,
-        products: [] as Array<any>
+        tableMorphs: [],
+        isTableView: false,
+        sortOptions: [{label: 'Сначала дешевле', value: 'price'}, {label: 'Сначала дороже', value: '-price'}],
+        kind: {} as IKind,
+        products: [] as Array<IProduct>,
+        meta: {} as MetaType,
+        sort: ''
       }),
 
-      async asyncData({ params, $api }) {
+      methods: {
+        withPopper,
+        ...mapMutations({
+          setTableView: `core/${SET_TABLE_CATEGORY_VIEW}`
+        }),
+      },
+
+      async asyncData({ params, query, $api, route, store }) {
         const kind = await $api.getKind(params.slug, {
           include: 'activeSubcategories',
         });
-        const products = await $api.getProducts({
-          include: 'preview',
-          query: {
-            filter: {
-              kind: params.slug,
-            }
-          }
-        });
 
-        return {
-          kind,
-          products
+        const isTableView = (store.state as RootState).core.tableCategoryView && (!query.gene || !query.trait || !query.shop)
+
+
+
+        if (!isTableView) {
+          const seoOption = kind.seo.kind;
+          store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, seoOption);
+
+          const {products, meta} = await $api.getProducts({
+            include: 'preview,kind,subcategory,shop',
+            query: {
+              page: {
+                size: 20,
+                number: query.page
+              },
+              sort: query.sort,
+              filter: {
+                shop: query.shop,
+                kind: params.slug,
+                price: query.price,
+                sex: query.sex,
+                morphs: qs.parse(route.fullPath.replace(route.path, '').replace('?', '')).morphs,
+                morph: {
+                  gene: query.gene,
+                  trait: query.trait
+                }
+              }
+            }
+          });
+
+          return {
+            kind,
+            products,
+            meta,
+            isTableView,
+            sort: query.sort
+          }
+        } else {
+          const tableMorphs = await $api.getKindTable(kind.id);
+          const seoOption = kind.seo.morphs;
+          store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, seoOption);
+
+          return {
+            kind,
+            isTableView,
+            tableMorphs,
+            sort: query.sort
+          }
         }
-      }
+      },
+
+      head() {
+        const {option} = this.$store.state.seo;
+        return {
+          title: option.title,
+          meta: [
+            {
+              hid: 'description',
+              name: 'description',
+              content: option.description
+            },
+            {
+              hid: 'keywords',
+              name: 'keywords',
+              content: option.keywords
+            }
+          ]
+        }
+      },
     });
 </script>
