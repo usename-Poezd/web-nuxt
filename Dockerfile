@@ -40,8 +40,8 @@ RUN npm run build --standalone && npm i
 FROM node:16-alpine3.11
 WORKDIR /var/www
 
-ADD package.json .
-ADD nuxt.config.js .
+COPY package.json .
+COPY nuxt.config.js .
 COPY --from=build /var/www/node_modules ./node_modules
 COPY --from=build /var/www/.nuxt ./.nuxt
 COPY --from=build /var/www/static ./static
