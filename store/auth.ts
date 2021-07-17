@@ -142,6 +142,6 @@ export const getters: GetterTree<AuthState, AuthState> = {
   },
 
   unreadChats: (state) => {
-    return Object.keys(state.user.unreadChats).filter((chatId: string) => state.user.unreadChats[chatId]).length
+    return state.user ? Object.keys(state.user.unreadChats).filter((chatId: string) => state.user.unreadChats[chatId]).length : 0
   },
 };
