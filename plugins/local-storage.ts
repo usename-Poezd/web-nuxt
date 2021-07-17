@@ -4,7 +4,7 @@ import cookie from 'cookie';
 import { Plugin } from '@nuxt/types'
 
 
-const localStorage: Plugin = ({ store, req, isDev }) => {
+const localStorage: Plugin = ({ store, req }) => {
   createPersistedState({
     key: 'nvcs', // choose any name for your cookie
     paths: [
@@ -18,7 +18,7 @@ const localStorage: Plugin = ({ store, req, isDev }) => {
       getItem: key => process.client ? Cookies.getJSON(key) : cookie.parse(req.headers.cookie || '')[key],
       // js-cookie can handle setting both client-side and server-side cookies with one method
       // use isDev to determine if the cookies is accessible via https only (i.e. localhost likely won't be using https)
-      setItem: (key, value) => Cookies.set(key, value, { expires: 14, secure: !isDev }),
+      setItem: (key, value) => Cookies.set(key, value, { expires: 14 }),
       // also allow js-cookie to handle removing cookies
       removeItem: key => Cookies.remove(key)
     }
