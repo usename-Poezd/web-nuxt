@@ -50,17 +50,20 @@ jobs:
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
   deploy:
-    - name: Deploy to Digital Ocean droplet via SSH action
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.DEV_HOST }}
-        username: ${{ secrets.DEV_USERNAME }}
-        key: ${{ secrets.DEV_SSH_KEY }}
-        port: ${{ secrets.DEV_PORT }}
-        script: |
-          cd /var/www
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          port: ${{ secrets.DEV_PORT }}
+          script: |
+            cd /var/www
 
-          docker-compose pull
-          docker-compose stop web
-          docker-compose rm -f web
-          docker-compose up -d --force-recreate nginx
+            docker-compose pull
+            docker-compose stop web
+            docker-compose rm -f web
+            docker-compose up -d --force-recreate nginx
