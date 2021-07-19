@@ -54,7 +54,7 @@ jobs:
     needs: build
     steps:
       - name: Deploy to Digital Ocean droplet via SSH action
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.DEV_HOST }}
           username: ${{ secrets.DEV_USERNAME }}
