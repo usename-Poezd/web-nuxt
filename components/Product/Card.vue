@@ -2,7 +2,7 @@
   <div class="flex flex-col md:px-2 mb-2">
     <div class="flex flex-col shadow rounded-xl bg-white p-2 flex-1">
       <NuxtLink :to="`/category/${product.kind.slug}${product.subcategory ? `/${product.subcategory.slug}/` : '/'}${product.id}`" class="relative mb-2">
-        <div v-if="!product.kind.onlyText" class="absolute bg-white shadow rounded top-2 right-2 p-1">
+        <div v-if="!product.kind.onlyText" class="absolute flex bg-white shadow rounded top-2 right-2 p-1">
           <div v-if="!product.group || (product.group.male === 0 && product.group.female)">
             <FontAwesomeIcon v-if="product.sex === null" icon="genderless" class="text-xl"/>
             <FontAwesomeIcon v-if="!product.sex && product.sex !== null" icon="venus" class="text-xl" style="color: #c11f80;"/>
@@ -18,6 +18,9 @@
               <span class="text-sm">{{product.group.female}}</span>
               <FontAwesomeIcon icon="venus" class="text-xl" style="color: #c11f80;"/>
             </div>
+          </div>
+          <div class="ml-1">
+            '{{moment(product.cb).format('YY')}}
           </div>
         </div>
         <img :data-src="product.preview.imgSrc" alt="" class="img-fluid rounded lazyload">
@@ -56,6 +59,7 @@ import Vue, {PropType} from 'vue';
 import {RUB, getPrice} from "~/utils";
 import {IProduct} from "~/types";
 import ChatSend from '~/components/Chat/Send';
+import moment from "moment";
 
 
 export default Vue.extend({
@@ -63,6 +67,7 @@ export default Vue.extend({
 
   methods: {
     getPrice,
+    moment,
     formatPrice() {
       return RUB(getPrice(this.product.price))
     },

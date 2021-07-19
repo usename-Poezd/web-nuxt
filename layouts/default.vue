@@ -1,10 +1,10 @@
 <template>
-  <div :style="$device.isMobile && 'padding-bottom: 56px;'">
+  <div :style="!$device.isDesktop && 'padding-bottom: 56px;'">
     <modals-container/>
     <Header/>
     <HeaderMenu :class="!headerMenuShow ? 'hidden' : ''"/>
     <Nuxt :class="headerMenuShow ? 'hidden' : ''"/>
-    <MobileHeader v-if="$device.isMobile"/>
+    <MobileHeader v-if="!$device.isDesktop"/>
     <Footer/>
   </div>
 </template>

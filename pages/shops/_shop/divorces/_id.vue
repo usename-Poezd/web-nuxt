@@ -87,10 +87,10 @@
       <div
         v-swiper:sexPhotos="{
              loop: true,
-             loopedSlides: !$device.isMobile ? 3 : 1,
+             loopedSlides: $device.isDesktop ? 3 : 1,
              centeredSlides: true,
              slideToClickedSlide: true,
-             slidesPerView: !$device.isMobile ? 3 : 1,
+             slidesPerView: $device.isDesktop ? 3 : 1,
              slidesPerGroup: 1,
              spaceBetween: 10,
              grabCursor: true,
@@ -132,10 +132,10 @@
       <div
         v-swiper:masonryPhotos="{
              loop: true,
-             loopedSlides: !$device.isMobile ? 3 : 1,
+             loopedSlides: $device.isDesktop ? 3 : 1,
              centeredSlides: true,
              slideToClickedSlide: true,
-             slidesPerView: !$device.isMobile ? 3 : 1,
+             slidesPerView: $device.isDesktop ? 3 : 1,
              slidesPerGroup: 1,
              spaceBetween: 10,
              grabCursor: true,
@@ -177,10 +177,10 @@
       <div
         v-swiper:exitPhotos="{
              loop: true,
-             loopedSlides: !$device.isMobile ? 3 : 1,
+             loopedSlides: $device.isDesktop ? 3 : 1,
              centeredSlides: true,
              slideToClickedSlide: true,
-             slidesPerView: !$device.isMobile ? 3 : 1,
+             slidesPerView: $device.isDesktop ? 3 : 1,
              slidesPerGroup: 1,
              spaceBetween: 10,
              grabCursor: true,

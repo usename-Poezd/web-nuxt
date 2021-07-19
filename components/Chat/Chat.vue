@@ -1,6 +1,6 @@
 <template>
-  <main :class="!$device.isMobile && 'container'">
-    <div class="md:py-4 pt-4 md:px-0 px-4">
+  <main :class="$device.isDesktop && 'container'">
+    <div class="lg:py-4 pt-4 lg:px-0 px-4">
       <nav class="text-black font-bold mb-4 text-xs" aria-label="Breadcrumb">
         <ol class="list-none p-0 inline-flex">
           <li class="flex items-center">
@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex flex-wrap chat">
-      <div v-if="!$device.isMobile || ($device.isMobile && !selectedChat.id)" class="lg:w-4/12 w-full lg:px-4" :set="interlocutors = []">
+      <div v-if="$device.isDesktop || (!$device.isDesktop && !selectedChat.id)" class="lg:w-4/12 w-full lg:px-4" :set="interlocutors = []">
         <div v-if="!loadingChats" class="overflow-auto h-full">
           <div
             v-for="(chat, id) in chats"
@@ -77,7 +77,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -91,7 +91,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -105,7 +105,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -119,7 +119,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -127,7 +127,7 @@
           </div>
         </div>
       </div>
-      <div class="lg:w-8/12 w-full h-full">
+      <div v-if="$route.query.cid || $device.isDesktop" class="lg:w-8/12 w-full h-full">
         <div v-if="!loadingChats && selectedChat.id" class="rounded md:shadow h-full flex flex-col">
           <div class="flex items-center border-b p-4">
             <div>

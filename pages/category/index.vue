@@ -1,5 +1,5 @@
 <template>
-  <HeaderMenu/>
+  <HeaderMenu :isCategories="true"/>
 </template>
 
 <script lang="ts">

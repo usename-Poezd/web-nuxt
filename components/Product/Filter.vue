@@ -1,5 +1,5 @@
 <template>
-  <div class="md:w-2/12 w-full">
+  <div class="lg:w-2/12 w-full">
     <div class="mt-2 mr-2">
       <div v-if="kind" class="mb-5">
         <div class="font-bold mb-3">Категории:</div>
@@ -60,15 +60,15 @@
         <div class="mb-5">
           <div class="font-bold mb-3">Цена:</div>
           <div class="mb-1">
-            <VueSlider v-model="price" @change="changePrice" :min="minPrice" :max="maxPrice" :height="5" :enable-cross="false"/>
+            <VueSlider :value="[priceMin, priceMax]" @change="changeSlider" :min="minPrice" :max="maxPrice" :height="5" :enable-cross="false"/>
             <div class="flex items-center">
               <div class="flex items-center bg-gray-200 rounded p-1 mr-2">
                 <span class="text-sm px-2">от</span>
-                <input type="text" @input="_.debounce(changePrice, 500)" v-model.number="price[0]" class="w-full bg-gray-200 appearance-none focus:outline-none">
+                <input type="text" v-model.number="priceMin" class="w-full bg-gray-200 appearance-none focus:outline-none">
               </div>
               <div class="flex items-center bg-gray-200 rounded p-1 mr-2">
                 <span class="text-sm px-2">до</span>
-                <input type="text" @input="_.debounce(changePrice, 500)" v-model.number="price[1]" class="w-full bg-gray-200 appearance-none focus:outline-none">
+                <input type="text" v-model.number="priceMax" class="w-full bg-gray-200 appearance-none focus:outline-none">
               </div>
             </div>
           </div>
@@ -103,8 +103,8 @@ import {IKind, IMorph, ISubcategory} from "~/types";
         : [ this.minPrice, this.maxPrice];
 
       return {
-        price,
-        _,
+        priceMin: price[0],
+        priceMax: price[1],
         sex: [
           {
             label: 'Самец',
@@ -133,14 +133,28 @@ import {IKind, IMorph, ISubcategory} from "~/types";
         this.$router.push(`${this.$route.path}?${qs.stringify(query)}&${morphsQuery}`);
       },
 
-      changePrice() {
-        this.$router.push({
-          path: this.$route.path,
-          query: {
-            ...this.$route.query,
-            price: `${this.price[0]},${this.price[1]}`
-          }
-        });
+      changePrice: _.debounce((vm: any) => {
+          vm.$router.push({
+            path: vm.$route.path,
+            query: {
+              ...vm.$route.query,
+              price: `${vm.priceMin},${vm.priceMax}`
+            }
+          });
+        }, 500),
+
+      changeSlider(val: Array<number>) {
+        this.priceMin = val[0];
+        this.priceMax = val[1];
+      }
+    },
+
+    watch: {
+      priceMin: function () {
+       this.changePrice(this)
+      },
+      priceMax: function () {
+        this.changePrice(this)
       }
     },
 

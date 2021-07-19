@@ -36,7 +36,7 @@
         <div class="w-full flex  md:flex-nowrap flex-wrap mb-7">
           <!-- IMAGES -->
           <div class="md:w-6/12 w-full flex md:flex-nowrap flex-wrap md:flex-row flex-col mr-4">
-            <div v-if="$device.isMobile" class="w-full mb-2">
+            <div v-if="!$device.isDesktop" class="w-full mb-2">
               <client-only>
                 <Swiper
                 :options="{
@@ -57,7 +57,7 @@
               </Swiper>
               </client-only>
             </div>
-            <div v-if="$device.isMobile" class="w-full">
+            <div v-if="!$device.isDesktop" class="w-full">
              <client-only>
                <Swiper
                  :options="{
@@ -85,7 +85,7 @@
             </div>
 
 
-            <div v-if="!$device.isMobile" class="md:w-1/12 w-full mr-2 ">
+            <div v-if="$device.isDesktop" class="md:w-1/12 w-full mr-2 ">
               <div
                 v-for="image in product.images"
                 @mouseover.prevent="setShowedImg(image)"
@@ -95,7 +95,7 @@
                 <img :data-src="image.imgSrc" :alt="product.name" class="img-fluid rounded lazyload">
               </div>
             </div>
-            <div v-if="!$device.isMobile" @click.prevent="openModal" class="md:w-11/12 w-full product-page-image">
+            <div v-if="$device.isDesktop" @click.prevent="openModal" class="md:w-11/12 w-full product-page-image">
               <img :data-src="showedImg.imgSrc" ref="image" :alt="product.name" class="img-fluid cursor-pointer rounded lazyload">
 
               <div class="flex mt-16">
@@ -109,7 +109,7 @@
           <!-- IMAGES END -->
 
           <!-- INFO -->
-          <div v-if="!$device.isMobile" class="w-6/12">
+          <div v-if="$device.isDesktop" class="w-6/12">
             <div class="flex mb-4">
               <div class="w-5/12 border-dashed">
                 <span class="relative bg-white pr-1">Категория</span>
@@ -188,9 +188,9 @@
               </div>
               <div class="w-7/12">
                 <div class="flex flex-wrap">
-                  <div v-for="morph in product.morphs" :class="`mr-2 mb-2 morph-indicator inline-block text-sm ${formatMorphClass(morph)}`">
+                  <NuxtLink v-for="morph in product.morphs" :key="`morph-${morph.gene.id},${morph.trait.id}`" :to="`/category/${$route.params.slug}?morphs[0]=${morph.gene.id},${morph.trait.id}`" :class="`mr-2 mb-2 morph-indicator inline-block text-sm ${formatMorphClass(morph)}`">
                     {{formatMorph(morph)}}
-                  </div>
+                  </NuxtLink>
                 </div>
               </div>
             </div>
@@ -282,7 +282,7 @@
       <p class="whitespace-pre-wrap">{{product.description}}</p>
     </div>
 
-    <div v-if="$device.isMobile" class="w-full mb-7">
+    <div v-if="!$device.isDesktop" class="w-full mb-7">
       <div class="font-bold text-xl mb-3">Информация о товаре</div>
       <div class="flex mb-4">
         <div class="w-6/12 border-dashed">
@@ -400,7 +400,7 @@ import ChatSend from "~/components/Chat/Send.vue";
     },
 
     mounted() {
-      if (this.$device.isMobile) {
+      if (!this.$device.isDesktop) {
         this.$nextTick(() => {
           const swiperTop = (this.$refs.main as any).$swiper;
           const swiperThumbs = (this.$refs.thumbs as any).$swiper;

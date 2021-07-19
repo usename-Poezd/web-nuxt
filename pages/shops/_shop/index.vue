@@ -90,10 +90,10 @@
           <div
             v-swiper:mySwiper="{
              loop: true,
-             loopedSlides: !$device.isMobile ? 3 : 2,
+             loopedSlides: $device.isDesktop ? 3 : 2,
              centeredSlides: true,
              slideToClickedSlide: true,
-             slidesPerView: !$device.isMobile ? 3 : 2,
+             slidesPerView: $device.isDesktop ? 3 : 2,
              slidesPerGroup: 1,
              spaceBetween: 10,
              grabCursor: true,

@@ -46,7 +46,7 @@
       />
     </div>
     <button
-      v-if="$device.isMobile"
+      v-if="!$device.isDesktop"
       @click="$modal.show('filter')"
       class="shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"
     >

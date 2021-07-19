@@ -574,7 +574,7 @@ export default Vue.extend({
             name: product.name,
             article: product.article,
             description: product.description,
-            price: product.price.find((i: any) => i.currency === product.currency)?.amount,
+            price: product.price as unknown as number,
             currency: product.currency,
             age: product.age?.id,
             locality: product.locality?.id || '',
