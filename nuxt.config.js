@@ -59,6 +59,11 @@ export default {
     ]
   },
 
+  loading: {
+    color: '#059669',
+    height: '3px'
+  },
+
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
