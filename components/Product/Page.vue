@@ -200,7 +200,7 @@
 
         <!-- SHOP -->
         <div class="shadow rounded flex md:flex-row flex-col items-start md:justify-start justify-between p-4 md:mb-0 mb-7">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between lg:w-auto w-full">
             <NuxtLink
               :to="`/shops/${product.shop.companyName}`"
               class="w-9/12 md:hidden block"
@@ -212,8 +212,9 @@
                 {{ product.shop.companyName }}
               </div>
             </NuxtLink>
-            <div class="md:w-24 w-14 md:h-24 h-14 shadow-md flex relative items-center justify-center rounded-full bg-green-400 overflow-hidden mr-4">
-              <img :src="product.shop.logoImg" :alt="product.shop.companyName" class="img-fluid shadow rounded-full">
+            <div :class="`md:w-24 w-14 md:h-24 h-14 shadow-md flex relative items-center justify-center rounded-full overflow-hidden mr-4 ${product.shop.logoImg && 'bg-green-400'}`">
+              <img v-if="!product.shop.logoImg" :src="product.shop.logoImg" :alt="product.shop.companyName" class="img-fluid shadow rounded-full">
+              <span v-else class="md:text-3xl text-xl font-bold text-white m-auto">{{product.shop.companyName[0]}}</span>
             </div>
           </div>
           <div class="md:block hidden">
