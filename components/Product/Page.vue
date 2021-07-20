@@ -212,10 +212,13 @@
                 {{ product.shop.companyName }}
               </div>
             </NuxtLink>
-            <div :class="`md:w-24 w-14 md:h-24 h-14 shadow-md flex relative items-center justify-center rounded-full overflow-hidden mr-4 ${!product.shop.logoImg && 'bg-green-400'}`">
+            <NuxtLink
+              :to="`/shops/${product.shop.companyName}`"
+              :class="`md:w-24 w-14 md:h-24 h-14 shadow-md flex relative items-center justify-center rounded-full overflow-hidden mr-4 ${!product.shop.logoImg && 'bg-green-400'}`"
+            >
               <img v-if="product.shop.logoImg" :src="product.shop.logoImg" :alt="product.shop.companyName" class="img-fluid shadow rounded-full">
               <span v-else class="md:text-3xl text-xl font-bold text-white m-auto">{{product.shop.companyName[0]}}</span>
-            </div>
+            </NuxtLink>
           </div>
           <div class="md:block hidden">
             <NuxtLink
