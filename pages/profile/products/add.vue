@@ -218,7 +218,7 @@
           <span>Параметры товара</span>
         </h2>
 
-        <div v-if="subcategory.localities.length" class="flex md:flex-row flex-col mb-4">
+        <div v-if="subcategory && subcategory.localities.length" class="flex md:flex-row flex-col mb-4">
           <div class="md:w-2/12 w-full">
             <label for="locality" class="text-gray-800 font-semibold">Локалитет</label>
           </div>
