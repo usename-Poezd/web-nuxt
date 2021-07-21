@@ -92,7 +92,7 @@ export default Vue.extend({
   middleware: ['auth'],
   layout: 'profile',
 
-  watchQuery: ['kind', 'page', 'sort'],
+  watchQuery: ['kind', 'page', 'sort', 'q'],
 
   data: () => ({
     q: '',
@@ -117,6 +117,7 @@ export default Vue.extend({
           number: query.page
         },
         sort: query.sort,
+        q: query.q,
         filter: {
           kind: query.kind,
           shop: store.state.auth.user.companyName
