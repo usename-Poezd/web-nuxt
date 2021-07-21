@@ -24,7 +24,7 @@
 
         <div v-if="files.length || $slots.default" class="flex flex-wrap">
           <slot></slot>
-          <div v-for="file in files" :key="`uploaded-image-${file.id}`" :class="`${previewClass} px-2 relative rounded`">
+          <div v-for="file in files" :key="`uploaded-image-${file.id}`" :class="`${previewClass} px-2 mb-2 relative rounded`">
             <div v-if="!file.success" class="h-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-7/12 rounded-full overflow-hidden">
               <div class="w-full h-full bg-gray-200 absolute"></div>
               <div class="transition-all ease-out duration-1000 h-full bg-green-500 relative w-0" :style="`width: ${file.progress}%`"></div>

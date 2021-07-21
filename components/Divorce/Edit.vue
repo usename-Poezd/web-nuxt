@@ -51,7 +51,7 @@
             id="sexPhotos"
             previewClass="md:w-3/12 sm:w-6/12 w-full"
           >
-            <div v-for="(image, idx) in divorce.sexPhotos" :key="`sexPhotos-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 relative rounded">
+            <div v-for="(image, idx) in divorce.sexPhotos" :key="`sexPhotos-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 pt-2 mb-2 relative rounded">
               <FontAwesomeIcon
                 @click.prevent="divorce.sexPhotos.splice(idx, 1)"
                 icon="times"
@@ -74,7 +74,7 @@
             id="masonryPhotos"
             previewClass="md:w-3/12 sm:w-6/12 w-full"
           >
-            <div v-for="(image, idx) in divorce.masonryPhotos" :key="`sexPhotos-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 relative rounded">
+            <div v-for="(image, idx) in divorce.masonryPhotos" :key="`sexPhotos-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 pt-2 mb-2 relative rounded">
               <FontAwesomeIcon
                 @click.prevent="divorce.masonryPhotos.splice(idx, 1)"
                 icon="times"
@@ -98,7 +98,7 @@
               id="exitPhotos"
               previewClass="md:w-3/12 sm:w-6/12 w-full"
             >
-              <div v-for="(image, idx) in divorce.exitPhotos" :key="`sexPhotos-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 relative rounded">
+              <div v-for="(image, idx) in divorce.exitPhotos" :key="`sexPhotos-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 pt-2 mb-2 relative rounded">
                 <FontAwesomeIcon
                   @click.prevent="divorce.exitPhotos.splice(idx, 1)"
                   icon="times"
