@@ -111,7 +111,7 @@
           <!-- INFO -->
           <div v-if="$device.isDesktop" class="w-6/12">
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Категория</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -119,7 +119,7 @@
               </div>
             </div>
             <div v-if="product.subcategory" class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Подкатегория</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -127,7 +127,7 @@
               </div>
             </div>
             <div v-if="product.locality" class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Локалитет</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -135,7 +135,7 @@
               </div>
             </div>
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Пол</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -167,7 +167,7 @@
               </div>
             </div>
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Дата рождения</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -175,16 +175,16 @@
               </div>
             </div>
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Возраст</span>
               </div>
               <div class="w-7/12 font-semibold">
                 {{product.age.title}}
               </div>
             </div>
-            <div v-if="product.morphs.length" class="flex">
-              <div class="w-5/12">
-                Морфы
+            <div v-if="product.morphs.length" class="flex items-start">
+              <div class="w-5/12 product-border-dashed">
+                <span class="relative bg-white pr-1">Морфы</span>
               </div>
               <div class="w-7/12">
                 <div class="flex flex-wrap">
@@ -289,7 +289,7 @@
     <div v-if="!$device.isDesktop" class="w-full mb-7">
       <div class="font-bold text-xl mb-3">Информация о товаре</div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Категория</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -297,7 +297,7 @@
         </div>
       </div>
       <div v-if="product.subcategory" class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Подкатегория</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -305,7 +305,7 @@
         </div>
       </div>
       <div v-if="product.locality" class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Локалитет</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -313,7 +313,7 @@
         </div>
       </div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Пол</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -345,7 +345,7 @@
         </div>
       </div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Дата рождения</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -353,7 +353,7 @@
         </div>
       </div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Возраст</span>
         </div>
         <div class="w-6/12 font-semibold">
