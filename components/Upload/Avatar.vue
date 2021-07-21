@@ -97,7 +97,7 @@ export default Vue.extend({
   methods: {
     async upload(file: any, component: any) {
       this.loading = true;
-      file.postAction = 'http://localhost/api/v2/upload';
+      file.postAction = `${this.$config.api}api/v2/upload`;
       await component.uploadHtml5(file)
         .then((resp:any) => {
           this.uploaded(Number(resp.xhr.response));
