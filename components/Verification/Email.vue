@@ -9,7 +9,7 @@
     </div>
     <ValidationObserver v-if="step === 1" v-slot="{ invalid }" class="w-full block">
       <form class="mb-3" @submit.prevent="submit">
-        <ValidationProvider name="телефон" rules="required" v-slot="{ errors }">
+        <ValidationProvider name="E-mail" rules="required" v-slot="{ errors }">
           <div class="mb-3">
             <label class="forms-label" for="email">E-mail:</label>
             <input
