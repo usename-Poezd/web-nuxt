@@ -22,7 +22,7 @@
         const kind = await store.getters["core/activeKind"](params.slug);
         const subcategory = await kind.subcategories.find((s: any) => s.slug === params.value);
         const {products} = await $api.getProducts({
-          include: 'preview,kind,subcategory',
+          include: 'preview,kind,subcategory,shop',
           query: {
             sort: 'random',
             page: {
