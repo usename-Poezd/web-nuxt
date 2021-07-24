@@ -105,36 +105,39 @@ export default Vue.extend({
   methods: {
     moment,
     async sendMessage() {
-      const usersChats = (await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() as object;
-      const shopsChats = (await this.$fire.database.ref(`users/${this.product.shop.id}`).get()).toJSON() as object;
+      const usersChats = (await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON();
+      const shopsChats = (await this.$fire.database.ref(`users/${this.product.shop.id}`).get()).toJSON() || {};
 
       let isNewChat = true
-      await new Promise( (resolve) => Object.keys(usersChats).some((chatId: string) => {
-        // @ts-ignore
-        if (shopsChats[chatId]) {
-          isNewChat = false
-          this.$fire.database.ref(`messages/${chatId}`).push({
-            product: String(this.product.id),
-            checked: false,
-            checkedCreator: `false_${String(this.user.id)}`,
-            creator: String(this.user.id),
-            text: this.message.trim(),
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-          });
 
-          this.$fire.database.ref(`chats/${chatId}/message`).set({
-            checked: false,
-            creator: String(this.user.id),
-            text: this.message.trim(),
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-          });
+      if (usersChats) {
+        await new Promise( (resolve) => Object.keys(usersChats as object).some((chatId: string) => {
+          // @ts-ignore
+          if (shopsChats[chatId]) {
+            isNewChat = false
+            this.$fire.database.ref(`messages/${chatId}`).push({
+              product: String(this.product.id),
+              checked: false,
+              checkedCreator: `false_${String(this.user.id)}`,
+              creator: String(this.user.id),
+              text: this.message.trim(),
+              createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
 
-          this.success = true;
-          setTimeout(() => this.$emit('close'), 3000)
-          resolve(true);
-          return true;
-        }
-      }))
+            this.$fire.database.ref(`chats/${chatId}/message`).set({
+              checked: false,
+              creator: String(this.user.id),
+              text: this.message.trim(),
+              createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            this.success = true;
+            setTimeout(() => this.$emit('close'), 3000)
+            resolve(true);
+            return true;
+          }
+        }))
+      }
 
       if (isNewChat) {
         this.$fire.database.ref('chats')

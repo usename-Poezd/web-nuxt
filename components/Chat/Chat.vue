@@ -29,7 +29,7 @@
             :class="`flex p-3 mb-4 rounded cursor-pointer ${$route.query.cid === id && 'bg-gray-200'}`"
           >
             <div class="w-2/12 relative">
-              <div v-if="chats[id].newMessagesCount > 0" class="absolute px-2 rounded-full bg-green-500 z-30 text-white font-semibold -top-2 right-1">{{chat.newMessagesCount}}</div>
+              <div v-if="chat.newMessagesCount > 0" class="absolute px-2 rounded-full bg-green-500 z-30 text-white font-semibold -top-2 right-1">{{chat.newMessagesCount}}</div>
               <div class="md:w-14 w-12 md:h-14 h-12 shadow-md flex relative items-center justify-center rounded-full bg-green-400 overflow-hidden mr-4">
                 <img
                   v-if="interlocutors[id].logoImg && interlocutors[id].companyName"
