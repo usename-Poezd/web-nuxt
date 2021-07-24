@@ -3,7 +3,7 @@ export default {
   head: {
     title: 'Breeder Zone',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ru'
     },
     meta: [
       { charset: 'utf-8' },
