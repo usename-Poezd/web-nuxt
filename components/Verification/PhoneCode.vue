@@ -75,8 +75,8 @@
         >
           Отправить
         </button>
-        <p class="mb-2">{{type === 'account' ? 'Ваш аккаунт не подтвержден. ' : ''}}Мы выслали вам код потжтверждения на ваш телефон.</p>
-        <p>Код не пришел? <span @click.prevent="submitPhone" class="cursor-pointer link">Отправить повторно</span></p>
+        <p class="mb-2">{{type === 'account' ? 'Ваш аккаунт не подтвержден. ' : ''}}Пожалуйста введите 4 последнее цыфры номера, с каторого иы вам позвоним.</p>
+        <p>Вам не позвонили? <span @click.prevent="submitPhone" class="cursor-pointer link">Позвонить повторно</span></p>
       </form>
     </ValidationObserver>
     <ValidationObserver v-if="step === 3 && type === 'password' && !loading" v-slot="{ invalid }" class="w-full block">
