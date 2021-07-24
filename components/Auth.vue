@@ -3,7 +3,7 @@
     <h1 class="w-full font-bold text-2xl text-center my-12">{{type === 'login' ? 'Вход' : 'Регистрация'}}</h1>
     <div :class="`${type === 'login' ? 'lg:w-3/12' : 'lg:w-4/12'} w-full p-2`">
       <div class="flex flex-col mb-5">
-        <a href="http://localhost/api/auth/v2/vkontakte/redirect" class="flex items-center py-3 bg-blue-500 transition hover:bg-blue-600 text-white cursor-pointer font-semibold rounded">
+        <a :href="`${$config.api}api/auth/v2/vkontakte/redirect`" class="flex items-center py-3 bg-blue-500 transition hover:bg-blue-600 text-white cursor-pointer font-semibold rounded">
           <div class="border-r px-3 mr-2">
             <FontAwesomeIcon :icon="['fab', 'vk']" size="lg"/>
           </div>
