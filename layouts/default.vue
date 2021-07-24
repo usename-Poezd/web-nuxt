@@ -36,7 +36,7 @@ export default Vue.extend({
       .then(async () => {
         await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
 
-        const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() as object);
+        const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() || {});
 
         chatIds.map((chatId: string) => {
           this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {
