@@ -5,9 +5,9 @@ name: Stage
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ master ]
   pull_request:
-    branches: [ dev ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -37,34 +37,34 @@ jobs:
         build-args: |
           API_BASE_PATH=${{secrets.API_BASE_PATH}}
           DOCKER_API_BASE_PATH=${{secrets.DOCKER_API_BASE_PATH}}
-          FIREBASE_API_KEY=${{secrets.DEV_FIREBASE_API_KEY}}
-          FIREBASE_AUTH_DOMAIN=${{secrets.DEV_FIREBASE_AUTH_DOMAIN}}
-          FIREBASE_DATABASE_URL=${{secrets.DEV_FIREBASE_DATABASE_URL}}
-          FIREBASE_PROJECT_ID=${{secrets.DEV_FIREBASE_PROJECT_ID}}
-          FIREBASE_STORAGE_BUCKET=${{secrets.DEV_FIREBASE_STORAGE_BUCKET}}
-          FIREBASE_MESSAGING_SENDER_ID=${{secrets.DEV_FIREBASE_MESSAGING_SENDER_ID}}
-          FIREBASE_APP_ID=${{secrets.DEV_FIREBASE_APP_ID}}
+          FIREBASE_API_KEY=${{secrets.FIREBASE_API_KEY}}
+          FIREBASE_AUTH_DOMAIN=${{secrets.FIREBASE_AUTH_DOMAIN}}
+          FIREBASE_DATABASE_URL=${{secrets.FIREBASE_DATABASE_URL}}
+          FIREBASE_PROJECT_ID=${{secrets.FIREBASE_PROJECT_ID}}
+          FIREBASE_STORAGE_BUCKET=${{secrets.FIREBASE_STORAGE_BUCKET}}
+          FIREBASE_MESSAGING_SENDER_ID=${{secrets.FIREBASE_MESSAGING_SENDER_ID}}
+          FIREBASE_APP_ID=${{secrets.FIREBASE_APP_ID}}
           YANDEX_METRIKA_ID=${{secrets.YANDEX_METRIKA_ID}}
         tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/web:dev
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to Digital Ocean droplet via SSH action
-        uses: appleboy/ssh-action@v0.1.4
-        with:
-          host: ${{ secrets.DEV_HOST }}
-          username: ${{ secrets.DEV_USERNAME }}
-          password: ${{ secrets.DEV_PASSWORD }}
-          port: ${{ secrets.DEV_PORT }}
-          script: |
-            cd /var/www
-
-            docker-compose pull web
-            docker-compose stop web
-            docker-compose rm -f web
-            docker-compose up -d --force-recreate nginx
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      - name: Deploy to Digital Ocean droplet via SSH action
+#        uses: appleboy/ssh-action@v0.1.4
+#        with:
+#          host: ${{ secrets.DEV_HOST }}
+#          username: ${{ secrets.DEV_USERNAME }}
+#          password: ${{ secrets.DEV_PASSWORD }}
+#          port: ${{ secrets.DEV_PORT }}
+#          script: |
+#            cd /var/www
+#
+#            docker-compose pull web
+#            docker-compose stop web
+#            docker-compose rm -f web
+#            docker-compose up -d --force-recreate nginx
