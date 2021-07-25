@@ -72,15 +72,13 @@
                 </li>
               </ul>
             </div>
-            <div>
-              <div class="flex items-start">
-                <div class="font-semibold mr-4">
-                  Локация
-                </div>
-                <div>
-                  <span class="mr-2">{{shop.location}}</span>
-                  <CountryFlag :country="shop.country.iso31663" class="border"/>
-                </div>
+            <div class="flex items-start">
+              <div class="font-semibold mr-4">
+                Локация
+              </div>
+              <div class="relative">
+                <span>{{shop.location}}</span>
+                <CountryFlag :country="shop.country.iso31663" class="border absolute -top-2 -right-12"/>
               </div>
             </div>
           </div>
