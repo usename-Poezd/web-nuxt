@@ -45,7 +45,7 @@ jobs:
           FIREBASE_MESSAGING_SENDER_ID=${{secrets.FIREBASE_MESSAGING_SENDER_ID}}
           FIREBASE_APP_ID=${{secrets.FIREBASE_APP_ID}}
           YANDEX_METRIKA_ID=${{secrets.YANDEX_METRIKA_ID}}
-        tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/web:dev
+        tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/web:latest
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
     - name: Image digest
