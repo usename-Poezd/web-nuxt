@@ -71,7 +71,7 @@
             id="preview"
             previewClass="md:w-3/12 sm:w-6/12 w-full"
           >
-            <div v-if="product.preview" class="md:w-3/12 sm:w-6/12 w-full px-2 relative rounded">
+            <div v-if="product.preview" class="md:w-3/12 sm:w-6/12 w-full px-2 pt-2 relative rounded">
               <FontAwesomeIcon @click.prevent="product.preview = null" icon="times" class="text-red-500 absolute top-2 right-4 cursor-pointer z-30"/>
               <img :src="product.preview.imgSrc" alt="" class="img-fluid shadow rounded">
             </div>
@@ -90,7 +90,7 @@
             id="images"
             previewClass="md:w-3/12 sm:w-6/12 w-full"
           >
-            <div v-for="(image, idx) in product.images" :key="`images-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 relative rounded">
+            <div v-for="(image, idx) in product.images" :key="`images-${image.id}`" class="md:w-3/12 sm:w-6/12 w-full px-2 mb-2 relative rounded pt-2">
               <FontAwesomeIcon
                 @click.prevent="product.images.splice(idx, 1)"
                 icon="times"
@@ -574,7 +574,7 @@ export default Vue.extend({
             name: product.name,
             article: product.article,
             description: product.description,
-            price: product.price.find((i: any) => i.currency === product.currency)?.amount,
+            price: product.price as unknown as number,
             currency: product.currency,
             age: product.age?.id,
             locality: product.locality?.id || '',

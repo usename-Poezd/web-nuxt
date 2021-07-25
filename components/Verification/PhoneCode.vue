@@ -75,8 +75,8 @@
         >
           Отправить
         </button>
-        <p class="mb-2">{{type === 'account' ? 'Ваш аккаунт не подтвержден. ' : ''}}Мы выслали вам код потжтверждения на ваш телефон.</p>
-        <p>Код не пришел? <span @click.prevent="submitPhone" class="cursor-pointer link">Отправить повторно</span></p>
+        <p class="mb-2">{{type === 'account' ? 'Ваш аккаунт не подтвержден. ' : ''}}Пожалуйста введите 4 последнее цыфры номера, с каторого иы вам позвоним.</p>
+        <p>Вам не позвонили? <span @click.prevent="submitPhone" class="cursor-pointer link">Позвонить повторно</span></p>
       </form>
     </ValidationObserver>
     <ValidationObserver v-if="step === 3 && type === 'password' && !loading" v-slot="{ invalid }" class="w-full block">
@@ -129,6 +129,7 @@
   import Vue from 'vue';
   import {mapMutations} from "vuex";
   import {AUTH_MUTATIONS} from "~/store/auth";
+  import {getFirebaseToken, setFirebaseToken} from "~/utils";
 
   const getTitle = (type:string) => {
     switch (type) {
@@ -183,7 +184,8 @@
       getDescription,
       ...mapMutations({
         setPayload: `auth/${AUTH_MUTATIONS.SET_PAYLOAD}`,
-        setUser: `auth/${AUTH_MUTATIONS.SET_USER}`
+        setUser: `auth/${AUTH_MUTATIONS.SET_USER}`,
+        setUserUnreadChats: `auth/${AUTH_MUTATIONS.SET_USER_UNREAD_CHATS}`
       }),
       submitPhone() {
         this.loading = true;
@@ -216,6 +218,29 @@
               case 'account':
                 this.setPayload(data);
                 this.setUser(data.user);
+
+                setFirebaseToken(this.$api)
+                  .then(async () => {
+                    await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+
+                    const chatIds = Object.keys((await this.$fire.database.ref(`users/${data.user.id}`).get()).toJSON() || {});
+
+                    chatIds.map((chatId: string) => {
+                      this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {
+                        const value = snapshot.val();
+
+                        if (value.creator !== String(data.user.id) && !data.checked) {
+                          this.setUserUnreadChats({
+                            [chatId]: true
+                          })
+                        } else {
+                          this.setUserUnreadChats({
+                            [chatId]: false
+                          })
+                        }
+                      })
+                    })
+                  });
 
                 this.$modal.hide('verify');
 

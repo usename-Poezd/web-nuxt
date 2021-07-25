@@ -67,8 +67,10 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {mapActions} from 'vuex';
+import {mapActions, mapMutations, mapState} from 'vuex';
 import VerificationPhoneCode from "~/components/Verification/PhoneCode.vue";
+import {getFirebaseToken, setFirebaseToken} from "~/utils";
+import {AUTH_MUTATIONS} from "~/store/auth";
 
 export default Vue.extend({
   middleware: ['guest'],
@@ -81,10 +83,19 @@ export default Vue.extend({
     loading: false
   }),
 
+  computed: {
+    ...mapState('auth', [
+      'user'
+    ])
+  },
+
   methods: {
     ...mapActions('auth', [
       'login'
     ]),
+    ...mapMutations({
+      setUserUnreadChats: `auth/${AUTH_MUTATIONS.SET_USER_UNREAD_CHATS}`
+    }),
 
     submit() {
       this.loading = true;
@@ -93,6 +104,29 @@ export default Vue.extend({
         .then(() => {
           this.$router.push('/');
           this.loading = false;
+
+          setFirebaseToken(this.$api)
+            .then(async () => {
+              await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+
+              const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() || {});
+
+              chatIds.map((chatId: string) => {
+                this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {
+                  const data = snapshot.val();
+
+                  if (data.creator !== String(this.user.id) && !data.checked) {
+                    this.setUserUnreadChats({
+                      [chatId]: true
+                    })
+                  } else {
+                    this.setUserUnreadChats({
+                      [chatId]: false
+                    })
+                  }
+                })
+              })
+            });
         })
         .catch((err) => {
           if (err.response.status === 401) {

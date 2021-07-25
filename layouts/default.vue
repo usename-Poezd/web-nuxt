@@ -1,10 +1,10 @@
 <template>
-  <div :style="$device.isMobile && 'padding-bottom: 56px;'">
+  <div :style="!$device.isDesktop && 'padding-bottom: 56px;'">
     <modals-container/>
     <Header/>
     <HeaderMenu :class="!headerMenuShow ? 'hidden' : ''"/>
     <Nuxt :class="headerMenuShow ? 'hidden' : ''"/>
-    <MobileHeader v-if="$device.isMobile"/>
+    <MobileHeader v-if="!$device.isDesktop"/>
     <Footer/>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default Vue.extend({
       .then(async () => {
         await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
 
-        const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() as object);
+        const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() || {});
 
         chatIds.map((chatId: string) => {
           this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {

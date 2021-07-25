@@ -79,23 +79,26 @@ export const actions: ActionTree<AuthState, AuthState> = {
       .then(async () => {
         await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
 
-        const chatIds = Object.keys((await this.$fire.database.ref(`users/${user.id}`).get()).toJSON() as object);
+        const chatsJSON = (await this.$fire.database.ref(`users/${user.id}`).get()).toJSON()
+        if (chatsJSON) {
+          const chatIds = Object.keys(chatsJSON as object);
 
-        chatIds.map((chatId: string) => {
-          this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {
-            const data = snapshot.val();
-
-            if (data.creator !== String(user.id) && !data.checked) {
-              commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
-                [chatId]: true
-              });
-            } else {
-              commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
-                [chatId]: false
-              });
-            }
+          chatIds.map((chatId: string) => {
+            this.$fire.database.ref(`chats/${chatId}/message`).off('value', (snapshot) => {
+              const data = snapshot.val();
+      
+              if (data.creator !== String(user.id) && !data.checked) {
+                commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+                  [chatId]: true
+                });
+              } else {
+                commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+                  [chatId]: false
+                });
+              }
+            })
           })
-        })
+        }
       });
   },
 
@@ -115,23 +118,26 @@ export const actions: ActionTree<AuthState, AuthState> = {
     const user = {...state.user};
     commit(AUTH_MUTATIONS.LOGOUT);
 
-    const chatIds = Object.keys((await this.$fire.database.ref(`users/${user.id}`).get()).toJSON() as object);
+    const chatsJSON = (await this.$fire.database.ref(`users/${user.id}`).get()).toJSON()
+    if (chatsJSON) {
+      const chatIds = Object.keys(chatsJSON as object);
 
-    chatIds.map((chatId: string) => {
-      this.$fire.database.ref(`chats/${chatId}/message`).off('value', (snapshot) => {
-        const data = snapshot.val();
-
-        if (data.creator !== String(user.id) && !data.checked) {
-          commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
-            [chatId]: true
-          });
-        } else {
-          commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
-            [chatId]: false
-          });
-        }
+      chatIds.map((chatId: string) => {
+        this.$fire.database.ref(`chats/${chatId}/message`).off('value', (snapshot) => {
+          const data = snapshot.val();
+  
+          if (data.creator !== String(user.id) && !data.checked) {
+            commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+              [chatId]: true
+            });
+          } else {
+            commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
+              [chatId]: false
+            });
+          }
+        })
       })
-    })
+    }
   },
 };
 
@@ -142,6 +148,6 @@ export const getters: GetterTree<AuthState, AuthState> = {
   },
 
   unreadChats: (state) => {
-    return Object.keys(state.user.unreadChats).filter((chatId: string) => state.user.unreadChats[chatId]).length
+    return state.user ? Object.keys(state.user.unreadChats).filter((chatId: string) => state.user.unreadChats[chatId]).length : 0
   },
 };

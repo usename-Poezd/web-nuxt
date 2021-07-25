@@ -79,7 +79,7 @@
           include: 'activeSubcategories',
         });
 
-        const isTableView = (store.state as RootState).core.tableCategoryView && (!query.gene || !query.trait || !query.shop)
+        const isTableView = (store.state as RootState).core.tableCategoryView && !(query.gene || query.trait || query.shop || qs.parse(route.fullPath.replace(route.path, '').replace('?', '')).morphs?.length)
 
 
 

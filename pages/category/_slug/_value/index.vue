@@ -98,7 +98,7 @@
         const product = await $api.getProduct(params.value, 'preview,images,kind,subcategory,locality,morphs.gene,morphs.trait,morphs.trait.traitGroup,shop,age');
         const kind = await store.getters["core/activeKind"](params.slug)
         const {products} = await $api.getProducts({
-          include: 'preview,kind,subcategory',
+          include: 'preview,kind,subcategory,shop',
           query: {
             sort: 'random',
             page: {

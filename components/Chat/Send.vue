@@ -29,7 +29,7 @@
           <div class="text-gray-400">На сайте с {{moment(product.shop.createdAt).format('DD.MM.YYYY')}}</div>
         </div>
       </div>
-      <ValidationObserver tag="form" @submit.prevent="sendMessage" v-slot="{invalid}" class="flex items-end">
+      <form @submit.prevent="sendMessage" class="flex items-end">
         <ValidationProvider name="message" rules="required" tag="div" class="w-full shadow rounded">
           <TextareaAutosize
             v-model="message"
@@ -41,7 +41,6 @@
           <div class="flex justify-end">
             <button
               type="submit"
-              :disabled="invalid"
               class="flex items-center text-sm text-white font-bold inline-block rounded-lg py-2 px-5 cursor-pointer duration-200 transition bg-green-600 hover:bg-green-700 mb-3 mr-3"
             >
               <span class="mr-2">Отправить</span>
@@ -63,7 +62,7 @@
             </button>
           </div>
         </ValidationProvider>
-      </ValidationObserver>
+      </form>
     </div>
     <div v-else class="alert alert-success">
       <div class="alert-icon">
@@ -105,36 +104,43 @@ export default Vue.extend({
   methods: {
     moment,
     async sendMessage() {
-      const usersChats = (await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() as object;
-      const shopsChats = (await this.$fire.database.ref(`users/${this.product.shop.id}`).get()).toJSON() as object;
+      if (!this.message.trim()) {
+        return;
+      }
+
+      const usersChats = (await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON();
+      const shopsChats = (await this.$fire.database.ref(`users/${this.product.shop.id}`).get()).toJSON() || {};
 
       let isNewChat = true
-      await new Promise( (resolve) => Object.keys(usersChats).some((chatId: string) => {
-        // @ts-ignore
-        if (shopsChats[chatId]) {
-          isNewChat = false
-          this.$fire.database.ref(`messages/${chatId}`).push({
-            product: String(this.product.id),
-            checked: false,
-            checkedCreator: `false_${String(this.user.id)}`,
-            creator: String(this.user.id),
-            text: this.message.trim(),
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-          });
 
-          this.$fire.database.ref(`chats/${chatId}/message`).set({
-            checked: false,
-            creator: String(this.user.id),
-            text: this.message.trim(),
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-          });
+      if (usersChats) {
+        await new Promise( (resolve) => Object.keys(usersChats as object).some((chatId: string) => {
+          // @ts-ignore
+          if (shopsChats[chatId]) {
+            isNewChat = false
+            this.$fire.database.ref(`messages/${chatId}`).push({
+              product: String(this.product.id),
+              checked: false,
+              checkedCreator: `false_${String(this.user.id)}`,
+              creator: String(this.user.id),
+              text: this.message.trim(),
+              createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
 
-          this.success = true;
-          setTimeout(() => this.$emit('close'), 3000)
-          resolve(true);
-          return true;
-        }
-      }))
+            this.$fire.database.ref(`chats/${chatId}/message`).set({
+              checked: false,
+              creator: String(this.user.id),
+              text: this.message.trim(),
+              createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            this.success = true;
+            setTimeout(() => this.$emit('close'), 3000)
+            resolve(true);
+            return true;
+          }
+        }))
+      }
 
       if (isNewChat) {
         this.$fire.database.ref('chats')

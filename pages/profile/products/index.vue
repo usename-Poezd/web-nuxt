@@ -60,7 +60,7 @@
           to="/profile/products/add"
           class="w-full text-sm text-center text-white font-bold inline-block rounded-lg py-2 px-3 cursor-pointer duration-200 transition bg-green-600 hover:bg-green-700"
         >
-          <span v-if="!$device.isMobile">Добавить товар</span>
+          <span v-if="$device.isDesktop">Добавить товар</span>
           <FontAwesomeIcon v-else icon="plus"/>
         </NuxtLink>
       </div>
@@ -92,7 +92,7 @@ export default Vue.extend({
   middleware: ['auth'],
   layout: 'profile',
 
-  watchQuery: ['kind', 'page', 'sort'],
+  watchQuery: ['kind', 'page', 'sort', 'q'],
 
   data: () => ({
     q: '',
@@ -117,6 +117,7 @@ export default Vue.extend({
           number: query.page
         },
         sort: query.sort,
+        q: query.q,
         filter: {
           kind: query.kind,
           shop: store.state.auth.user.companyName

@@ -13,7 +13,7 @@
       <slot name="headerFilter"/>
     </div>
     <div class="flex flex-wrap items-start">
-      <slot name="filter" v-if="!$device.isMobile"/>
+      <slot name="filter" v-if="$device.isDesktop"/>
       <modal
         v-else
         classes="full-modal"
@@ -33,10 +33,10 @@
         </div>
       </modal>
 
-      <div class="md:w-10/12 w-full">
+      <div class="lg:w-10/12 w-full">
         <div class="flex justify-between mb-3 md:px-2">
           <button
-            v-if="!$device.isMobile && kind"
+            v-if="!!$device.isDesktop && kind"
             @click.prevent="openMorphsTable"
             class="shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"
           >
@@ -62,14 +62,14 @@
             />
           </div>
           <button
-            v-if="$device.isMobile"
+            v-if="!$device.isDesktop"
             @click="$modal.show('filter')"
             class="shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"
           >
             <FontAwesomeIcon icon="sliders-h" size="lg"/>
           </button>
         </div>
-        <div v-if="$device.isMobile && kind" class="flex justify-between mb-3 md:px-2">
+        <div v-if="!$device.isDesktop && kind" class="flex justify-between mb-3 md:px-2">
           <button
             @click.prevent="openMorphsTable"
             class="w-full shadow text-sm font-bold inline-block rounded-lg p-2 cursor-pointer duration-200 transition bg-white hover:bg-gray-100"
@@ -90,7 +90,7 @@
           />
         </div>
       </div>
-      <div class="md:w-10/12 w-full ml-auto pt-3">
+      <div class="lg:w-10/12 w-full ml-auto pt-3">
         <Pagination :currentPage="meta.page.currentPage" :lastPage="meta.page.lastPage"/>
       </div>
     </div>

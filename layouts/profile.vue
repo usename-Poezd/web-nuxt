@@ -1,11 +1,11 @@
 <template>
-  <div :style="$device.isMobile && 'padding-bottom: 56px;'">
+  <div :style="!$device.isDesktop && 'padding-bottom: 56px;'">
     <modals-container/>
     <Header/>
     <HeaderMenu :class="!headerMenuShow ? 'hidden' : ''"/>
     <main v-if="isAuthenticated && user" :class="`container md:mt-16 mt-5 ${headerMenuShow ? 'hidden' : ''}`">
       <div class="flex items-start flex-wrap">
-        <div v-if="$route.path === '/profile' || !$device.isMobile" class="md:w-2/12 w-full md:mb-16 mb-5">
+        <div v-if="$route.path === '/profile' || $device.isDesktop" class="md:w-2/12 w-full md:mb-16 mb-5">
           <div class="mb-7 flex md:flex-col md:items-start items-center">
             <div @click.prevent="updateProfileImg" class="w-24 h-24 flex relative items-center justify-center rounded-full bg-green-400 overflow-hidden shadow">
               <div v-if="profileImgLoading" class="w-full h-full flex absolute top-0 left-0 bg-white opacity-80">
@@ -26,7 +26,7 @@
             </div>
           </div>
           <ul>
-            <li v-if="!$device.isMobile">
+            <li v-if="$device.isDesktop">
               <NuxtLink to="/profile" :class="`flex items-center justify-between md:pb-2 pb-4 text-gray-800 transition duration-200 hover:text-green-600 ${$route.path === '/profile' && 'text-green-600'}`">
                 <div class="flex items-center">
                   <span class="mr-1 w-6 text-center">
@@ -34,7 +34,7 @@
                   </span>
                   <span class="md:font-normal font-semibold">Главная</span>
                 </div>
-                <FontAwesomeIcon v-if="$device.isMobile" icon="chevron-right" class="text-gray-500"/>
+                <FontAwesomeIcon v-if="!$device.isDesktop" icon="chevron-right" class="text-gray-500"/>
               </NuxtLink>
             </li>
             <li v-if="user.isBreeder">
@@ -45,7 +45,7 @@
                   </span>
                   <span class="md:font-normal font-semibold">Мои товары</span>
                 </div>
-                <FontAwesomeIcon v-if="$device.isMobile" icon="chevron-right" class="text-gray-500"/>
+                <FontAwesomeIcon v-if="!$device.isDesktop" icon="chevron-right" class="text-gray-500"/>
               </NuxtLink>
             </li>
             <li v-if="user.isBreeder">
@@ -56,7 +56,7 @@
                   </span>
                   <span class="md:font-normal font-semibold">Мои разведенья</span>
                 </div>
-                <FontAwesomeIcon v-if="$device.isMobile" icon="chevron-right" class="text-gray-500"/>
+                <FontAwesomeIcon v-if="!$device.isDesktop" icon="chevron-right" class="text-gray-500"/>
               </NuxtLink>
             </li>
             <li>
@@ -67,7 +67,7 @@
                   </span>
                   <span class="md:font-normal font-semibold">Настройки</span>
                 </div>
-                <FontAwesomeIcon v-if="$device.isMobile" icon="chevron-right" class="text-gray-500"/>
+                <FontAwesomeIcon v-if="!$device.isDesktop" icon="chevron-right" class="text-gray-500"/>
               </NuxtLink>
             </li>
             <li>
@@ -78,17 +78,17 @@
                   </span>
                   <span class="md:font-normal font-semibold">Выйти</span>
                 </div>
-                <FontAwesomeIcon v-if="$device.isMobile" icon="chevron-right" class="text-gray-500"/>
+                <FontAwesomeIcon v-if="!$device.isDesktop" icon="chevron-right" class="text-gray-500"/>
               </div>
             </li>
           </ul>
         </div>
-        <div v-if="$route.path !== '/profile' || !$device.isMobile" class="md:w-10/12 w-full md:pl-5">
+        <div v-if="$route.path !== '/profile' || $device.isDesktop" class="md:w-10/12 w-full md:pl-5">
           <Nuxt />
         </div>
       </div>
     </main>
-    <MobileHeader v-if="$device.isMobile"/>
+    <MobileHeader v-if="!$device.isDesktop"/>
     <Footer/>
   </div>
 </template>
@@ -123,7 +123,7 @@ export default Vue.extend({
       .then(async () => {
         await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
 
-        const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() as object);
+        const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() || {});
 
         chatIds.map((chatId: string) => {
           this.$fire.database.ref(`chats/${chatId}/message`).on('value', (snapshot) => {

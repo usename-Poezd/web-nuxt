@@ -29,7 +29,7 @@ declare module 'vuex/types/index' {
 }
 
 const modAxios = (axios: NuxtAxiosInstance, store: Store<RootState>, redirect: any) => {
-  const IGNORED_PATHS = ['/auth/login', '/auth/register', '/auth/logout', '/auth/refresh'];
+  const IGNORED_PATHS = ['/api/auth/v2/login', '/api/auth/v2/register', '/api/auth/v2/logout', '/api/auth/v2/refresh'];
 
   axios.onRequest((config) => {
     // check if the user is authenticated

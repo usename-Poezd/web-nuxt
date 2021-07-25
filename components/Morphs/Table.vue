@@ -217,7 +217,7 @@ import {IKind} from "~/types";
     },
 
     mounted() {
-      if (!this.genes.length || !this.subcategories.length) {
+      if (!this.genes.length || !this.subcategories.length || !this.tableMorphs.genes.length || !this.tableMorphs.subcategories.length) {
         this.loading = true;
         this.$api.getKindTable(this.kind.id)
           .then((data: any) => {

@@ -3,7 +3,7 @@ export default {
   head: {
     title: 'Breeder Zone',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ru'
     },
     meta: [
       { charset: 'utf-8' },
@@ -59,6 +59,11 @@ export default {
     ]
   },
 
+  loading: {
+    color: '#059669',
+    height: '3px'
+  },
+
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
@@ -75,6 +80,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/firebase',
+    '@nuxtjs/yandex-metrika'
   ],
 
   firebase: {
@@ -119,6 +125,15 @@ export default {
         ['@babel/plugin-proposal-private-methods', { loose: true }]
       ]
     }
+  },
+
+  yandexMetrika: {
+    id: process.env.YANDEX_METRIKA_ID,
+    webvisor: true,
+    // clickmap:true,
+    // useCDN:false,
+    // trackLinks:true,
+    // accurateTrackBounce:true,
   },
 
   publicRuntimeConfig: {

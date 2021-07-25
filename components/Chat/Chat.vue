@@ -1,6 +1,6 @@
 <template>
-  <main :class="!$device.isMobile && 'container'">
-    <div class="md:py-4 pt-4 md:px-0 px-4">
+  <main :class="$device.isDesktop && 'container'">
+    <div class="lg:py-4 pt-4 lg:px-0 px-4">
       <nav class="text-black font-bold mb-4 text-xs" aria-label="Breadcrumb">
         <ol class="list-none p-0 inline-flex">
           <li class="flex items-center">
@@ -19,8 +19,18 @@
     </div>
 
     <div class="flex flex-wrap chat">
-      <div v-if="!$device.isMobile || ($device.isMobile && !selectedChat.id)" class="lg:w-4/12 w-full lg:px-4" :set="interlocutors = []">
+      <div v-if="$device.isDesktop || (!$device.isDesktop && !selectedChat.id)" class="lg:w-4/12 w-full lg:px-4" :set="interlocutors = []">
         <div v-if="!loadingChats" class="overflow-auto h-full">
+
+          <div v-if="Object.keys(chats).length === 0" class="flex items-center p-4 h-full">
+            <div class="flex flex-col items-center m-auto text-gray-500">
+              <svg class="w-14 h-14" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.03 10c-8.48 0-14.97 5.92-14.97 12.8 0 2.47.82 4.79 2.25 6.74a1.5 1.5 0 01.3.9c0 1.63-.43 3.22-.96 4.67a41.9 41.9 0 01-1.17 2.8c3.31-.33 5.5-1.4 6.8-2.96a1.5 1.5 0 011.69-.43 17.06 17.06 0 006.06 1.1C30.5 35.61 37 29.68 37 22.8 37 15.93 30.5 10 22.03 10zM4.06 22.8C4.06 13.9 12.3 7 22.03 7 31.75 7 40 13.88 40 22.8c0 8.93-8.25 15.81-17.97 15.81-2.17 0-4.25-.33-6.17-.95-2.26 2.14-5.55 3.18-9.6 3.34a2.2 2.2 0 01-2.07-3.08l.42-.95c.43-.96.86-1.9 1.22-2.9.41-1.11.69-2.18.76-3.18a14.28 14.28 0 01-2.53-8.08z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M43.01 18.77a1.5 1.5 0 00.38 2.09c3.44 2.38 5.55 5.98 5.55 9.95 0 2.47-.81 4.78-2.25 6.73a1.5 1.5 0 00-.3.9c0 1.63.43 3.22.96 4.67.35.96.77 1.92 1.17 2.8-3.31-.33-5.5-1.4-6.8-2.96a1.5 1.5 0 00-1.69-.43 17.06 17.06 0 01-6.06 1.1c-2.98 0-5.75-.76-8.08-2.03a1.5 1.5 0 00-1.44 2.63 20.19 20.19 0 0015.7 1.44c2.25 2.14 5.54 3.18 9.59 3.34a2.2 2.2 0 002.07-3.08l-.42-.95c-.44-.96-.86-1.9-1.22-2.9a11.65 11.65 0 01-.76-3.18 14.28 14.28 0 002.53-8.08c0-5.1-2.72-9.56-6.84-12.42a1.5 1.5 0 00-2.09.38z" fill="currentColor"></path></svg>
+              <div class="font-semibold text-lg">
+                Вы пока никому не написали
+              </div>
+            </div>
+          </div>
+
           <div
             v-for="(chat, id) in chats"
             :key="`chat-${id}`"
@@ -29,7 +39,7 @@
             :class="`flex p-3 mb-4 rounded cursor-pointer ${$route.query.cid === id && 'bg-gray-200'}`"
           >
             <div class="w-2/12 relative">
-              <div v-if="chats[id].newMessagesCount > 0" class="absolute px-2 rounded-full bg-green-500 z-30 text-white font-semibold -top-2 right-1">{{chat.newMessagesCount}}</div>
+              <div v-if="chat.newMessagesCount > 0" class="absolute px-2 rounded-full bg-green-500 z-30 text-white font-semibold -top-2 right-1">{{chat.newMessagesCount}}</div>
               <div class="md:w-14 w-12 md:h-14 h-12 shadow-md flex relative items-center justify-center rounded-full bg-green-400 overflow-hidden mr-4">
                 <img
                   v-if="interlocutors[id].logoImg && interlocutors[id].companyName"
@@ -77,7 +87,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -91,7 +101,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -105,7 +115,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -119,7 +129,7 @@
             </div>
             <div class="w-10/12 text-sm">
               <div class="flex sm:flex-row flex-col sm:items-center justify-between mb-2">
-                <div class="h-3 w-2/4 bg-gray-300"></div>
+                <div class="h-3 w-2/4 bg-gray-300 sm:mb-0 mb-2"></div>
                 <div class="h-2.5 w-12 bg-gray-300"></div>
               </div>
               <div class="h-2.5 w-3/4 bg-gray-300"></div>
@@ -127,7 +137,7 @@
           </div>
         </div>
       </div>
-      <div class="lg:w-8/12 w-full h-full">
+      <div v-if="$route.query.cid || $device.isDesktop" class="lg:w-8/12 w-full h-full">
         <div v-if="!loadingChats && selectedChat.id" class="rounded md:shadow h-full flex flex-col">
           <div class="flex items-center border-b p-4">
             <div>
@@ -475,11 +485,17 @@ export default Vue.extend({
     async getChats() {
       this.loadingChats = true;
       // Get users chats
-      const chatsId = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() as object);
-      const chatsQuery = this.$fire.database.ref('chats');
+      const chatsId = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() || {});
+
+      if (chatsId.length === 0) {
+        this.loadingChats = false;
+
+        return {};
+      }
+
+      let chatsQuery = this.$fire.database.ref('chats').orderByKey();
       chatsId.map((chatId: string) => {
-        chatsQuery.orderByKey()
-          .equalTo(chatId)
+        chatsQuery = chatsQuery.equalTo(chatId)
       })
 
 

@@ -15,7 +15,11 @@
     <div class="flex lg:flex-nowrap flex-wrap">
       <div class="xl:w-2/12 lg:w-3/12 w-full lg:mr-4 lg:mb-0 mb-4">
         <div class="mb-4 p-4 shadow rounded-lg">
-          <img :src="shop.logoImg" :alt="shop.companyName" class="mx-auto">
+          <img v-if="shop.logoImg" :src="shop.logoImg" :alt="shop.companyName" class="mx-auto">
+          <div v-else class="md:w-24 w-22 md:h-24 h-22 shadow-md flex relative items-center justify-center rounded-full overflow-hidden bg-green-400 mx-auto">
+            <span class="md:text-3xl text-xl font-bold text-white m-auto">{{shop.companyName[0]}}</span>
+          </div>
+
         </div>
 
         <a v-if="shop.website" target="_blank" :href="shop.website" class="p-4 block shadow rounded-lg mb-4 link text-center font-semibold">
@@ -29,15 +33,15 @@
             shop.facebook ||
             shop.youtube
           "
-          class="p-4 shadow rounded-lg flex justify-between"
+          class="p-4 shadow rounded-lg flex"
         >
-          <a v-if="shop.vk" target="_blank" :href="shop.vk" class="p-2 transition duration-150 text-green-600 hover:text-green-700">
+          <a v-if="shop.vk" target="_blank" :href="shop.vk" class="p-2 transition duration-150 text-green-600 hover:text-green-700 mr-3">
             <FontAwesomeIcon :icon="['fab', 'vk']" size="lg"/>
           </a>
-          <a v-if="shop.instagram" target="_blank" :href="shop.instagram" class="p-2 transition duration-150 text-green-600 hover:text-green-700">
+          <a v-if="shop.instagram" target="_blank" :href="shop.instagram" class="p-2 transition duration-150 text-green-600 hover:text-green-700 mr-3">
             <FontAwesomeIcon :icon="['fab', 'instagram']" size="lg"/>
           </a>
-          <a v-if="shop.facebook" target="_blank" :href="shop.facebook" class="p-2 transition duration-150 text-green-600 hover:text-green-700">
+          <a v-if="shop.facebook" target="_blank" :href="shop.facebook" class="p-2 transition duration-150 text-green-600 hover:text-green-700 mr-3">
             <FontAwesomeIcon :icon="['fab', 'facebook']" size="lg"/>
           </a>
           <a v-if="shop.youtube" target="_blank" :href="shop.youtube" class="p-2 transition duration-150 text-green-600 hover:text-green-700">
@@ -72,13 +76,13 @@
                 </li>
               </ul>
             </div>
-            <div class="flex">
+            <div class="flex items-start">
               <div class="font-semibold mr-4">
                 Локация
               </div>
-              <div>
-                <span class="mr-2">{{shop.location}}</span>
-                <CountryFlag :country="shop.country.iso31663" class="border"/>
+              <div class="relative">
+                <span>{{shop.location}}</span>
+                <CountryFlag :country="shop.country.iso31663" class="border absolute -top-2 -right-12"/>
               </div>
             </div>
           </div>
@@ -88,12 +92,13 @@
           <h2 class="text-xl font-bold mb-2 pl-4">Категории</h2>
 
           <div
+            v-if="shop.kinds.length >= 4"
             v-swiper:mySwiper="{
              loop: true,
-             loopedSlides: !$device.isMobile ? 3 : 2,
+             loopedSlides: $device.isDesktop ? 3 : 2,
              centeredSlides: true,
              slideToClickedSlide: true,
-             slidesPerView: !$device.isMobile ? 3 : 2,
+             slidesPerView: $device.isDesktop ? 3 : 2,
              slidesPerGroup: 1,
              spaceBetween: 10,
              grabCursor: true,
@@ -135,9 +140,31 @@
               </svg>
             </div>
           </div>
+          <div v-else class="flex">
+            <NuxtLink
+              v-for="kind in shop.kinds"
+              :to="`/category/${kind.slug}?shop=${shop.companyName}`"
+              :key="`shop-kind-${kind.id}`"
+              class="lg:w-4/12 sm:w-6/12 w-full mb-4 sm:px-3 px-0"
+            >
+              <div class="flex flex-col rounded bg-gray-100 transition hover:text-green-600 py-3 xl:px-0 px-3 h-full">
+                <div class="rounded">
+                  <img
+                    :data-src="kind.logoSquare"
+                    :alt="kind.titleRus"
+                    class="rounded mx-auto lazyload"
+                  >
+                </div>
+                <div class="text-center font-semibold mt-auto pt-2">
+                  {{kind.titleRus}}
+                </div>
+              </div>
+
+            </NuxtLink>
+          </div>
         </div>
 
-        <div v-if="products" class="mb-7">
+        <div v-if="products.length" class="mb-7">
           <h2 class="text-xl font-bold mb-2 pl-4">Товары</h2>
 
           <div class="flex md:overflow-auto overflow-y-scroll">
@@ -154,7 +181,7 @@
           </div>
         </div>
 
-        <div v-if="divorces" class="mb-7">
+        <div v-if="divorces.length" class="mb-7">
           <h2 class="text-xl font-bold mb-2 pl-4">Недавние разведения</h2>
 
           <div class="flex flex-wrap justify-center md:flex-row flex-col">

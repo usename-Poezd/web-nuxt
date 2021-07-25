@@ -36,7 +36,7 @@
         <div class="w-full flex  md:flex-nowrap flex-wrap mb-7">
           <!-- IMAGES -->
           <div class="md:w-6/12 w-full flex md:flex-nowrap flex-wrap md:flex-row flex-col mr-4">
-            <div v-if="$device.isMobile" class="w-full mb-2">
+            <div v-if="!$device.isDesktop" class="w-full mb-2">
               <client-only>
                 <Swiper
                 :options="{
@@ -57,7 +57,7 @@
               </Swiper>
               </client-only>
             </div>
-            <div v-if="$device.isMobile" class="w-full">
+            <div v-if="!$device.isDesktop" class="w-full">
              <client-only>
                <Swiper
                  :options="{
@@ -85,7 +85,7 @@
             </div>
 
 
-            <div v-if="!$device.isMobile" class="md:w-1/12 w-full mr-2 ">
+            <div v-if="$device.isDesktop" class="md:w-1/12 w-full mr-2 ">
               <div
                 v-for="image in product.images"
                 @mouseover.prevent="setShowedImg(image)"
@@ -95,7 +95,7 @@
                 <img :data-src="image.imgSrc" :alt="product.name" class="img-fluid rounded lazyload">
               </div>
             </div>
-            <div v-if="!$device.isMobile" @click.prevent="openModal" class="md:w-11/12 w-full product-page-image">
+            <div v-if="$device.isDesktop" @click.prevent="openModal" class="md:w-11/12 w-full product-page-image">
               <img :data-src="showedImg.imgSrc" ref="image" :alt="product.name" class="img-fluid cursor-pointer rounded lazyload">
 
               <div class="flex mt-16">
@@ -109,9 +109,9 @@
           <!-- IMAGES END -->
 
           <!-- INFO -->
-          <div v-if="!$device.isMobile" class="w-6/12">
+          <div v-if="$device.isDesktop" class="w-6/12">
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Категория</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -119,7 +119,7 @@
               </div>
             </div>
             <div v-if="product.subcategory" class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Подкатегория</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -127,7 +127,7 @@
               </div>
             </div>
             <div v-if="product.locality" class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Локалитет</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -135,7 +135,7 @@
               </div>
             </div>
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Пол</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -167,7 +167,7 @@
               </div>
             </div>
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Дата рождения</span>
               </div>
               <div class="w-7/12 font-semibold">
@@ -175,22 +175,22 @@
               </div>
             </div>
             <div class="flex mb-4">
-              <div class="w-5/12 border-dashed">
+              <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Возраст</span>
               </div>
               <div class="w-7/12 font-semibold">
                 {{product.age.title}}
               </div>
             </div>
-            <div v-if="product.morphs.length" class="flex">
-              <div class="w-5/12">
-                Морфы
+            <div v-if="product.morphs.length" class="flex items-start">
+              <div class="w-5/12 product-border-dashed">
+                <span class="relative bg-white pr-1">Морфы</span>
               </div>
               <div class="w-7/12">
                 <div class="flex flex-wrap">
-                  <div v-for="morph in product.morphs" :class="`mr-2 mb-2 morph-indicator inline-block text-sm ${formatMorphClass(morph)}`">
+                  <NuxtLink v-for="morph in product.morphs" :key="`morph-${morph.gene.id},${morph.trait.id}`" :to="`/category/${$route.params.slug}?morphs[0]=${morph.gene.id},${morph.trait.id}`" :class="`mr-2 mb-2 morph-indicator inline-block text-sm ${formatMorphClass(morph)}`">
                     {{formatMorph(morph)}}
-                  </div>
+                  </NuxtLink>
                 </div>
               </div>
             </div>
@@ -200,7 +200,7 @@
 
         <!-- SHOP -->
         <div class="shadow rounded flex md:flex-row flex-col items-start md:justify-start justify-between p-4 md:mb-0 mb-7">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between lg:w-auto w-full">
             <NuxtLink
               :to="`/shops/${product.shop.companyName}`"
               class="w-9/12 md:hidden block"
@@ -212,9 +212,13 @@
                 {{ product.shop.companyName }}
               </div>
             </NuxtLink>
-            <div class="md:w-24 w-14 md:h-24 h-14 shadow-md flex relative items-center justify-center rounded-full bg-green-400 overflow-hidden mr-4">
-              <img :src="product.shop.logoImg" :alt="product.shop.companyName" class="img-fluid shadow rounded-full">
-            </div>
+            <NuxtLink
+              :to="`/shops/${product.shop.companyName}`"
+              :class="`md:w-24 w-14 md:h-24 h-14 shadow-md flex relative items-center justify-center rounded-full overflow-hidden mr-4 ${!product.shop.logoImg && 'bg-green-400'}`"
+            >
+              <img v-if="product.shop.logoImg" :src="product.shop.logoImg" :alt="product.shop.companyName" class="img-fluid shadow rounded-full">
+              <span v-else class="md:text-3xl text-xl font-bold text-white m-auto">{{product.shop.companyName[0]}}</span>
+            </NuxtLink>
           </div>
           <div class="md:block hidden">
             <NuxtLink
@@ -282,10 +286,10 @@
       <p class="whitespace-pre-wrap">{{product.description}}</p>
     </div>
 
-    <div v-if="$device.isMobile" class="w-full mb-7">
+    <div v-if="!$device.isDesktop" class="w-full mb-7">
       <div class="font-bold text-xl mb-3">Информация о товаре</div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Категория</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -293,7 +297,7 @@
         </div>
       </div>
       <div v-if="product.subcategory" class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Подкатегория</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -301,7 +305,7 @@
         </div>
       </div>
       <div v-if="product.locality" class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Локалитет</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -309,7 +313,7 @@
         </div>
       </div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Пол</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -341,7 +345,7 @@
         </div>
       </div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Дата рождения</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -349,7 +353,7 @@
         </div>
       </div>
       <div class="flex mb-4">
-        <div class="w-6/12 border-dashed">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Возраст</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -400,7 +404,7 @@ import ChatSend from "~/components/Chat/Send.vue";
     },
 
     mounted() {
-      if (this.$device.isMobile) {
+      if (!this.$device.isDesktop) {
         this.$nextTick(() => {
           const swiperTop = (this.$refs.main as any).$swiper;
           const swiperThumbs = (this.$refs.thumbs as any).$swiper;

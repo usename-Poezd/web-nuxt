@@ -13,7 +13,7 @@
 @import "guards";
 @import "chat";
 
-.border-dashed {
+.product-border-dashed {
   @apply relative;
   &:before {
     content: " ";
