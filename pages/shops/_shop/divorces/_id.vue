@@ -85,6 +85,7 @@
       <h2 class="text-xl font-bold mb-7">Фото спаривания</h2>
 
       <div
+        v-if="divorce.sexPhotos.length >= 2"
         v-swiper:sexPhotos="{
              loop: true,
              loopedSlides: $device.isDesktop ? 3 : 1,
@@ -124,12 +125,26 @@
           </svg>
         </div>
       </div>
+      <div v-else>
+        <div
+          v-for="photo in divorce.sexPhotos"
+          :key="`shop-photo-${photo.id}`"
+          class="md:px-3 px-0"
+        >
+          <img
+            :data-src="photo.imgSrc"
+            :alt="divorce.title"
+            class="rounded mx-auto lazyload img-fluid"
+          >
+        </div>
+      </div>
     </div>
 
     <div v-if="divorce.masonryPhotos.length" class="p-4 shadow rounded-lg mb-7">
       <h2 class="text-xl font-bold mb-7">Фото кладки</h2>
 
       <div
+        v-if="divorce.masonryPhotos.length >= 2"
         v-swiper:masonryPhotos="{
              loop: true,
              loopedSlides: $device.isDesktop ? 3 : 1,
@@ -169,12 +184,26 @@
           </svg>
         </div>
       </div>
+      <div v-else>
+        <div
+          v-for="photo in divorce.masonryPhotos"
+          :key="`shop-photo-${photo.id}`"
+          class="md:px-3 px-0"
+        >
+          <img
+            :data-src="photo.imgSrc"
+            :alt="divorce.title"
+            class="rounded mx-auto lazyload img-fluid"
+          >
+        </div>
+      </div>
     </div>
 
     <div v-if="divorce.exitPhotos.length" class="p-4 shadow rounded-lg mb-7">
       <h2 class="text-xl font-bold mb-7">Фото выхода</h2>
 
       <div
+        v-if="divorce.exitPhotos.length >= 2"
         v-swiper:exitPhotos="{
              loop: true,
              loopedSlides: $device.isDesktop ? 3 : 1,
@@ -212,6 +241,19 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
+        </div>
+      </div>
+      <div v-else>
+        <div
+          v-for="photo in divorce.exitPhotos"
+          :key="`shop-photo-${photo.id}`"
+          class="md:px-3 px-0"
+        >
+          <img
+            :data-src="photo.imgSrc"
+            :alt="divorce.title"
+            class="rounded mx-auto lazyload img-fluid"
+          >
         </div>
       </div>
     </div>
