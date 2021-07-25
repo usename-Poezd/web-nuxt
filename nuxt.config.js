@@ -80,6 +80,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/firebase',
+    '@nuxtjs/yandex-metrika'
   ],
 
   firebase: {
@@ -124,6 +125,15 @@ export default {
         ['@babel/plugin-proposal-private-methods', { loose: true }]
       ]
     }
+  },
+
+  yandexMetrika: {
+    id: process.env.YANDEX_METRIKA_ID,
+    webvisor: true,
+    // clickmap:true,
+    // useCDN:false,
+    // trackLinks:true,
+    // accurateTrackBounce:true,
   },
 
   publicRuntimeConfig: {
