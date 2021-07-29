@@ -366,9 +366,14 @@
         </div>
         <div class="w-full pl-2">
           <div class="flex flex-wrap">
-            <div v-for="morph in product.morphs" :class="`mr-2 mb-2 morph-indicator inline-block text-sm ${formatMorphClass(morph)}`">
+            <NuxtLink
+              v-for="morph in product.morphs"
+              :key="`morph-${morph.gene.id},${morph.trait.id}`"
+              :class="`mr-2 mb-2 morph-indicator inline-block text-sm ${formatMorphClass(morph)}`"
+              :to="`/category/${$route.params.slug}?morphs[0]=${morph.gene.id},${morph.trait.id}`"
+            >
               {{formatMorph(morph)}}
-            </div>
+            </NuxtLink>
           </div>
         </div>
       </div>
