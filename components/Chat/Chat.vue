@@ -228,15 +228,15 @@
                     </div>
                     <p class="whitespace-pre-wrap">{{ message.text }}</p>
 
-                    <div v-if="typeof message.product === 'object'" class="flex p-3 shadow rouunded mt-3">
-                      <div class="w-2/12 pr-4">
+                    <div v-if="typeof message.product === 'object'" class="flex lg:flex-row flex-col p-3 shadow rouunded mt-3">
+                      <div class="lg:w-2/12  w-full lg:pr-4 lg:pb-0 pr-0 pb-4">
                         <NuxtLink
                           :to="`/category/${message.product.kind.slug}${message.product.subcategory ? `/${message.product.subcategory.slug}/` : '/'}${message.product.id}`"
                         >
                           <img :data-src="message.product.preview.imgSrc" :alt="message.product.name" class="img-fluid lazyload rounded">
                         </NuxtLink>
                       </div>
-                      <div class="w-10/12">
+                      <div class="lg:w-10/12 w-full ">
                         <NuxtLink
                           :to="`/category/${message.product.kind.slug}${message.product.subcategory ? `/${message.product.subcategory.slug}/` : '/'}${message.product.id}`"
                           class="link text-lg font-semibold"

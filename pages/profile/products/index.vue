@@ -116,9 +116,10 @@ export default Vue.extend({
           size: 20,
           number: query.page
         },
-        sort: query.sort,
+        sort: '-active',
         q: query.q,
         filter: {
+          active: false,
           kind: query.kind,
           shop: store.state.auth.user.companyName
         }
