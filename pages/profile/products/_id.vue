@@ -561,7 +561,7 @@ export default Vue.extend({
       this.success = false;
       this.serverErrors = {};
 
-      this.$api.updateProduct(product, 'preview,kind,subcategory,morphs.gene,morphs.trait,images,age,locality')
+      this.$api.updateProduct(product, 'preview,kind,subcategory,morphs.gene,morphs.trait,morphs.trait.traitGroup,images,age,locality')
         .then((product: IProduct) => {
           this.loading = false;
           this.success = true
@@ -626,7 +626,7 @@ export default Vue.extend({
   },
 
   async asyncData({$api, params, query, store}) {
-    const product = await $api.getProduct(params.id, 'preview,kind,subcategory,morphs.gene,morphs.trait,images,age,locality');
+    const product = await $api.getProduct(params.id, 'preview,kind,subcategory,morphs.gene,morphs.trait,morphs.trait.traitGroup,images,age,locality');
 
     const kind = store.state.core.kinds.find((k: IKind) => k.id === product.kind.id);
 

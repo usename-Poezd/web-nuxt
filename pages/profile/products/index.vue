@@ -110,7 +110,7 @@ export default Vue.extend({
 
   async asyncData({store, query, $api}) {
     const {products, meta} = await $api.getProducts({
-      include: 'preview,kind,subcategory,morphs.gene,morphs.trait',
+      include: 'preview,kind,subcategory,morphs.gene,morphs.trait,morphs.trait.traitGroup',
       query: {
         page: {
           size: 20,
