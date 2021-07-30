@@ -188,7 +188,9 @@
             <label for="description" class="text-gray-800 font-semibold">Цена по запросу</label>
           </div>
           <div class="md:w-6/12 w-full flex flex-col">
-            <ToggleButton v-model="formValues.askPrice" color="#10B981" :labels="false"/>
+            <client-only>
+              <ToggleButton v-model="formValues.askPrice" color="#10B981" :labels="false"/>
+            </client-only>
           </div>
         </div>
         <div class="flex md:flex-row flex-col mb-4">
@@ -196,7 +198,9 @@
             <label for="description" class="text-gray-800 font-semibold">Ативен</label>
           </div>
           <div class="md:w-6/12 w-full flex flex-col">
-            <ToggleButton v-model="formValues.isActive" color="#10B981" :labels="false"/>
+            <client-only>
+              <ToggleButton v-model="formValues.isActive" color="#10B981" :labels="false"/>
+            </client-only>
           </div>
         </div>
       </div>
