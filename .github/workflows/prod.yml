@@ -65,6 +65,4 @@ jobs:
             cd /var/www
 
             docker-compose pull web
-            docker-compose stop web
-            docker-compose rm -f web
             docker-compose up -d --force-recreate nginx
