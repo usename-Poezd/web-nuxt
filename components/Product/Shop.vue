@@ -57,7 +57,7 @@
             </div>
           </div>
         </div>
-        <div v-if="!product.askPrice" class="flex md:mb-2 mb-3">
+        <div class="flex md:mb-2 mb-3">
           <div class="md:w-3/12 w-5/12 font-semibold">Цена</div>
           <div class="md:w-9/12 w-7/12 pl-3">{{RUB(getPrice(product.price))}}</div>
         </div>
