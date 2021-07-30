@@ -29,7 +29,13 @@
       </ol>
     </nav>
 
-    <h1 class="md:text-2xl text-xl font-bold pb-4 mb-7 border-b">{{ product.name }}</h1>
+    <div class="flex justify-between items-center border-b pb-4 mb-7 ">
+      <h1 class="md:text-2xl text-xl font-bold">{{ product.name }}</h1>
+
+      <NuxtLink v-if="user && product.shop.id === user.id" :to="`/profile/products/${product.id}`">
+        <FontAwesomeIcon icon="pen" class="text-green-600"/>
+      </NuxtLink>
+    </div>
 
     <div class="flex md:flex-nowrap flex-wrap items-start mb-7">
       <div class="md:w-10/12 w-full">
@@ -110,6 +116,14 @@
 
           <!-- INFO -->
           <div v-if="$device.isDesktop" class="w-6/12">
+            <div class="flex mb-4">
+              <div class="w-5/12 product-border-dashed">
+                <span class="relative bg-white pr-1">{{ product.article ? 'Уникальный идентификатор' : 'Номер в системе'}}</span>
+              </div>
+              <div class="w-7/12 font-semibold">
+                {{product.article || product.id}}
+              </div>
+            </div>
             <div class="flex mb-4">
               <div class="w-5/12 product-border-dashed">
                 <span class="relative bg-white pr-1">Категория</span>
@@ -290,6 +304,14 @@
       <div class="font-bold text-xl mb-3">Информация о товаре</div>
       <div class="flex mb-4">
         <div class="w-6/12 product-border-dashed">
+          <span class="relative bg-white pr-1">{{ product.article ? 'Уникальный идентификатор' : 'Номер в системе'}}</span>
+        </div>
+        <div class="w-6/12 font-semibold">
+          {{product.article || product.id}}
+        </div>
+      </div>
+      <div class="flex mb-4">
+        <div class="w-6/12 product-border-dashed">
           <span class="relative bg-white pr-1">Категория</span>
         </div>
         <div class="w-6/12 font-semibold">
@@ -400,8 +422,13 @@ import {RUB, getPrice, formatMorphClass, formatMorph, USD, EUR} from "~/utils";
 import {IKind, IProduct, ISubcategory} from "~/types";
 import moment from "moment";
 import ChatSend from "~/components/Chat/Send.vue";
+import {mapState} from "vuex";
 
   export default Vue.extend({
+    computed: {
+      ...mapState('auth', ['user'])
+    },
+
     data() {
       return {
         showedImg: {...this.product.images[0]}
