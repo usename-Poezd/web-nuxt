@@ -66,11 +66,15 @@
     <div class="md:w-2/12 w-full flex flex-col justify-center items-center">
       <div class="flex items-center mb-2">
         <div class="font-semibold mr-2">Цена по запросу</div>
-        <ToggleButton v-model="product.askPrice" color="#10B981" :labels="false"/>
+        <client-only>
+          <ToggleButton v-model="product.askPrice" color="#10B981" :labels="false"/>
+        </client-only>
       </div>
       <div class="flex items-center mb-2">
         <div class="font-semibold mr-2">Ативен</div>
-        <ToggleButton v-model="product.isActive" color="#10B981" :labels="false"/>
+        <client-only>
+          <ToggleButton v-model="product.isActive" color="#10B981" :labels="false"/>
+        </client-only>
       </div>
       <div class="flex items-center">
         <NuxtLink
