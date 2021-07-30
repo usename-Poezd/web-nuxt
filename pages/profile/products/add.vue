@@ -239,6 +239,9 @@
             <label class="text-gray-800 font-semibold">Морфы</label>
           </div>
           <div class="md:w-6/12 w-full flex flex-col">
+            <div class="text-gray-500 text-sm">
+              Название товара: {{formValues.name}}
+            </div>
             <MorphsSelect class="forms-select" :morphs="morphs" @change="changeMorphs" :kind="kind.id"/>
           </div>
         </div>
