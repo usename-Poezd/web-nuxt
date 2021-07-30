@@ -23,7 +23,6 @@
         </div>
 
         <div v-if="files.length || $slots.default" class="flex flex-wrap">
-          <slot></slot>
           <div v-for="file in files" :key="`uploaded-image-${file.id}`" :class="`${previewClass} px-2 mb-2 relative rounded`">
             <div v-if="!file.success" class="h-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-7/12 rounded-full overflow-hidden">
               <div class="w-full h-full bg-gray-200 absolute"></div>
@@ -35,6 +34,7 @@
             <FontAwesomeIcon icon="times" class="text-red-500 absolute top-2 right-4 cursor-pointer z-30" @click.prevent="$refs.upload.remove(file)"/>
             <img :src="file.url" alt="" class="img-fluid shadow rounded">
           </div>
+          <slot></slot>
         </div>
       </FileUpload>
     </div>

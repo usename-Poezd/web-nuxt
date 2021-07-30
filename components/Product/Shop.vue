@@ -75,6 +75,7 @@
       <div class="flex items-center">
         <NuxtLink
           :to="`/profile/products/${product.id}`"
+          @click.native="setRedirectLink($route.fullPath)"
           class="text-sm text-white font-bold inline-block rounded-lg py-2 px-3 cursor-pointer duration-200 transition bg-green-600 hover:bg-green-700 mr-2"
         >
           Изменить
@@ -96,6 +97,8 @@ import Vue, {PropType} from 'vue';
   import moment from "moment";
   import _ from "lodash";
 import {IProduct} from "~/types";
+import {mapMutations} from "vuex";
+import {SET_REDIRECT_LINK} from "~/store/core";
 
   export default Vue.extend({
     methods: {
@@ -104,6 +107,9 @@ import {IProduct} from "~/types";
       formatMorph,
       RUB,
       getPrice,
+      ...mapMutations({
+        setRedirectLink: `core/${SET_REDIRECT_LINK}`
+      }),
 
       deleteProduct() {
         this.$api.deleteProduct(this.product.id);

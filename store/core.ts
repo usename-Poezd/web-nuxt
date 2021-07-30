@@ -5,19 +5,22 @@ const SET_KINDS = 'SET_KINDS';
 const SET_HEADER_MENU_SHOW = 'SET_HEADER_MENU_SHOW';
 const SET_SCROLL_Y = 'SET_SCROLL_Y';
 export const SET_TABLE_CATEGORY_VIEW = 'SET_TABLE_CATEGORY_VIEW';
+export const SET_REDIRECT_LINK = 'SET_REDIRECT_LINK';
 
 export type CoreState = {
   kinds: Array<IKind>,
   headerMenuShow: boolean,
   scrollY: number,
-  tableCategoryView: boolean
+  tableCategoryView: boolean,
+  redirectLink: string
 }
 
 export const state = (): CoreState => ({
   kinds: [],
   headerMenuShow: false,
   scrollY: 0,
-  tableCategoryView: false
+  tableCategoryView: false,
+  redirectLink: ''
 });
 
 export const getters: GetterTree<CoreState, CoreState> = {
@@ -30,6 +33,7 @@ export const mutations: MutationTree<CoreState> = {
   [SET_KINDS]: (state, kinds: Array<IKind>) => state.kinds = kinds,
   [SET_HEADER_MENU_SHOW]: (state, value: boolean) => state.headerMenuShow = value,
   [SET_SCROLL_Y]: (state, value: number) => state.scrollY = value,
+  [SET_REDIRECT_LINK]: (state, value: string) => state.redirectLink = value,
 };
 
 export const actions: ActionTree<CoreState, CoreState> = {
