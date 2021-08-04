@@ -1,7 +1,8 @@
 import {ActionTree, MutationTree, GetterTree} from 'vuex';
-import {IKind} from "~/types";
+import {IKind, ISocial} from "~/types";
 
 const SET_KINDS = 'SET_KINDS';
+const SET_SOCIALS = 'SET_SOCIALS';
 const SET_HEADER_MENU_SHOW = 'SET_HEADER_MENU_SHOW';
 const SET_SCROLL_Y = 'SET_SCROLL_Y';
 export const SET_TABLE_CATEGORY_VIEW = 'SET_TABLE_CATEGORY_VIEW';
@@ -9,6 +10,7 @@ export const SET_REDIRECT_LINK = 'SET_REDIRECT_LINK';
 
 export type CoreState = {
   kinds: Array<IKind>,
+  socials: Array<ISocial>
   headerMenuShow: boolean,
   scrollY: number,
   tableCategoryView: boolean,
@@ -17,6 +19,7 @@ export type CoreState = {
 
 export const state = (): CoreState => ({
   kinds: [],
+  socials: [],
   headerMenuShow: false,
   scrollY: 0,
   tableCategoryView: false,
@@ -31,6 +34,7 @@ export const getters: GetterTree<CoreState, CoreState> = {
 export const mutations: MutationTree<CoreState> = {
   [SET_TABLE_CATEGORY_VIEW]: (state, payload: boolean) => state.tableCategoryView = payload,
   [SET_KINDS]: (state, kinds: Array<IKind>) => state.kinds = kinds,
+  [SET_SOCIALS]: (state, socials: Array<ISocial>) => state.socials = socials,
   [SET_HEADER_MENU_SHOW]: (state, value: boolean) => state.headerMenuShow = value,
   [SET_SCROLL_Y]: (state, value: number) => state.scrollY = value,
   [SET_REDIRECT_LINK]: (state, value: string) => state.redirectLink = value,
@@ -40,6 +44,9 @@ export const actions: ActionTree<CoreState, CoreState> = {
   async load({ commit }) {
     const kinds = await this.$api.getKinds();
     commit(SET_KINDS, kinds)
+
+    const socials = await this.$api.getSocials();
+    commit(SET_SOCIALS, socials);
   },
 
   toggleHeaderMenu({ commit, state }) {

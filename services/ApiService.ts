@@ -1,7 +1,7 @@
 import {NuxtAxiosInstance} from "@nuxtjs/axios";
 import {Deserializer} from "jsonapi-serializer";
 import qs from "qs";
-import {IKind, IMorph, IUser, IProduct, ISubcategory, IDocument, ISeoOption} from "~/types";
+import {IKind, IMorph, IUser, IProduct, ISubcategory, IDocument, ISeoOption, ISocial} from "~/types";
 import {JsonApiService} from "~/services/JsonApiService";
 
 export type MetaType = {
@@ -25,6 +25,13 @@ class ApiService {
   constructor(api: NuxtAxiosInstance, authApi: NuxtAxiosInstance) {
     this.api = api;
     this.authApi = authApi
+  }
+
+  getSocials = async (): Promise<Array<ISocial>> => {
+    const data = await this.api.$get(`socials?fields[socials]=title,url,fa_icon`);
+
+    return this.deserializer.deserialize(data)
+      .then((data) => data);
   }
 
   getFirebaseToken = async (access_token = ''): Promise<string> => {
