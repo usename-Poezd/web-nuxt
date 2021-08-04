@@ -33,7 +33,7 @@ ARG YANDEX_METRIKA_ID
 ENV YANDEX_METRIKA_ID $YANDEX_METRIKA_ID
 
 COPY . /var/www
-RUN rm package-lock.json && npm i
+RUN npm cache clean --force && rm package-lock.json && npm i
 
 ENV NODE_ENV=production
 
