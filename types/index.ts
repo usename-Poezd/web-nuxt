@@ -6,3 +6,4 @@ export * from './subcategory';
 export * from './locality';
 export * from './document';
 export * from './seo-option';
+export * from './social';

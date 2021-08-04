@@ -4,9 +4,9 @@
       <div class="flex md:flex-col md:w-2/12 w-full mr-6 md:mb-0 mb-3">
         <img src="https://breeders-zone.s3.us-east-2.amazonaws.com/static/icons/logo.svg" alt="" class="h-auto md:w-full w-6/12">
         <div class="flex items-center justify-center md:w-full  w-6/12">
-          <FontAwesomeIcon class="md:text-2xl text-3xl mr-3" :icon="['fab', 'vk']" style="color: #2787F5;"/>
-          <FontAwesomeIcon class="md:text-2xl text-3xl mr-3" :icon="['fab', 'youtube']" style="color: #ff0000;"/>
-          <FontAwesomeIcon class="md:text-2xl text-3xl" :icon="['fab', 'facebook']" style="color: #4267B2;"/>
+          <a v-for="social in socials" :key="social.title" :href="social.url" target="_blank">
+            <FontAwesomeIcon class="md:text-2xl text-3xl mr-3 text-green-600" :icon="['fab', social.faIcon]" />
+          </a>
         </div>
       </div>
       <div class="md:w-6/12 mr-6 md:mb-0 mb-3">
@@ -25,8 +25,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import {mapState} from "vuex";
 
 export default Vue.extend({
+  computed: {
+    ...mapState('core', ['socials'])
+  },
+
   name: "Footer",
 });
 </script>
