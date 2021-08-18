@@ -48,8 +48,13 @@ import {mapState} from 'vuex';
   import _ from "lodash";
   import {IKind, IMorph} from "~/types";
   import {formatMorph, formatMorphClass, withPopper} from "~/utils";
+import VueSelect from "vue-select";
 
   export default Vue.extend({
+    components: {
+      VueSelect
+    },
+
     data() {
       return {
         selectedMorphs: [...this.morphs] || [] as Array<IMorph>,

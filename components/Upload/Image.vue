@@ -3,7 +3,7 @@
     <div class="flex justify-center items-center p-3 border-4 border-green-500 border-dashed rounded">
       <FileUpload
         extensions="gif,jpg,jpeg,png,webp"
-        size="5000000"
+        :size="5000000"
         accept="image/png,image/gif,image/jpeg,image/webp"
         :input-id="id"
         :multiple="multiple"

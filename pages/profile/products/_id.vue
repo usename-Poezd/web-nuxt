@@ -465,15 +465,23 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {mapActions, mapState} from "vuex";
+import {mapState} from "vuex";
 import {IKind, IMorph, IProduct, ISubcategory} from "~/types";
 import moment from "moment";
 import {withPopper} from "~/utils";
 import {diffArrays} from "diff";
+import VueSelect from "vue-select";
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/locale/ru';
 
 export default Vue.extend({
   middleware: ['auth'],
   layout: 'profile',
+
+  components: {
+    VueSelect,
+    DatePicker
+  },
 
   data() {
     return {
@@ -630,9 +638,18 @@ export default Vue.extend({
       this.uploaded = upl;
     }
   },
-
   async asyncData({$api, params, query, store}) {
     const product = await $api.getProduct(params.id, 'preview,kind,subcategory,morphs.gene,morphs.trait,morphs.trait.traitGroup,images,age,locality');
+    if (!store.state.core.kinds.length || store.state.core.kinds.filter((i: IKind) => i.subcategories).length !== store.state.core.kinds.length) {
+      await store.dispatch('core/fetchKinds', {
+        include: 'subcategories,subcategories.localities',
+        query: {
+          fields: {
+            kinds: 'active,slug,titleRus,subcategories'
+          }
+        }
+      });
+    }
 
     const kind = store.state.core.kinds.find((k: IKind) => k.id === product.kind.id);
 

@@ -71,9 +71,15 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 import VerificationPhoneCode from "~/components/Verification/PhoneCode.vue";
 import {getFirebaseToken, setFirebaseToken} from "~/utils";
 import {AUTH_MUTATIONS} from "~/store/auth";
+import {mask} from "vue-the-mask";
 
 export default Vue.extend({
   middleware: ['guest'],
+
+  directives: {
+     mask
+  },
+
   data: () => ({
     formValues: {
       phone: '',

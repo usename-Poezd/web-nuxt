@@ -90,6 +90,9 @@
           const {products, meta} = await $api.getProducts({
             include: 'preview,kind,subcategory,shop',
             query: {
+              fields: {
+                products: 'name,sex,group,preview,kind,shop,subcategory,price,askPrice'
+              },
               page: {
                 size: 20,
                 number: query.page

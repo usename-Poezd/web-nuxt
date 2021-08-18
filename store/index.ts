@@ -14,7 +14,7 @@ export type RootState = {
 };
 
 export const actions: ActionTree<RootState, RootState> = {
-  async nuxtServerInit({ state, dispatch } ) {
+  async nuxtServerInit({ state, dispatch }) {
     await dispatch('core/load');
 
     const { access_token, refresh_token } = state.auth;

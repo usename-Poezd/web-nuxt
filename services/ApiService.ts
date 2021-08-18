@@ -76,8 +76,11 @@ class ApiService {
   };
 
 
-  getKinds = async (): Promise<Array<IKind>> => {
-    const data = await this.api.$get('kinds?include=subcategories,subcategories.localities');
+  getKinds = async (options: any = {}): Promise<Array<IKind>> => {
+    let url = `kinds?include=${options.include || ''}`;
+    const query = qs.stringify(options.query);
+    url += `&${query}`;
+    const data = await this.api.$get(url);
 
     return this.deserializer.deserialize(data)
       .then((data) => data);

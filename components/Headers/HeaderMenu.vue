@@ -18,6 +18,21 @@
       </div>
     </div>
     <div class="container pt-4 flex flex-wrap">
+      <div
+        v-if="kindsLoading"
+        v-for="i in Array.from({length: 5}, (v, i) => i)"
+        :key="'header-menu-kind-skeleton' + i"
+        class="lg:w-3/12 md:w-4/12 sm:w-6/12 w-full mb-4 sm:px-3 px-0"
+      >
+        <div class="flex flex-col rounded bg-gray-100 transition hover:text-green-600 py-3 xl:px-0 px-3 h-full">
+          <div class="p-4">
+            <div class="rounded w-full animate-pulse bg-gray-300" style="height: 183px"></div>
+          </div>
+          <div class="mx-auto mt-auto pt-2 w-24 h-3 animate-pulse bg-gray-300">
+          </div>
+        </div>
+
+      </div>
       <NuxtLink
         v-for="activeKind in activeKinds"
         :to="`/category/${activeKind.slug}`"
@@ -45,7 +60,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import {mapGetters, mapActions} from 'vuex';
+  import {mapGetters, mapActions, mapState} from 'vuex';
 
   export default Vue.extend({
     name: "HeaderMenu",
@@ -60,16 +75,33 @@
       q: ''
     }),
 
+    mounted() {
+      if (this.kinds.length === 0) {
+        this.fetchKinds({
+          query: {
+            fields: {
+              kinds: 'active,slug,titleRus,logoSquare'
+            }
+          }
+        });
+      }
+    },
+
     methods: {
       ...mapActions('core', [
-        'toggleHeaderMenu'
+        'toggleHeaderMenu',
+        'fetchKinds'
       ])
     },
 
     computed: {
       ...mapGetters('core', [
         'activeKinds'
-      ])
+      ]),
+      ...mapState('core', [
+        'kinds',
+        'kindsLoading'
+      ]),
     },
   });
 </script>

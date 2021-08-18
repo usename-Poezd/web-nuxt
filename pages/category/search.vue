@@ -22,6 +22,7 @@
     import {withPopper} from "~/utils";
     import {IProduct} from "~/types";
     import {MetaType} from "~/services";
+    import ProductFilter from "~/components/Product/Filter"
 
     export default Vue.extend({
 

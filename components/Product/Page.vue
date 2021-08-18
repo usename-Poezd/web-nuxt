@@ -16,11 +16,11 @@
     <nav class="text-black font-bold mb-4 text-xs" aria-label="Breadcrumb">
       <ol class="list-none p-0 inline-flex">
         <li class="flex items-center">
-          <NuxtLink :to="`/category/${kind.slug}`">{{kind.titleRus}}</NuxtLink>
+          <NuxtLink :to="`/category/${product.kind.slug}`">{{product.kind.titleRus}}</NuxtLink>
           <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
         </li>
-        <li v-if="subcategory" class="flex items-center">
-          <NuxtLink :to="`/category/${kind.slug}/${subcategory.slug}`">{{ subcategory.title }}</NuxtLink>
+        <li v-if="product.subcategory" class="flex items-center">
+          <NuxtLink :to="`/category/${product.kind.slug}/${product.subcategory.slug}`">{{ product.subcategory.title }}</NuxtLink>
           <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
         </li>
         <li>
@@ -401,18 +401,26 @@
       </div>
     </div>
 
-    <div v-if="products" class="w-full">
-      <div class="font-bold text-xl mb-2">Похожие товары</div>
-      <div class="flex md:overflow-auto overflow-y-scroll">
-        <ProductCard
-          class="md:w-1/5 w-48 md:flex-shrink flex-shrink-0 md:mr-0 mr-4"
-          v-for="product in products"
-          :key="'product-' + product.id"
-          :product="product"
-          :truncateName="true"
-        />
+    <LazyHydrate when-visible>
+      <div v-if="productsLoading || products.length > 0" class="w-full">
+        <div class="font-bold text-xl mb-2">Похожие товары</div>
+        <div class="flex md:overflow-auto overflow-y-scroll">
+          <ProductCardSkeleton
+            v-if="productsLoading"
+            v-for="i in Array.from({length: 5}, (v, i) => i)"
+            :key="'product-skeleton' + i"
+            class="md:w-1/5 w-48 md:flex-shrink flex-shrink-0 md:mr-0 mr-4"
+          />
+          <ProductCard
+            class="md:w-1/5 w-48 md:flex-shrink flex-shrink-0 md:mr-0 mr-4"
+            v-for="product in products"
+            :key="'product-' + product.id"
+            :product="product"
+            :truncateName="true"
+          />
+        </div>
       </div>
-    </div>
+    </LazyHydrate>
   </div>
 </template>
 
@@ -423,19 +431,29 @@ import {IKind, IProduct, ISubcategory} from "~/types";
 import moment from "moment";
 import ChatSend from "~/components/Chat/Send.vue";
 import {mapState} from "vuex";
+// @ts-ignore
+import LazyHydrate from 'vue-lazy-hydration';
 
   export default Vue.extend({
+    components: {
+      LazyHydrate,
+      ProductCard: () => import('~/components/Product/Card'),
+      ProductCardSkeleton: () => import('~/components/Product/CardSkeleton'),
+    },
+
     computed: {
       ...mapState('auth', ['user'])
     },
 
     data() {
       return {
-        showedImg: {...this.product.images[0]}
+        showedImg: {...this.product.images[0]},
+        products: [] as Array<IProduct>,
+        productsLoading: true
       }
     },
 
-    mounted() {
+    async mounted() {
       if (!this.$device.isDesktop) {
         this.$nextTick(() => {
           const swiperTop = (this.$refs.main as any).$swiper;
@@ -444,6 +462,28 @@ import {mapState} from "vuex";
           swiperThumbs.controller.control = swiperTop;
         });
       }
+
+      this.productsLoading = true
+      const filter: any = {
+        exclude: this.product.id,
+        kind: this.$route.params.slug,
+        shop: this.product.shop.id
+      }
+      if (!Number(this.$route.params.value)) {
+        filter.subcategory = this.$route.params.value
+      }
+      const {products} = await this.$api.getProducts({
+        include: 'preview,kind,subcategory,shop',
+        query: {
+          sort: 'random',
+          page: {
+            size: 5
+          },
+          filter
+        }
+      });
+      this.products = products;
+      this.productsLoading = false;
     },
 
     methods: {
@@ -479,10 +519,7 @@ import {mapState} from "vuex";
     },
 
     props: {
-      product: Object as PropType<IProduct>,
-      products: Array as PropType<Array<IProduct>>,
-      kind: Object as PropType<IKind>,
-      subcategory: Object as PropType<ISubcategory>
+      product: Object as PropType<IProduct>
     }
   });
 </script>

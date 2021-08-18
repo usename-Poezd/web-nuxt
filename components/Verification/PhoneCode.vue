@@ -130,6 +130,7 @@
   import {mapMutations} from "vuex";
   import {AUTH_MUTATIONS} from "~/store/auth";
   import {getFirebaseToken, setFirebaseToken} from "~/utils";
+  import {mask} from "vue-the-mask";
 
   const getTitle = (type:string) => {
     switch (type) {
@@ -157,6 +158,10 @@
     name: "Verify",
 
     props: ['userId', 'userPhone', 'stage', 'type'],
+
+    directives: {
+      mask
+    },
 
     data() {
         return {

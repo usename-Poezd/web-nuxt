@@ -33,7 +33,7 @@
       />
     </template>
   </ProductLayout>
-  <ProductPage v-else :product="product" :kind="kind" :products="products"/>
+  <ProductPage v-else :product="product"/>
 </template>
 
 <script lang="ts">
@@ -96,28 +96,11 @@
         }
 
         const product = await $api.getProduct(params.value, 'preview,images,kind,subcategory,locality,morphs.gene,morphs.trait,morphs.trait.traitGroup,shop,age');
-        const kind = await store.getters["core/activeKind"](params.slug)
-        const {products} = await $api.getProducts({
-          include: 'preview,kind,subcategory,shop',
-          query: {
-            sort: 'random',
-            page: {
-              size: 5
-            },
-            filter: {
-              exclude: product.id,
-              kind: kind.slug,
-              shop: product.shop.id
-            }
-          }
-        });
 
         store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, product.seo);
 
         return {
           product,
-          kind,
-          products,
           isProduct: true
         }
       },

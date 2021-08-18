@@ -1,4 +1,6 @@
 export default {
+
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Breeder Zone',
@@ -27,16 +29,10 @@ export default {
     '~/plugins/api.ts',
     '~/plugins/fontawesome.ts',
     '~plugins/vue-js-modal.ts',
-    '~plugins/vue-select.ts',
     '~/plugins/local-storage',
     '~/plugins/vee-validate',
-    '~/plugins/mask',
     '~/plugins/vue-textarea-autosize',
     '~/plugins/vuescroll',
-    {
-      src: '~/plugins/vue2-datepicker',
-      ssr: false
-    },
     {
       src: '~/plugins/vue-awesome-swiper',
       ssr: false
@@ -45,10 +41,6 @@ export default {
       src: '~/plugins/vue-js-toggle-button.ts',
       ssr: false
     },
-    {
-      src: '~plugins/vue-slider-component.ts',
-      ssr: false
-    }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

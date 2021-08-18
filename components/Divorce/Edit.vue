@@ -267,8 +267,12 @@ import Vue, {PropType} from 'vue';
   import {mapState} from "vuex";
   import {diffArrays} from "diff";
 import {RootState} from "~/store";
+import VueSelect from "vue-select";
 
   export default Vue.extend<any, any, any, any>({
+    components: {
+      VueSelect,
+    },
 
     props: {
       divorce: {

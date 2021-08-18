@@ -97,6 +97,10 @@ import {IKind, IMorph, ISubcategory} from "~/types";
   import qs from 'qs';
 
   export default Vue.extend({
+    components: {
+      VueSlider: () => import('vue-slider-component')
+    },
+
     data() {
       const price = this.$route.query.price ?
         (this.$route.query.price as string).split(',').map(i => Number(i))

@@ -448,9 +448,27 @@ import Vue from 'vue'
 import {mapState} from "vuex";
 import moment from "moment";
 import {IKind, IMorph} from "~/types";
-import qs from "qs";
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/locale/ru';
 
 export default Vue.extend({
+  components: {
+    DatePicker
+  },
+
+  async asyncData({store}) {
+    if (!store.state.core.kinds.length || store.state.core.kinds.filter((i: IKind) => i.subcategories).length !== store.state.core.kinds.length) {
+      await store.dispatch('core/fetchKinds', {
+        include: 'subcategories,subcategories.localities',
+        query: {
+          fields: {
+            kinds: 'active,slug,titleRus,subcategories'
+          }
+        }
+      });
+    }
+  },
+
   middleware: ['auth'],
   layout: 'profile',
 

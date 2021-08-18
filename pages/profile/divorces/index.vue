@@ -61,8 +61,13 @@
 import Vue from 'vue'
 import {mapState} from "vuex";
 import {withPopper} from "~/utils";
+import VueSelect from "vue-select";
 
 export default Vue.extend({
+  components: {
+    VueSelect
+  },
+
   middleware: ['auth'],
   layout: 'profile',
 

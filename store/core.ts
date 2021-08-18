@@ -5,10 +5,12 @@ const SET_KINDS = 'SET_KINDS';
 const SET_SOCIALS = 'SET_SOCIALS';
 const SET_HEADER_MENU_SHOW = 'SET_HEADER_MENU_SHOW';
 const SET_SCROLL_Y = 'SET_SCROLL_Y';
+const SET_KINDS_LOADING = 'SET_KINDS_LOADING';
 export const SET_TABLE_CATEGORY_VIEW = 'SET_TABLE_CATEGORY_VIEW';
 export const SET_REDIRECT_LINK = 'SET_REDIRECT_LINK';
 
 export type CoreState = {
+  kindsLoading: boolean,
   kinds: Array<IKind>,
   socials: Array<ISocial>
   headerMenuShow: boolean,
@@ -18,6 +20,7 @@ export type CoreState = {
 }
 
 export const state = (): CoreState => ({
+  kindsLoading: false,
   kinds: [],
   socials: [],
   headerMenuShow: false,
@@ -38,15 +41,20 @@ export const mutations: MutationTree<CoreState> = {
   [SET_HEADER_MENU_SHOW]: (state, value: boolean) => state.headerMenuShow = value,
   [SET_SCROLL_Y]: (state, value: number) => state.scrollY = value,
   [SET_REDIRECT_LINK]: (state, value: string) => state.redirectLink = value,
+  [SET_KINDS_LOADING]: (state, value: boolean) => state.kindsLoading = value,
 };
 
 export const actions: ActionTree<CoreState, CoreState> = {
   async load({ commit }) {
-    const kinds = await this.$api.getKinds();
-    commit(SET_KINDS, kinds)
-
     const socials = await this.$api.getSocials();
     commit(SET_SOCIALS, socials);
+  },
+
+  async fetchKinds({ commit }, options: any = {}) {
+    commit(SET_KINDS_LOADING, true);
+    const kinds = await this.$api.getKinds(options);
+    commit(SET_KINDS_LOADING, false);
+    commit(SET_KINDS, kinds)
   },
 
   toggleHeaderMenu({ commit, state }) {
