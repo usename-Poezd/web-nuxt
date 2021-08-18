@@ -1,24 +1,45 @@
 <template>
   <div :style="!$device.isDesktop && 'padding-bottom: 56px;'">
-    <modals-container/>
-    <Header/>
-    <HeaderMenu :class="!headerMenuShow ? 'hidden' : ''"/>
-    <Nuxt :class="headerMenuShow ? 'hidden' : ''"/>
-    <MobileHeader v-if="!$device.isDesktop"/>
-    <Footer/>
+    <LazyHydrate when-visible>
+      <ModalsContainer/>
+    </LazyHydrate>
+    <LazyHydrate on-interaction="click">
+      <Header/>
+    </LazyHydrate>
+    <LazyHydrate never :trigger-hydration="headerMenuShow">
+      <HeaderMenu v-if="headerMenuShow"/>
+    </LazyHydrate>
+    <Nuxt  v-if="!headerMenuShow"/>
+    <LazyHydrate never :trigger-hydration="!$device.isDesktop">
+      <MobileHeader v-if="!$device.isDesktop"/>
+    </LazyHydrate>
+    <LazyHydrate never>
+      <Footer/>
+    </LazyHydrate>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import {mapMutations, mapState} from 'vuex';
+import {mapActions, mapMutations, mapState} from 'vuex';
 import {getFirebaseToken, setFirebaseToken} from "~/utils";
 import {AUTH_MUTATIONS} from "~/store/auth";
+// @ts-ignore
+import LazyHydrate from 'vue-lazy-hydration';
 
 export default Vue.extend({
+  components: {
+    LazyHydrate,
+    Header: () => import('~/components/Headers/Header'),
+    HeaderMenu: () => import('~/components/Headers/HeaderMenu'),
+    MobileHeader: () => import('~/components/Headers/MobileHeader'),
+    Footer: () => import('~/components/Footer')
+  },
+
   computed: {
     ...mapState('core', [
-      'headerMenuShow'
+      'headerMenuShow',
+      'kinds'
     ]),
     ...mapState('auth', [
       'user'
@@ -28,7 +49,8 @@ export default Vue.extend({
   methods: {
     ...mapMutations({
       setUserUnreadChats: `auth/${AUTH_MUTATIONS.SET_USER_UNREAD_CHATS}`
-    })
+    }),
+    ...mapActions('core', ['fetchKinds'])
   },
 
   mounted() {

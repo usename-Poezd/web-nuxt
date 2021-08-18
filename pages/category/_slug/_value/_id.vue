@@ -1,5 +1,5 @@
 <template>
-  <ProductPage v-else :product="product" :kind="kind" :subcategory="subcategory" :products="products"/>
+  <ProductPage v-else :product="product"/>
 </template>
 
 <script lang="ts">
@@ -13,37 +13,16 @@
         kind: {} as IKind,
         subcategory: {} as ISubcategory,
         product: {} as IProduct,
-        products: [] as Array<IProduct>
       }),
 
 
       async asyncData({ params, $api, store }) {
         const product = await $api.getProduct(params.id, 'preview,images,kind,subcategory,locality,morphs.gene,morphs.trait,morphs.trait.traitGroup,shop,age');
-        const kind = await store.getters["core/activeKind"](params.slug);
-        const subcategory = await kind.subcategories.find((s: any) => s.slug === params.value);
-        const {products} = await $api.getProducts({
-          include: 'preview,kind,subcategory,shop',
-          query: {
-            sort: 'random',
-            page: {
-              size: 5
-            },
-            filter: {
-              exclude: product.id,
-              kind: kind.slug,
-              subcategory: subcategory.slug,
-              shop: product.shop.id
-            }
-          }
-        });
 
         store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, product.seo);
 
         return {
-          product,
-          kind,
-          subcategory,
-          products
+          product
         }
       },
       head() {

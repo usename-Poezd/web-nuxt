@@ -87,10 +87,15 @@ import {mapState} from "vuex";
 import {withPopper} from "~/utils";
 import {IProduct} from "~/types";
 import {MetaType} from "~/services";
+import VueSelect from "vue-select";
 
 export default Vue.extend({
   middleware: ['auth'],
   layout: 'profile',
+
+  components: {
+    VueSelect
+  },
 
   watchQuery: ['kind', 'page', 'sort', 'q'],
 

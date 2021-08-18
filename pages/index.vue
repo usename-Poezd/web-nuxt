@@ -10,7 +10,7 @@
           </NuxtLink>
         </div>
         <div class="md:w-56 w-24 md:h-56 h-24 rounded-full bg-white overflow-hidden relative">
-          <img src="https://breeders-zone.s3.us-east-2.amazonaws.com/media/cache/b0/ce/11.jpg" alt="" class="img-fluid rounded-full absolute bottom-0">
+          <img data-src="https://breeders-zone.s3.us-east-2.amazonaws.com/media/cache/b0/ce/11.jpg" alt="" class="img-fluid rounded-full absolute bottom-0 lazyload">
         </div>
       </div>
     </div>
@@ -58,6 +58,13 @@ export default Vue.extend({
   }),
 
   async asyncData({$api, store}) {
+    await store.dispatch('core/fetchKinds', {
+      query: {
+        fields: {
+          kinds: 'active,slug,titleRus,logoSquare'
+        }
+      }
+    });
     const seoOption = await $api.getSeoOption('default');
     store.commit(`seo/${SEO_MUTATIONS.SET_SEO_OPTION}`, seoOption)
   },

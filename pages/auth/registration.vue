@@ -112,9 +112,14 @@
 <script lang="ts">
   import Vue from 'vue'
   import VerificationPhoneCode from "~/components/Verification/PhoneCode.vue";
+  import {mask} from "vue-the-mask";
 
   export default Vue.extend({
     middleware: ['guest'],
+
+    directives: {
+      mask
+    },
 
     data: () => ({
       formValues: {
