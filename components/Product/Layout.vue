@@ -99,14 +99,20 @@
 
 <script lang="ts">
 import Vue, {PropType} from 'vue';
-  import {withPopper} from "~/utils";
-  import Table from "~/components/Morphs/Table.vue";
+import {withPopper} from "~/utils";
+import Table from "~/components/Morphs/Table.vue";
 import {IKind, IProduct} from "~/types";
-  import {mapMutations} from "vuex";
-  import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
+import {mapMutations} from "vuex";
+import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
 import {MetaType} from "~/services";
+import VueSelect from "vue-select";
 
   export default Vue.extend({
+    components: {
+      VueSelect,
+      Pagination: () => import('~/components/Pagination')
+    },
+
     data: () => ({
       sortOptions: [{label: 'Сначала дешевле', value: 'price'}, {label: 'Сначала дороже', value: '-price'}],
     }),
