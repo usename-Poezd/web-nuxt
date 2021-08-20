@@ -27,7 +27,7 @@
     "cropperjs": "^1.5.12",
     "currency.js": "^2.0.4",
     "diff": "^5.0.0",
-    "firebase": "^8.7.0",
+    "firebase": "^8.10.0",
     "js-cookie": "^2.2.1",
     "jsonapi-serializer": "^3.6.7",
     "lodash": "^4.17.21",
