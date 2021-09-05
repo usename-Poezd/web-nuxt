@@ -268,10 +268,13 @@ import Vue, {PropType} from 'vue';
   import {diffArrays} from "diff";
 import {RootState} from "~/store";
 import VueSelect from "vue-select";
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/locale/ru';
 
   export default Vue.extend<any, any, any, any>({
     components: {
       VueSelect,
+      DatePicker
     },
 
     props: {

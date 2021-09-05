@@ -20,8 +20,19 @@ export default Vue.extend({
     }
   },
 
-  async asyncData({$api, params}) {
+  async asyncData({$api, params, store}) {
     const divorce = await $api.getDivorce(params.id, 'male.gene,male.trait,male.trait.traitGroup,female.gene,female.trait,female.trait.traitGroup,kind,subcategory,exitPhotos,sexPhotos,masonryPhotos');
+
+    if (!store.state.core.kinds.length || store.state.core.kinds.filter((i: IKind) => i.subcategories).length !== store.state.core.kinds.length) {
+      await store.dispatch('core/fetchKinds', {
+        include: 'subcategories,subcategories.localities',
+        query: {
+          fields: {
+            kinds: 'active,slug,titleRus,subcategories'
+          }
+        }
+      });
+    }
 
     return {
       divorce
