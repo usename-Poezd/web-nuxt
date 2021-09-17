@@ -36,7 +36,7 @@
     "nuxt-lazysizes": "^1.4.0",
     "qs": "^6.10.1",
     "swiper": "^5.2.0",
-    "vee-validate": "^3.4.9",
+    "vee-validate": "^3.4.13",
     "vue-awesome-swiper": "^4.1.1",
     "vue-country-flag": "^2.1.1",
     "vue-currency-input": "^2.0.0",
