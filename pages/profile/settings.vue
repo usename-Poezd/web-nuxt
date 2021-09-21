@@ -324,7 +324,7 @@
             <label for="vk" class="text-gray-800 font-semibold">Вконтакте</label>
           </div>
           <div class="md:w-6/12 w-full flex flex-col">
-            <ValidationProvider name="вконтакте" rules="required" v-slot="{ errors }">
+            <ValidationProvider name="вконтакте" v-slot="{ errors }">
               <input
                 id="vk"
                 name="vk"
