@@ -249,7 +249,7 @@
 
                 this.$modal.hide('verify');
 
-                if (this.$route.path === '/auth/login' || this.$route.path === '/auth/register') {
+                if (this.$route.path === '/auth/login' || this.$route.path === '/auth/callback' || this.$route.path === '/auth/register') {
                   this.$router.push('/');
                 }
 

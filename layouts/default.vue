@@ -1,8 +1,6 @@
 <template>
   <div :style="!$device.isDesktop && 'padding-bottom: 56px;'">
-    <LazyHydrate when-visible>
-      <ModalsContainer/>
-    </LazyHydrate>
+    <ModalsContainer/>
     <LazyHydrate on-interaction="click">
       <Header/>
     </LazyHydrate>
