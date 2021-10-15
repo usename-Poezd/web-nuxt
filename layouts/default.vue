@@ -1,9 +1,7 @@
 <template>
   <div :style="!$device.isDesktop && 'padding-bottom: 56px;'">
     <ModalsContainer/>
-    <LazyHydrate on-interaction="click">
-      <Header/>
-    </LazyHydrate>
+    <Header/>
     <LazyHydrate never :trigger-hydration="headerMenuShow">
       <HeaderMenu v-if="headerMenuShow"/>
     </LazyHydrate>
