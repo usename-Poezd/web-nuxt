@@ -441,7 +441,7 @@ export default Vue.extend({
     selectedChat: {
       messages: {}
     } as any,
-    chats: [] as any,
+    chats: {} as any,
     loadingChats: true,
   }),
 
@@ -493,26 +493,23 @@ export default Vue.extend({
         return {};
       }
 
-      let chatsQuery = this.$fire.database.ref('chats').orderByKey();
-      chatsId.map((chatId: string) => {
-        chatsQuery = chatsQuery.equalTo(chatId)
-      })
-
-
-      chatsQuery.on('value', async (snapshot) => {
+      let chatsQuery = this.$fire.database.ref('chats').orderByKey().on('value', async (snapshot) => {
         if (snapshot.val() === null) {
           return
         }
 
+
         const chats = Object.entries(snapshot.val())
           // @ts-ignore
-          .sort(([,a],[,b]) => a.message.createdAt-b.message.createdAt)
-          .reduce((r, [k, v]) => ({ ...r, [k]: v }), {}) as object;
+          .sort(([,a],[,b]) => b.message.createdAt - a.message.createdAt)
+          .filter((i: any) => chatsId.includes(i[0]))
+          .reduce((r, [k, v]) => ({ ...r, [k]: v }), {})
+
 
         // Get chat members
         const membersId: Array<string> = []
 
-        await Promise.all( Object.keys(chats).map(async (chatId: string) => {
+        await Promise.all(Object.keys(chats).map(async (chatId: string) => {
           // If we dont have a chat
           // then we fetch chat members
           // and push it to array
@@ -562,32 +559,32 @@ export default Vue.extend({
           chats[chatId] = newChat;
         });
 
-       this.chats = chats;
+        this.chats = chats;
 
-      Object.keys(this.chats).map((chatId: string) => {
-        const user = this.chats[chatId].members
-          .find((u: IUser) => u.id !== String(this.user.id));
+        Object.keys(this.chats).map((chatId: string) => {
+          const user = this.chats[chatId].members
+            .find((u: IUser) => u.id !== String(this.user.id));
 
-        this.$fire.database.ref(`messages/${chatId}`)
-          .orderByChild('checkedCreator')
-          .equalTo(`false_${user.id}`)
-          .on('value', (snapshot) => {
-            if (snapshot.exists()) {
-              this.chats[chatId].newMessagesCount = Object.keys(snapshot.val()).length
-              return
-            }
+          this.$fire.database.ref(`messages/${chatId}`)
+            .orderByChild('checkedCreator')
+            .equalTo(`false_${user.id}`)
+            .on('value', (snapshot) => {
+              if (snapshot.exists()) {
+                this.chats[chatId].newMessagesCount = Object.keys(snapshot.val()).length
+                return
+              }
 
-            this.chats[chatId].newMessagesCount = 0
-          })
-      });
+              this.chats[chatId].newMessagesCount = 0
+            })
+        });
 
-       if (this.$route.query.cid && !this.selectedChat.id) {
-         this.selectedChat = {
-           id: this.$route.query.cid,
-           messages: {...this.selectedChat.messages},
-           ...this.chats[(this.$route.query.cid as string)]
-         };
-       }
+        if (this.$route.query.cid && !this.selectedChat.id) {
+          this.selectedChat = {
+            id: this.$route.query.cid,
+            messages: {...this.selectedChat.messages},
+            ...this.chats[(this.$route.query.cid as string)]
+          };
+        }
 
         this.loadingChats = false;
       });
