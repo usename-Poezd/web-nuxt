@@ -30,7 +30,8 @@
       "@nuxtjs/axios",
       "@types/node",
       "@nuxtjs/device",
-      "@nuxtjs/firebase"
+      "@nuxtjs/firebase",
+      "cookie-universal-nuxt"
     ]
   },
   "exclude": [
