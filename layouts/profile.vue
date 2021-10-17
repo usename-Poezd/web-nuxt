@@ -119,9 +119,9 @@ export default Vue.extend({
   },
 
   mounted() {
-    setFirebaseToken(this.$api)
+    setFirebaseToken(this.$api, this.$cookies)
       .then(async () => {
-        await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+        await this.$fire.auth.signInWithCustomToken(getFirebaseToken(this.$cookies));
 
         const chatIds = Object.keys((await this.$fire.database.ref(`users/${this.user.id}`).get()).toJSON() || {});
 

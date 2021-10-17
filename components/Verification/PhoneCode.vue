@@ -224,9 +224,9 @@
                 this.setPayload(data);
                 this.setUser(data.user);
 
-                setFirebaseToken(this.$api)
+                setFirebaseToken(this.$api, this.$cookies)
                   .then(async () => {
-                    await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+                    await this.$fire.auth.signInWithCustomToken(getFirebaseToken(this.$cookies));
 
                     const chatIds = Object.keys((await this.$fire.database.ref(`users/${data.user.id}`).get()).toJSON() || {});
 

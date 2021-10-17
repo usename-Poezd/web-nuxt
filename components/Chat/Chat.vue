@@ -446,8 +446,8 @@ export default Vue.extend({
   }),
 
   async mounted() {
-    await setFirebaseToken(this.$api);
-    await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+    await setFirebaseToken(this.$api, this.$cookies);
+    await this.$fire.auth.signInWithCustomToken(getFirebaseToken(this.$cookies));
     await this.getChats();
   },
 

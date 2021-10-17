@@ -1,10 +1,9 @@
 import createPersistedState from 'vuex-persistedstate'
-import * as Cookies from 'js-cookie';
 import cookie from 'cookie';
 import { Plugin } from '@nuxt/types'
 
 
-const localStorage: Plugin = ({ store, req }) => {
+const localStorage: Plugin = ({ store, req, $cookies }) => {
   createPersistedState({
     key: 'nvcs', // choose any name for your cookie
     paths: [
@@ -15,12 +14,12 @@ const localStorage: Plugin = ({ store, req }) => {
     ],
     storage: {
       // if on the browser, parse the cookies using js-cookie otherwise parse from the raw http request
-      getItem: key => process.client ? Cookies.getJSON(key) : cookie.parse(req.headers.cookie || '')[key],
+      getItem: key => process.client ? $cookies.get(key) : cookie.parse(req.headers.cookie || '')[key],
       // js-cookie can handle setting both client-side and server-side cookies with one method
       // use isDev to determine if the cookies is accessible via https only (i.e. localhost likely won't be using https)
-      setItem: (key, value) => Cookies.set(key, value, { expires: 14 }),
+      setItem: (key, value) => $cookies.set(key, value, { maxAge: 60 * 60 * 24 * 14}),
       // also allow js-cookie to handle removing cookies
-      removeItem: key => Cookies.remove(key)
+      removeItem: key => $cookies.remove(key)
     }
   })(store)
 };

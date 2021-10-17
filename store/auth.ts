@@ -77,7 +77,7 @@ export const actions: ActionTree<AuthState, AuthState> = {
 
     await setFirebaseToken(this.$api, payload.access_token)
       .then(async () => {
-        await this.$fire.auth.signInWithCustomToken(getFirebaseToken());
+        await this.$fire.auth.signInWithCustomToken(getFirebaseToken(this.$cookies));
 
         const chatsJSON = (await this.$fire.database.ref(`users/${user.id}`).get()).toJSON()
         if (chatsJSON) {
