@@ -593,7 +593,11 @@ export default Vue.extend({
             age: product.age?.id,
             locality: product.locality?.id || '',
             cb: moment(product.cb).toDate() as Date,
-            sex:  product.group !== null ? 'group' : product.sex as boolean|string|null,
+            sex:  product.group !== null ?
+                      'group'
+                      : product.sex === null
+                        ? 'na'
+                        : product.sex as boolean|string|null,
             groupMale: product.group?.male || 0,
             groupFemale: product.group?.female || 0,
           };
