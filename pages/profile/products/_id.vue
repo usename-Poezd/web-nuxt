@@ -254,7 +254,7 @@
                   id="sex_null"
                   name="sex"
                   v-model="formValues.sex"
-                  :value="null"
+                  value="na"
                   type="radio"
                   class="form-radio cursor-pointer rounded bg-gray-200 border-transparent focus:border-transparent text-green-600 focus:ring-0 focus:ring-offset-0 mr-1"
                 >
@@ -545,7 +545,7 @@ export default Vue.extend({
         tmpPreview: this.previews.length ?
           String(this.previews[0].tmpId)
           : null,
-        sex: this.formValues.sex === 'group' ? null : this.formValues.sex,
+        sex: this.formValues.sex === 'group' || this.formValues.sex === 'na' ? null : this.formValues.sex,
         kind: {
           id: this.kind.id
         },
@@ -666,7 +666,11 @@ export default Vue.extend({
         age: product.age?.id,
         locality: product.locality?.id || '',
         cb: moment(product.cb).toDate() as Date,
-        sex:  product.group !== null ? 'group' : product.sex as boolean|string|null,
+        sex:  product.group !== null ?
+          'group'
+          : product.sex === null
+            ? 'na'
+            : product.sex as boolean|string|null,
         groupMale: product.group?.male || '',
         groupFemale: product.group?.female || '',
       },

@@ -295,7 +295,7 @@
                   id="sex_null"
                   name="sex"
                   v-model="formValues.sex"
-                  :value="null"
+                  value="na"
                   type="radio"
                   class="form-radio cursor-pointer rounded bg-gray-200 border-transparent focus:border-transparent text-green-600 focus:ring-0 focus:ring-offset-0 mr-1"
                 >
@@ -514,7 +514,7 @@ export default Vue.extend({
           trait: m.trait.id
         })),
         tmpPreview: String(this.images[0].tmpId),
-        sex: this.formValues.sex === 'group' ? null : this.formValues.sex,
+        sex: this.formValues.sex === 'group' || this.formValues.sex === 'na' ? null : this.formValues.sex,
         kind: {
           id: this.kind.id
         },
