@@ -61,7 +61,7 @@
     "@nuxtjs/tailwindcss": "^4.1.2",
     "@types/cookie": "^0.4.0",
     "@types/diff": "^5.0.0",
-    "@types/js-cookie": "^2.2.6",
+    "@types/js-cookie": "^3.0.1",
     "@types/jsonapi-serializer": "^3.6.3",
     "@types/lodash": "^4.14.170",
     "@types/qs": "^6.9.6",
