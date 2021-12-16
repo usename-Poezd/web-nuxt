@@ -1,4 +1,3 @@
-import * as Cookies from "js-cookie";
 import moment from "moment";
 import {ApiServiceType} from "~/services";
 import {NuxtCookies} from "cookie-universal-nuxt";
