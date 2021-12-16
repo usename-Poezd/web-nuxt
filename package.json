@@ -52,6 +52,11 @@
     "vuescroll": "^4.17.3",
     "vuex-persistedstate": "*"
   },
+  "peerDependenciesMeta": {
+    "@vue/composition-api": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@nuxt/types": "^2.15.6",
     "@nuxt/typescript-build": "^2.1.0",
