@@ -75,7 +75,7 @@ export const actions: ActionTree<AuthState, AuthState> = {
     commit(AUTH_MUTATIONS.SET_USER, user);
     commit(AUTH_MUTATIONS.SET_PAYLOAD, payload);
 
-    await setFirebaseToken(this.$api, payload.access_token)
+    await setFirebaseToken(this.$api, this.$cookies, payload.access_token)
       .then(async () => {
         await this.$fire.auth.signInWithCustomToken(getFirebaseToken(this.$cookies));
 
@@ -86,7 +86,7 @@ export const actions: ActionTree<AuthState, AuthState> = {
           chatIds.map((chatId: string) => {
             this.$fire.database.ref(`chats/${chatId}/message`).off('value', (snapshot) => {
               const data = snapshot.val();
-      
+
               if (data.creator !== String(user.id) && !data.checked) {
                 commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
                   [chatId]: true
@@ -125,7 +125,7 @@ export const actions: ActionTree<AuthState, AuthState> = {
       chatIds.map((chatId: string) => {
         this.$fire.database.ref(`chats/${chatId}/message`).off('value', (snapshot) => {
           const data = snapshot.val();
-  
+
           if (data.creator !== String(user.id) && !data.checked) {
             commit(AUTH_MUTATIONS.SET_USER_UNREAD_CHATS, {
               [chatId]: true
