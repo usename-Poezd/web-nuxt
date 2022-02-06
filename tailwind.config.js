@@ -30,9 +30,4 @@ module.exports = {
       ringWidth: ['hover'],
     }
   },
-  plugins: [
-    require('@tailwindcss/forms')({
-      strategy: 'class',
-    })
-  ],
 }
