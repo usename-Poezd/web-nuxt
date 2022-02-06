@@ -48,8 +48,8 @@
     import qs from "qs";
     import {withPopper} from "~/utils";
     import {RootState} from "~/store";
-    import {mapMutations} from "vuex";
-    import {SET_TABLE_CATEGORY_VIEW} from "~/store/core";
+    import {mapMutations, mapState} from "vuex";
+    import {SET_KINDS, SET_TABLE_CATEGORY_VIEW} from "~/store/core";
     import {MetaType} from "~/services";
     import {SEO_MUTATIONS} from "~/store/seo";
 
@@ -67,11 +67,23 @@
         sort: ''
       }),
 
+      computed: {
+        ...mapState('core', [
+          'kinds'
+        ]),
+      },
+
       methods: {
         withPopper,
         ...mapMutations({
           setTableView: `core/${SET_TABLE_CATEGORY_VIEW}`
         }),
+      },
+
+      mounted() {
+        if (this.kinds.length === 0) {
+          this.$store.commit(`core/${SET_KINDS}`, [this.kind])
+        }
       },
 
       async asyncData({ params, query, $api, route, store }) {
@@ -90,6 +102,7 @@
           const {products, meta} = await $api.getProducts({
             include: 'preview,kind,subcategory,shop',
             query: {
+              q: query.q,
               fields: {
                 products: 'name,sex,group,preview,kind,shop,subcategory,price,askPrice'
               },
@@ -100,7 +113,7 @@
               sort: query.sort,
               filter: {
                 shop: query.shop,
-                kind: params.slug,
+                kind: kind.id,
                 price: query.price,
                 sex: query.sex,
                 morphs: qs.parse(route.fullPath.replace(route.path, '').replace('?', '')).morphs,

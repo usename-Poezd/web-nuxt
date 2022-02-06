@@ -10,12 +10,12 @@
         <div class="flex items-center w-full mr-2 bg-gray-200 rounded">
           <input
             v-model="q"
-            @keydown.enter="$router.push('/category/search?q=' + q)"
+            @keydown.enter="search"
             type="text"
-            placeholder="Поиск..."
+            :placeholder="activeKind($route.params.slug) ? `Поиск в ${activeKind($route.params.slug).titleRus}` : `Поиск...` "
             class="block w-full p-2 rounded outline-none appearance-none bg-gray-200"
           >
-          <button @click.prevent="$router.push('/category/search?q=' + q)" class="outline-none appearance-none text-gray-500 relative top-0.5 pr-2">
+          <button @click.prevent="search" class="outline-none appearance-none text-gray-500 relative top-0.5 pr-2">
             <FontAwesomeIcon class="text-xl" icon="search"/>
           </button>
         </div>
@@ -71,12 +71,14 @@
       q: ''
     }),
 
+
     computed: {
       ...mapState('core', [
         'headerMenuShow'
       ]),
       ...mapGetters('core', [
-        'activeKinds'
+        'activeKinds',
+        'activeKind'
       ]),
 
       ...mapState('auth', ['user']),
@@ -86,7 +88,11 @@
     methods: {
       ...mapActions('core', [
         'toggleHeaderMenu'
-      ])
+      ]),
+
+      search() {
+        this.$router.push(`/category/${this.$route.params.slug  ? this.$route.params.slug : 'search'}?q=${this.q}`)
+      }
     }
   });
 </script>

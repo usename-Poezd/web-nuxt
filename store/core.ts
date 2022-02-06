@@ -1,7 +1,7 @@
 import {ActionTree, MutationTree, GetterTree} from 'vuex';
 import {IKind, ISocial} from "~/types";
 
-const SET_KINDS = 'SET_KINDS';
+export const SET_KINDS = 'SET_KINDS';
 const SET_SOCIALS = 'SET_SOCIALS';
 const SET_HEADER_MENU_SHOW = 'SET_HEADER_MENU_SHOW';
 const SET_SCROLL_Y = 'SET_SCROLL_Y';

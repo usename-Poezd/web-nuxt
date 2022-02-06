@@ -50,8 +50,8 @@
           :filterable="false"
           :searchable="false"
           placeholder="Сортировать по..."
-          :options="kinds.map(k => ({label: k.titleRus, value: k.slug}))"
-          :value="kinds.map(k => ({label: k.titleRus, value: k.slug})).find((item) => item.value === kind)"
+          :options="kinds.map(k => ({label: k.titleRus, value: k.id}))"
+          :value="kinds.map(k => ({label: k.titleRus, value: k.id})).find((item) => item.value === kind)"
           :calculate-position="withPopper"
         />
       </div>
@@ -121,11 +121,11 @@ export default Vue.extend({
           size: 20,
           number: query.page
         },
-        sort: '-active',
+        sort: query.q === '' ? '-active' : undefined,
         q: query.q,
         filter: {
           active: false,
-          kind: query.kind,
+          kind: query.kind !== '' ? query.kind : undefined,
           shop: store.state.auth.user.companyName
         }
       }
