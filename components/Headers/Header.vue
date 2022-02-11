@@ -3,7 +3,7 @@
     <div class="container flex items-center">
       <div class="lg:w-1/12 w-3/12 py-2">
         <NuxtLink to="/">
-          <img src="https://breeders-zone.s3.us-east-2.amazonaws.com/static/icons/logo.svg" alt="" class="img-fluid lg:h-12">
+          <img src="https://d3idtmspffvdxi.cloudfront.net/static/icons/logo.svg" alt="" class="img-fluid lg:h-12">
         </NuxtLink>
       </div>
       <div class="w-full p-2 pr-0 flex items-center">
