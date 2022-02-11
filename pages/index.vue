@@ -10,7 +10,7 @@
           </NuxtLink>
         </div>
         <div class="md:w-56 w-24 md:h-56 h-24 rounded-full bg-white overflow-hidden relative">
-          <img data-src="https://breeders-zone.s3.us-east-2.amazonaws.com/media/cache/b0/ce/11.jpg" alt="" class="img-fluid rounded-full absolute bottom-0 lazyload">
+          <img data-src="https://d3idtmspffvdxi.cloudfront.net/media/cache/b0/ce/11.jpg" alt="" class="img-fluid rounded-full absolute bottom-0 lazyload">
         </div>
       </div>
     </div>
