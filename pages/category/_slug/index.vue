@@ -104,7 +104,7 @@
             query: {
               q: query.q,
               fields: {
-                products: 'name,sex,group,preview,kind,shop,subcategory,price,askPrice'
+                products: 'name,sex,group,preview,kind,shop,subcategory,price,askPrice,cb'
               },
               page: {
                 size: 20,
